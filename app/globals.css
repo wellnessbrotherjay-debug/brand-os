@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800;900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+
+    /* Brand Palette - Default (Luxury Gold/Cyan) */
+    --brand-primary: #00BFFF;
+    /* Cyan */
+    --brand-secondary: #F4D03F;
+    /* Gold */
+    --brand-accent: #FFD100;
+    /* Bright Gold */
+
+    /* Functional Colors */
+    --brand-background: #030712;
+    /* Rich Black */
+    --brand-surface: #111827;
+    /* Dark Gray */
+    --brand-text: #FFFFFF;
+    --brand-text-muted: #9CA3AF;
+
+    /* Fonts */
+    --brand-font: "Inter", sans-serif;
+    --font-inter: "Inter", sans-serif;
+    --font-poppins: "Poppins", sans-serif;
+    --font-cormorant: "Cormorant Garamond", serif;
+    --font-orbitron: "Orbitron", sans-serif;
+
+    /* Spacing & Radius */
+    --radius: 0.5rem;
+
+    /* Effects */
+    --shadow-luxury: 0 0 45px rgba(244, 208, 63, 0.15);
+    --glow-gold: 0 0 20px rgba(244, 208, 63, 0.3);
+    --glow-blue: 0 0 20px rgba(0, 191, 255, 0.3);
+  }
+
+  body {
+    @apply antialiased;
+    font-family: var(--brand-font), sans-serif;
+    background:
+      radial-gradient(circle at top, rgba(0, 191, 255, 0.12), rgba(3, 7, 18, 0.9)),
+      linear-gradient(135deg, rgba(244, 208, 63, 0.05), rgba(0, 0, 0, 0.9));
+  }
+
+  ::selection {
+    background-color: rgba(244, 208, 63, 0.4);
+    color: #050505;
+  }
+
+  a {
+    @apply transition-colors;
+  }
+}
+
+@layer components {
+  .card-surface {
+    @apply rounded-3xl border border-white/10 bg-black/60 shadow-panel backdrop-blur-md;
+  }
+
+  .pill {
+    @apply rounded-full bg-cyan-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-cyan-200;
+  }
+}
+
+@layer base {
+  body.nexus-mode {
+    background: none;
+    color: hsl(var(--foreground, 0 0% 100%));
+  }
+
+  body.nexus-mode .app-shell-chrome {
+    display: none;
+  }
+
+  body.nexus-mode .app-shell-content {
+    padding-top: 0;
+  }
+}

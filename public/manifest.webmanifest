@@ -1,0 +1,17 @@
+{
+  "name": "Hotel Fit Solutionss",
+  "short_name": "HotelFit",
+  "description": "Venue-aware wellness operating system for hotels",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050b12",
+  "theme_color": "#00bfff",
+  "icons": [
+    {
+      "src": "/hex-pattern.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

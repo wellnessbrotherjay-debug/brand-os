@@ -1,0 +1,78 @@
+{
+  "name": "brand-os",
+  "version": "1.0.0",
+  "description": "Hotel Fit Solutions Brand OS",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "check:supabase": "node scripts/checkSupabase.mjs",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:reset": "supabase db reset"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wellnessbrotherjay-debug/exequte-hotel.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wellnessbrotherjay-debug/exequte-hotel/issues"
+  },
+  "homepage": "https://github.com/wellnessbrotherjay-debug/exequte-hotel#readme",
+  "dependencies": {
+    "@cloudflare/stream-react": "^1.9.3",
+    "@google/genai": "^1.33.0",
+    "@radix-ui/react-accordion": "^1.2.12",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-progress": "^1.1.8",
+    "@radix-ui/react-select": "^2.2.6",
+    "@radix-ui/react-separator": "^1.1.8",
+    "@radix-ui/react-slider": "^1.3.6",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@radix-ui/react-tabs": "^1.1.13",
+    "@radix-ui/react-toast": "^1.2.14",
+    "@supabase/supabase-js": "^2.38.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "dotenv": "^17.2.3",
+    "exceljs": "^4.4.0",
+    "framer-motion": "^10.18.0",
+    "lucide-react": "^0.462.0",
+    "next": "14.0.2",
+    "openai": "^6.10.0",
+    "papaparse": "^5.5.3",
+    "pg": "^8.16.3",
+    "postmark": "^4.0.4",
+    "qrcode": "^1.5.3",
+    "qrcode.react": "^4.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "recharts": "^3.4.1",
+    "sonner": "^2.0.7",
+    "stripe": "^16.6.0",
+    "tailwind-merge": "^2.6.0",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24.9.1",
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^19.2.2",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.0.2",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.9.3"
+  }
+}
