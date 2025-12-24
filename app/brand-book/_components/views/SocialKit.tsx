@@ -31,7 +31,7 @@ const PhonePreview = ({
     onUpdate,
     onEditHighlight,
     isLive = false,
-    customTitle = null,
+    customTitle = undefined,
     overrideData = null
 }: {
     platform: string,
@@ -1041,6 +1041,27 @@ export const SocialKit: React.FC = () => {
 
     const [competitor, setCompetitor] = useState<string>(""); // Handle of selected competitor
     const [isAddCompetitorOpen, setIsAddCompetitorOpen] = useState(false);
+    const [searchHandle, setSearchHandle] = useState("");
+    const [isSearching, setIsSearching] = useState(false);
+    const [searchResult, setSearchResult] = useState<any>(null);
+    const [searchError, setSearchError] = useState<string | null>(null);
+
+    const handleSearch = async () => {
+        if (!searchHandle || !activeBrandId) return;
+        setIsSearching(true);
+        setSearchError(null);
+        try {
+            const { searchInstagramByHandle } = await import('../services/metaService');
+            const result = await searchInstagramByHandle(searchHandle, activeBrandId);
+            if (result.success) {
+                setSearchResult(result);
+            }
+        } catch (err: any) {
+            setSearchError(err.message || "Failed to find account");
+        } finally {
+            setIsSearching(false);
+        }
+    };
 
     // Initial load
     useEffect(() => {
@@ -1084,6 +1105,34 @@ export const SocialKit: React.FC = () => {
                     </div>
 
                     <div className="flex items-center gap-4">
+                        {comparisonMode === 'internal' && (
+                            <div className="flex gap-2">
+                                <div className="relative group">
+                                    <input
+                                        type="text"
+                                        value={searchHandle}
+                                        onChange={(e) => setSearchHandle(e.target.value)}
+                                        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                                        placeholder="Search Instagram handle..."
+                                        className="bg-white border border-gray-200 rounded-lg pl-9 pr-3 py-2 text-sm focus:outline-none min-w-[200px] border-blue-200"
+                                    />
+                                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                    {isSearching && (
+                                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                                            <Loader2 size={14} className="animate-spin text-blue-500" />
+                                        </div>
+                                    )}
+                                </div>
+                                <button
+                                    onClick={handleSearch}
+                                    disabled={isSearching || !searchHandle}
+                                    className="bg-black text-white px-4 py-2 rounded-lg text-sm font-bold hover:opacity-90 disabled:opacity-50"
+                                >
+                                    Search
+                                </button>
+                            </div>
+                        )}
+
                         {comparisonMode === 'competitive' && (
                             <div className="flex gap-2">
                                 <select
@@ -1115,20 +1164,52 @@ export const SocialKit: React.FC = () => {
                 />
 
                 {/* Comparison Grid */}
-                <div className="flex-1 grid grid-cols-2 gap-8 px-8 pb-8 overflow-y-auto">
+                <div className="flex-1 grid grid-cols-2 gap-8 px-8 pb-8 overflow-y-auto pt-4">
                     {/* LEFT: Current Brand */}
                     <div className="flex flex-col items-center">
-                        <h3 className="font-bold mb-4 bg-gray-100 px-4 py-1 rounded-full text-xs uppercase tracking-wider">Current Live</h3>
+                        <div className="flex items-center gap-2 mb-4">
+                            <h3 className="font-bold bg-gray-100 px-4 py-1 rounded-full text-xs uppercase tracking-wider">
+                                {searchResult ? `@${searchResult.profile.username}` : 'Current Live'}
+                            </h3>
+                            {searchResult && (
+                                <button
+                                    onClick={() => {
+                                        setSearchResult(null);
+                                        setSearchHandle("");
+                                    }}
+                                    className="p-1 hover:bg-gray-100 rounded-full text-gray-400"
+                                    title="Reset to local"
+                                >
+                                    <RefreshCw size={12} />
+                                </button>
+                            )}
+                        </div>
                         <div className="shadow-2xl overflow-hidden bg-black border-[8px] border-black rounded-[2.5rem] relative w-[375px] h-[750px] shrink-0">
                             <div className="pt-8 h-full bg-white">
-                                {identity && activeBrand && <PhonePreview
-                                    platform="Instagram"
-                                    identity={identity}
-                                    brand={activeBrand}
-                                    showStory={false}
-                                    setShowStory={() => { }}
-                                    isLive={true}
-                                />}
+                                {searchError && (
+                                    <div className="absolute inset-x-0 bottom-0 top-8 bg-white z-50 flex flex-col items-center justify-center p-8 text-center">
+                                        <X size={48} className="text-red-500 mb-4" />
+                                        <p className="font-bold text-red-500 mb-2">Search Failed</p>
+                                        <p className="text-xs text-gray-500">{searchError}</p>
+                                    </div>
+                                )}
+                                {identity && activeBrand && (
+                                    <PhonePreview
+                                        platform="Instagram"
+                                        identity={identity}
+                                        brand={activeBrand}
+                                        showStory={false}
+                                        setShowStory={() => { }}
+                                        isLive={!searchResult}
+                                        overrideData={searchResult ? {
+                                            name: searchResult.profile.username,
+                                            tagline: searchResult.profile.biography,
+                                            logo: searchResult.profile.profilePictureUrl,
+                                            feed: searchResult.media,
+                                            website: searchResult.profile.website
+                                        } : null}
+                                    />
+                                )}
                             </div>
                         </div>
                     </div>
@@ -1460,7 +1541,18 @@ export const SocialKit: React.FC = () => {
                         {/* Sidebar / Editor */}
                         <div className="lg:col-span-5 flex flex-col h-full bg-white rounded-xl shadow-sm border border-black/5 overflow-hidden">
                             <div className="p-6 border-b border-black/5">
-                                <h2 className="text-xl font-bold mb-4">Profile Editor</h2>
+                                <div className="flex justify-between items-center mb-4">
+                                    <h2 className="text-xl font-bold">Profile Editor</h2>
+                                    <button
+                                        onClick={async () => {
+                                            const { loginWithFacebook } = await import('../services/authService');
+                                            loginWithFacebook();
+                                        }}
+                                        className="text-[10px] bg-blue-600 text-white px-3 py-1.5 rounded-full font-bold flex items-center gap-1 hover:bg-blue-700 transition-colors"
+                                    >
+                                        <LogIn size={12} /> Connect Instagram
+                                    </button>
+                                </div>
                                 <div className="flex gap-2 p-1 bg-gray-100 rounded-lg overflow-x-auto">
                                     {(['Instagram', 'TikTok', 'YouTube', 'Facebook', 'LinkedIn'] as const).map(p => (
                                         <button

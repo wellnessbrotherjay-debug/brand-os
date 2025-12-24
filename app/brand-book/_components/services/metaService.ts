@@ -322,32 +322,19 @@ export const getInstagramBusinessAccountId = async (pageId: string, brandId: str
 };
 
 // 2. Search for Instagram Accounts (Business Discovery)
-export const searchInstagramAccounts = async (query: string, brandId: string) => {
-    const token = await getAccessToken(brandId);
-    if (!token) throw new Error("No token");
-
+export const searchInstagramByHandle = async (username: string, brandId: string) => {
     try {
-        // Step A: Get User's Pages
-        const pagesRes = await fetch(`${GRAPH_API}/me/accounts?access_token=${token}`);
-        const pagesData = await pagesRes.json();
-        const page = pagesData.data?.[0]; // Just grab first page
+        const response = await fetch(`/api/instagram/search?username=${username}&brandId=${brandId}`);
+        const data = await response.json();
 
-        if (!page) throw new Error("No Facebook Page found to act as searcher.");
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to search Instagram account');
+        }
 
-        // Step B: Get IG Bus ID
-        const igBusId = await getInstagramBusinessAccountId(page.id, brandId);
-        if (!igBusId) throw new Error("No Instagram Business Account linked to your Page.");
-
-        // Step C: Business Discovery
-        // We query the "acting" account to "discover" the target account (query)
-        const discoveryRes = await fetch(
-            `${GRAPH_API}/${igBusId}?fields=business_discovery.username(${query}){username,website,name,profile_picture_url,biography,followers_count,media_count}&access_token=${token}`
-        );
-        const discoveryData = await discoveryRes.json();
-
-    } catch (e) {
-        console.error("Search failed", e);
-        return null;
+        return data;
+    } catch (error: any) {
+        console.error('[searchInstagramByHandle Error]:', error);
+        throw error;
     }
 };
 

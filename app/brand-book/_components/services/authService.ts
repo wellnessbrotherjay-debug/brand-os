@@ -41,24 +41,34 @@ export const checkUrlForToken = async (brandId: string) => {
         const expiresIn = params.get('expires_in');
 
         if (accessToken) {
-            // Fetch real User ID for the DB
             try {
+                // 1. Fetch FB User ID
                 const meRes = await fetch(`https://graph.facebook.com/me?access_token=${accessToken}`);
                 const meData = await meRes.json();
                 const userID = meData.id || 'unknown';
 
+                // 2. Fetch Pages to see if there's an IG Business account
+                const pagesRes = await fetch(`https://graph.facebook.com/v19.0/me/accounts?fields=name,instagram_business_account&access_token=${accessToken}`);
+                const pagesData = await pagesRes.json();
+
+                // Store page info in tokens if found
+                const pages = pagesData.data || [];
+                const firstIgAccount = pages.find((p: any) => p.instagram_business_account)?.instagram_business_account?.id;
+
                 const tokenData = {
                     accessToken,
-                    expiresIn: expiresIn ? parseInt(expiresIn) : 5184000, // 60 days default
-                    userID
+                    expiresIn: expiresIn ? parseInt(expiresIn) : 5184000, // 60 days
+                    userID,
+                    igAccountId: firstIgAccount || null,
+                    pages: pages.map((p: any) => ({ id: p.id, name: p.name, hasIg: !!p.instagram_business_account }))
                 };
 
-                console.log("[AuthService] Saving token for brand:", brandId);
+                console.log("[AuthService] Saving token for brand:", brandId, "IG Account:", firstIgAccount);
                 await saveSocialToken(brandId, 'facebook', tokenData);
 
                 return tokenData;
             } catch (e) {
-                console.error("Failed to fetch user ID", e);
+                console.error("Failed to fetch social details", e);
             }
         }
     }
