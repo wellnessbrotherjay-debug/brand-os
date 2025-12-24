@@ -213,7 +213,7 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setView, children }
                             onClick={() => setAppMode('brand')}
                             className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-all ${appMode === 'brand' ? 'bg-white shadow-sm' : 'opacity-50 hover:opacity-80'}`}
                         >
-                            Strategy
+                            Creative OS
                         </button>
                         {currentUser?.role !== 'Designer' && (
                             <button
@@ -239,60 +239,80 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setView, children }
                             />
 
                             {/* Brand & Strategy Group */}
-                            <div className="pt-2 mt-2 mb-2">
-                                <NavItem
-                                    icon={<Database size={20} />}
-                                    label="Brand Origin"
-                                    isActive={currentView === 'brand_master'}
-                                    onClick={() => setView('brand_master')}
-                                    accentColor={accentBg}
-                                    textColor={textPrimary}
-                                />
-                                <NavItem
-                                    icon={<Palette size={20} />}
-                                    label="Identity Hub"
-                                    isActive={currentView === 'identity'}
-                                    onClick={() => setView('identity')}
-                                    accentColor={accentBg}
-                                    textColor={textPrimary}
-                                />
-                                <NavItem
-                                    icon={<Users size={20} />}
-                                    label="Customer Avatar"
-                                    isActive={currentView === 'customer_avatar'}
-                                    onClick={() => setView('customer_avatar')}
-                                    accentColor={accentBg}
-                                    textColor={textPrimary}
-                                />
-                                <NavItem
-                                    icon={<BrainCircuit size={20} />}
-                                    label="LLM Settings"
-                                    isActive={currentView === 'llm_settings'}
-                                    onClick={() => setView('llm_settings')}
-                                    accentColor={accentBg}
-                                    textColor={textPrimary}
-                                />
-                            </div>
+                            {currentUser?.role !== 'Designer' && (
+                                <div className="pt-2 mt-2 mb-2">
+                                    <NavItem
+                                        icon={<Database size={20} />}
+                                        label="Brand Origin"
+                                        isActive={currentView === 'brand_master'}
+                                        onClick={() => setView('brand_master')}
+                                        accentColor={accentBg}
+                                        textColor={textPrimary}
+                                    />
+                                    <NavItem
+                                        icon={<Palette size={20} />}
+                                        label="Identity Hub"
+                                        isActive={currentView === 'identity'}
+                                        onClick={() => setView('identity')}
+                                        accentColor={accentBg}
+                                        textColor={textPrimary}
+                                    />
+                                    <NavItem
+                                        icon={<Users size={20} />}
+                                        label="Customer Avatar"
+                                        isActive={currentView === 'customer_avatar'}
+                                        onClick={() => setView('customer_avatar')}
+                                        accentColor={accentBg}
+                                        textColor={textPrimary}
+                                    />
+                                    <NavItem
+                                        icon={<BrainCircuit size={20} />}
+                                        label="LLM Settings"
+                                        isActive={currentView === 'llm_settings'}
+                                        onClick={() => setView('llm_settings')}
+                                        accentColor={accentBg}
+                                        textColor={textPrimary}
+                                    />
+                                </div>
+                            )}
+
+                            {/* Identity for Designer */}
+                            {currentUser?.role === 'Designer' && (
+                                <div className="pt-2 mt-2 mb-2">
+                                    <NavItem
+                                        icon={<Palette size={20} />}
+                                        label="Identity Hub"
+                                        isActive={currentView === 'identity'}
+                                        onClick={() => setView('identity')}
+                                        accentColor={accentBg}
+                                        textColor={textPrimary}
+                                    />
+                                </div>
+                            )}
 
                             {/* Workspace Group */}
                             <div className="pt-4 mt-4 border-t" style={{ borderColor: `${textPrimary}10` }}>
                                 <h3 className="px-4 text-xs font-semibold uppercase tracking-wider mb-2 opacity-50">Workspace</h3>
-                                <NavItem
-                                    icon={<Box size={20} />}
-                                    label="Pods"
-                                    isActive={currentView === 'pods'}
-                                    onClick={() => setView('pods')}
-                                    accentColor={accentBg}
-                                    textColor={textPrimary}
-                                />
-                                <NavItem
-                                    icon={<FolderOpen size={20} />}
-                                    label="Projects Board"
-                                    isActive={currentView === 'projects'}
-                                    onClick={() => setView('projects')}
-                                    accentColor={accentBg}
-                                    textColor={textPrimary}
-                                />
+                                {currentUser?.role !== 'Designer' && (
+                                    <>
+                                        <NavItem
+                                            icon={<Box size={20} />}
+                                            label="Pods"
+                                            isActive={currentView === 'pods'}
+                                            onClick={() => setView('pods')}
+                                            accentColor={accentBg}
+                                            textColor={textPrimary}
+                                        />
+                                        <NavItem
+                                            icon={<FolderOpen size={20} />}
+                                            label="Projects Board"
+                                            isActive={currentView === 'projects'}
+                                            onClick={() => setView('projects')}
+                                            accentColor={accentBg}
+                                            textColor={textPrimary}
+                                        />
+                                    </>
+                                )}
                                 <NavItem
                                     icon={<Image size={20} />}
                                     label="Projects & Assets"
@@ -309,59 +329,67 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setView, children }
                                     accentColor={accentBg}
                                     textColor={textPrimary}
                                 />
-                                <NavItem
-                                    icon={<Film size={20} />}
-                                    label="Video Factory"
-                                    isActive={currentView === 'video_studio'}
-                                    onClick={() => setView('video_studio')}
-                                    accentColor={accentBg}
-                                    textColor={textPrimary}
-                                />
-                                <NavItem
-                                    icon={<UserPlus size={20} />}
-                                    label="Team & Access"
-                                    isActive={currentView === 'team'}
-                                    onClick={() => setView('team')}
-                                    accentColor={accentBg}
-                                    textColor={textPrimary}
-                                />
-                                <NavItem
-                                    icon={<Target size={20} />}
-                                    label="Marketing Strategy"
-                                    isActive={currentView === 'marketing_strategy'}
-                                    onClick={() => setView('marketing_strategy')}
-                                    accentColor={accentBg}
-                                    textColor={textPrimary}
-                                />
-                                <NavItem
-                                    icon={<Link2 size={20} />}
-                                    label="Integrations"
-                                    isActive={currentView === 'integrations'}
-                                    onClick={() => setView('integrations')}
-                                    accentColor={accentBg}
-                                    textColor={textPrimary}
-                                />
+                                {currentUser?.role !== 'Designer' && (
+                                    <>
+                                        <NavItem
+                                            icon={<Film size={20} />}
+                                            label="Video Factory"
+                                            isActive={currentView === 'video_studio'}
+                                            onClick={() => setView('video_studio')}
+                                            accentColor={accentBg}
+                                            textColor={textPrimary}
+                                        />
+                                        <NavItem
+                                            icon={<UserPlus size={20} />}
+                                            label="Team & Access"
+                                            isActive={currentView === 'team'}
+                                            onClick={() => setView('team')}
+                                            accentColor={accentBg}
+                                            textColor={textPrimary}
+                                        />
+                                        <NavItem
+                                            icon={<Target size={20} />}
+                                            label="Marketing Strategy"
+                                            isActive={currentView === 'marketing_strategy'}
+                                            onClick={() => setView('marketing_strategy')}
+                                            accentColor={accentBg}
+                                            textColor={textPrimary}
+                                        />
+                                        <NavItem
+                                            icon={<Link2 size={20} />}
+                                            label="Integrations"
+                                            isActive={currentView === 'integrations'}
+                                            onClick={() => setView('integrations')}
+                                            accentColor={accentBg}
+                                            textColor={textPrimary}
+                                        />
+                                    </>
+                                )}
                             </div>
 
                             {/* Content Engine Group */}
                             <div className="pt-4 mt-4 border-t" style={{ borderColor: `${textPrimary}10` }}>
                                 <h3 className="px-4 text-xs font-semibold uppercase tracking-wider mb-2 opacity-50">Content Engine</h3>
-                                <NavItem
-                                    icon={<Lightbulb size={20} />}
-                                    label="Idea Generator"
-                                    isActive={currentView === 'ideas'}
-                                    onClick={() => setView('ideas')}
-                                    accentColor={accentBg}
-                                    textColor={textPrimary}
-                                />
-                                <NavItem
-                                    icon={<LayoutTemplate size={20} />}
-                                    label="Template Studio"
-                                    isActive={currentView === 'template_studio'}
-                                    onClick={() => setView('template_studio')}
-                                    accentColor={accentBg}
-                                    textColor={textPrimary}
-                                />
+                                {currentUser?.role !== 'Designer' && (
+                                    <>
+                                        <NavItem
+                                            icon={<Lightbulb size={20} />}
+                                            label="Idea Generator"
+                                            isActive={currentView === 'ideas'}
+                                            onClick={() => setView('ideas')}
+                                            accentColor={accentBg}
+                                            textColor={textPrimary}
+                                        />
+                                        <NavItem
+                                            icon={<LayoutTemplate size={20} />}
+                                            label="Template Studio"
+                                            isActive={currentView === 'template_studio'}
+                                            onClick={() => setView('template_studio')}
+                                            accentColor={accentBg}
+                                            textColor={textPrimary}
+                                        />
+                                    </>
+                                )}
                                 <NavItem
                                     icon={<Calendar size={20} />}
                                     label="Calendar"
@@ -386,22 +414,26 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setView, children }
                                     accentColor={accentBg}
                                     textColor={textPrimary}
                                 />
-                                <NavItem
-                                    icon={<Megaphone size={20} />}
-                                    label="Ads Control Center"
-                                    isActive={currentView === 'meta_ads'}
-                                    onClick={() => setView('meta_ads')}
-                                    accentColor={accentBg}
-                                    textColor={textPrimary}
-                                />
-                                <NavItem
-                                    icon={<BarChart3 size={20} />}
-                                    label="Analytics"
-                                    isActive={currentView === 'analytics'}
-                                    onClick={() => setView('analytics')}
-                                    accentColor={accentBg}
-                                    textColor={textPrimary}
-                                />
+                                {currentUser?.role !== 'Designer' && (
+                                    <>
+                                        <NavItem
+                                            icon={<Megaphone size={20} />}
+                                            label="Ads Control Center"
+                                            isActive={currentView === 'meta_ads'}
+                                            onClick={() => setView('meta_ads')}
+                                            accentColor={accentBg}
+                                            textColor={textPrimary}
+                                        />
+                                        <NavItem
+                                            icon={<BarChart3 size={20} />}
+                                            label="Analytics"
+                                            isActive={currentView === 'analytics'}
+                                            onClick={() => setView('analytics')}
+                                            accentColor={accentBg}
+                                            textColor={textPrimary}
+                                        />
+                                    </>
+                                )}
                             </div>
 
                             <div className="pt-4 mt-4 border-t" style={{ borderColor: `${textPrimary}10` }}>
