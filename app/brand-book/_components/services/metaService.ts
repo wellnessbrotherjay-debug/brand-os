@@ -314,15 +314,23 @@ export const getInstagramBusinessAccountId = async (pageId: string, brandId: str
     try {
         const res = await fetch(`${GRAPH_API}/${pageId}?fields=instagram_business_account&access_token=${token}`);
         const data = await res.json();
-        return data.instagram_business_account?.id || null;
+
+        if (data.error) {
+            console.warn(`[MetaService] Error fetching IG Business ID for page ${pageId}:`, data.error);
+            return null;
+        }
+
+        const igId = data.instagram_business_account?.id || null;
+        console.log(`[MetaService] Found IG Business ID: ${igId} for page: ${pageId}`);
+        return igId;
     } catch (e) {
-        console.error("Failed to get IG Business ID", e);
+        console.error("[MetaService] Failed to get IG Business ID", e);
         return null;
     }
 };
 
 // 2. Search for Instagram Accounts (Business Discovery)
-export const searchInstagramByHandle = async (username: string, brandId: string) => {
+export const searchInstagramAccounts = async (username: string, brandId: string) => {
     try {
         const response = await fetch(`/api/instagram/search?username=${username}&brandId=${brandId}`);
         const data = await response.json();
@@ -333,7 +341,7 @@ export const searchInstagramByHandle = async (username: string, brandId: string)
 
         return data;
     } catch (error: any) {
-        console.error('[searchInstagramByHandle Error]:', error);
+        console.error('[searchInstagramAccounts Error]:', error);
         throw error;
     }
 };

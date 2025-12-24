@@ -506,7 +506,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const connectSocialPlatform = async (platform: 'facebook' | 'google' | 'instagram') => {
         if (!activeBrandId) return;
 
-        if (platform === 'facebook') {
+        if (platform === 'facebook' || platform === 'instagram') {
             try {
                 const response = await loginWithFacebook();
                 if (response) {
@@ -516,8 +516,8 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
                     setConnectors(prev => prev.map(c => c.id === 'meta' || c.id === 'facebook' ? { ...c, connected: true } : c));
                 }
             } catch (error) {
-                console.error("Facebook Login Failed:", error);
-                alert("Failed to connect to Facebook. Please allow popup.");
+                console.error("Meta Login Failed:", error);
+                alert("Failed to connect to Meta. Please allow popup.");
             }
         } else if (platform === 'google') {
             alert("Google connection coming soon.");
@@ -528,10 +528,12 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         if (!activeBrandId) return;
 
         // 1. Clear Service Layer
-        await deleteSocialToken(activeBrandId, platform);
+        // Since IG and FB share the Meta token saved as 'facebook', we delete 'facebook' for either.
+        const platformToDelete = (platform === 'instagram') ? 'facebook' as const : platform;
+        await deleteSocialToken(activeBrandId, platformToDelete);
 
         // 2. Clear Local State
-        if (platform === 'facebook') {
+        if (platform === 'facebook' || platform === 'instagram') {
             setMetaAccounts([]);
             setMetaCampaigns([]);
             setMetaAdSets([]);

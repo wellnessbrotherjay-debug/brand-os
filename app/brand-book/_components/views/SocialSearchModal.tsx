@@ -28,6 +28,10 @@ export const SocialSearchModal: React.FC<SocialSearchModalProps> = ({ isOpen, on
         setError('');
         setResult(null);
         try {
+            // Check for explicit mock trigger or try actual search
+            if (query.toLowerCase().startsWith('mock')) {
+                throw new Error("Mock requested");
+            }
             const data = await searchSocialAccounts(query);
             if (data) {
                 setResult(data);
@@ -35,7 +39,19 @@ export const SocialSearchModal: React.FC<SocialSearchModalProps> = ({ isOpen, on
                 setError('Account not found or limit reached.');
             }
         } catch (e) {
-            setError('Failed to search. Ensure you have a working Meta token.');
+            console.warn("Search failed, falling back to mock data for design review.");
+            // Fallback to Mock Data as requested by user to "feed the layout"
+            setResult({
+                id: 'mock_12345',
+                name: query || 'No1 Wellness (Mock)',
+                username: (query || 'no1wellness').replace(/\s+/g, '').toLowerCase(),
+                profile_picture_url: 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=150&h=150&fit=crop',
+                followers_count: 12500,
+                media_count: 342,
+                biography: 'Premium wellness and fitness solutions. Empowering your journey to health. \n📍 Global • 🌱 Organic • 💪 Strength',
+                website: 'https://exequte.com',
+                is_mock: true
+            });
         } finally {
             setIsLoading(false);
         }
@@ -103,7 +119,10 @@ export const SocialSearchModal: React.FC<SocialSearchModalProps> = ({ isOpen, on
                                 <img src={result.profile_picture_url} className="w-16 h-16 rounded-full object-cover border border-gray-100 shadow-md bg-gray-100" alt={result.username} />
                                 <div className="flex-1 min-w-0">
                                     <h3 className="font-bold text-lg text-gray-900 truncate">{result.name}</h3>
-                                    <p className="text-sm text-gray-500 font-mono">@{result.username}</p>
+                                    <p className="text-sm text-gray-500 font-mono">
+                                        @{result.username}
+                                        {result.is_mock && <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">Mock Data</span>}
+                                    </p>
                                     <div className="flex gap-4 mt-2 text-sm text-gray-600">
                                         <span><strong className="text-gray-900">{result.followers_count.toLocaleString()}</strong> followers</span>
                                         <span><strong className="text-gray-900">{result.media_count}</strong> posts</span>
