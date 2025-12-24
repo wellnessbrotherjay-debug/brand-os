@@ -345,6 +345,7 @@ export interface BrandColor {
 }
 
 export interface AvatarProfile {
+  id: string;
   name?: string;
   age_range?: string;
   gender?: string;
@@ -456,6 +457,7 @@ export interface BrandIdentity {
 
   brand_book_config?: BrandBookConfig;
   ui_config?: UIConfig;
+  avatars?: AvatarProfile[];
 }
 
 // --- NEW WORKSPACE TYPES ---

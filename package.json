@@ -18,15 +18,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wellnessbrotherjay-debug/exequte-hotel.git"
+    "url": ""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/wellnessbrotherjay-debug/exequte-hotel/issues"
+    "url": ""
   },
-  "homepage": "https://github.com/wellnessbrotherjay-debug/exequte-hotel#readme",
+  "homepage": "",
   "dependencies": {
     "@cloudflare/stream-react": "^1.9.3",
     "@google/genai": "^1.33.0",

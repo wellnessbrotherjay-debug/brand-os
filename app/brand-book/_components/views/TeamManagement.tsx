@@ -5,7 +5,7 @@ import { TeamMember, TeamRole } from '../types';
 import { Users, Shield, Plus, MoreHorizontal, Check, X, Search, Mail, Trash2, Edit2, Layout, Database, Camera, Image as ImageIcon } from 'lucide-react';
 
 export const TeamManagement: React.FC = () => {
-    const { teamMembers, addTeamMember, updateTeamMember, deleteTeamMember, projects, updateProject } = useAppStore();
+    const { teamMembers, addTeamMember, updateTeamMember, deleteTeamMember, projects, updateProject, currentUser } = useAppStore();
     const [activeTab, setActiveTab] = useState<'members' | 'access'>('members');
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
@@ -105,12 +105,14 @@ export const TeamManagement: React.FC = () => {
                     <h1 className="text-3xl font-bold font-serif-brand">Team & Access</h1>
                     <p className="opacity-60">Manage your organization&apos;s members and project permissions.</p>
                 </div>
-                <button
-                    onClick={() => { setEditingMember(null); setNewMember({ role: 'Marketing', status: 'active', bio: '', achievements: [], gallery_images: [], country_flag: '🇺🇸' }); setIsAddModalOpen(true); }}
-                    className="bg-black text-white px-6 py-3 rounded-lg font-bold shadow-lg hover:opacity-90 flex items-center gap-2"
-                >
-                    <Plus size={18} /> Invite Member
-                </button>
+                {currentUser?.role !== 'Designer' && (
+                    <button
+                        onClick={() => { setEditingMember(null); setNewMember({ role: 'Marketing', status: 'active', bio: '', achievements: [], gallery_images: [], country_flag: '🇺🇸' }); setIsAddModalOpen(true); }}
+                        className="bg-black text-white px-6 py-3 rounded-lg font-bold shadow-lg hover:opacity-90 flex items-center gap-2"
+                    >
+                        <Plus size={18} /> Invite Member
+                    </button>
+                )}
             </header>
 
             {/* Tabs */}
@@ -171,7 +173,9 @@ export const TeamManagement: React.FC = () => {
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex justify-end gap-2">
                                             <button onClick={() => handleEditClick(member)} className="p-2 hover:bg-gray-200 rounded text-gray-500 hover:text-black"><Edit2 size={16} /></button>
-                                            <button onClick={() => deleteTeamMember(member.id)} className="p-2 hover:bg-red-50 rounded text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
+                                            {currentUser?.role !== 'Designer' && (
+                                                <button onClick={() => deleteTeamMember(member.id)} className="p-2 hover:bg-red-50 rounded text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
+                                            )}
                                         </div>
                                     </td>
                                 </tr>

@@ -108,7 +108,7 @@ const GlobalFontManager: React.FC = () => {
 };
 
 export const Layout: React.FC<LayoutProps> = ({ currentView, setView, children }) => {
-    const { brands, activeBrandId, setActiveBrand, identities } = useAppStore();
+    const { brands, activeBrandId, setActiveBrand, identities, currentUser, setCurrentUser } = useAppStore();
     const [appMode, setAppMode] = React.useState<'brand' | 'hospitality'>('brand');
 
     const currentIdentity = identities.find(i => i.brand_id === activeBrandId);
@@ -215,12 +215,14 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setView, children }
                         >
                             Strategy
                         </button>
-                        <button
-                            onClick={() => setAppMode('hospitality')}
-                            className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-all ${appMode === 'hospitality' ? 'bg-white shadow-sm' : 'opacity-50 hover:opacity-80'}`}
-                        >
-                            Operations
-                        </button>
+                        {currentUser?.role !== 'Designer' && (
+                            <button
+                                onClick={() => setAppMode('hospitality')}
+                                className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-all ${appMode === 'hospitality' ? 'bg-white shadow-sm' : 'opacity-50 hover:opacity-80'}`}
+                            >
+                                Operations
+                            </button>
+                        )}
                     </div>
                 </div>
 
@@ -405,7 +407,7 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setView, children }
                             <div className="pt-4 mt-4 border-t" style={{ borderColor: `${textPrimary}10` }}>
                                 <h3 className="px-4 text-xs font-semibold uppercase tracking-wider mb-2 opacity-50">Output</h3>
                                 <NavItem
-                                    icon={<BookOpen size={20} />}
+                                    icon={< BookOpen size={20} />}
                                     label="Brand Book"
                                     isActive={currentView === 'brandbook'}
                                     onClick={() => setView('brandbook')}
@@ -414,7 +416,7 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setView, children }
                                 />
                             </div>
                         </>
-                    ) : (
+                    ) : currentUser?.role === 'Designer' ? null : (
                         <>
                             <NavItem
                                 icon={<Hotel size={20} />}
@@ -461,10 +463,20 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setView, children }
                         <span>Theme Settings</span>
                     </button>
                     <div className="flex items-center gap-3 mt-3 px-2">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-100 to-gray-300 border border-white/50"></div>
-                        <div className="flex flex-col">
-                            <span className="text-sm font-medium opacity-90">Senior Engineer</span>
-                            <span className="text-xs opacity-50">Admin Workspace</span>
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-100 to-gray-300 border border-white/50 overflow-hidden">
+                            {currentUser?.avatar_url && <img src={currentUser.avatar_url} className="w-full h-full object-cover" />}
+                        </div>
+                        <div className="flex flex-col flex-1">
+                            <span className="text-sm font-medium opacity-90">{currentUser?.name}</span>
+                            <select
+                                value={currentUser?.role}
+                                onChange={(e) => setCurrentUser({ ...currentUser, role: e.target.value })}
+                                style={{ color: textPrimary }}
+                                className="text-[10px] bg-transparent border-none p-0 focus:ring-0 cursor-pointer opacity-50 font-bold uppercase tracking-wider"
+                            >
+                                <option value="Admin">Admin Workspace</option>
+                                <option value="Designer">Design Team</option>
+                            </select>
                         </div>
                     </div>
                 </div>

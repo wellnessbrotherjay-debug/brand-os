@@ -351,6 +351,10 @@ interface StoreContextType extends AppState {
     searchSocialAccounts: (platform: string, query: string) => Promise<any>;
     linkSocialAccount: (platform: string, accountData: any) => void;
     debugMeta: () => Promise<any>;
+
+    // User / Session Methods
+    currentUser: any;
+    setCurrentUser: (user: any) => void;
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
@@ -616,7 +620,6 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             content_mix: [],
             instagram_bio: brand.tagline,
             instagram_highlights: [],
-            instagram_highlights: [],
             instagram_feed: [],
             social_connections: [],
             avatars: []
@@ -862,7 +865,6 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         projects, tasks, teamMembers, llmSettings,
         taskComments,
         pods, podFiles, podDiscussions,
-        users, currentUser,
         chatThreads, chatMessages, osNotifications,
         creativePrompts, generatedAssets, moodboards, videoProjects, videoScenes,
         dashboards, teamMetrics,
@@ -886,6 +888,9 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         addMetaCampaign, addMetaAdSet, addMetaAd,
         syncMetaAccount, connectSocialPlatform, disconnectSocialPlatform, searchSocialAccounts, linkSocialAccount,
         debugMeta,
+        users,
+        currentUser,
+        setCurrentUser,
         addAvatar, updateAvatar, deleteAvatar
     };
 
