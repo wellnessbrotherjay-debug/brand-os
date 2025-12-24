@@ -10,7 +10,7 @@ import {
     MetaAdAccount, MetaCampaign, MetaAdSet, MetaAd, AnalyticsNotification, Task, TaskStatus, TaskPriority,
     ChatThread, ChatMessage, Pod, PodType, PodFile,
     CreativePrompt, GeneratedAsset, Moodboard,
-    VideoProject, VideoScene, AvatarProfile, KnowledgeSource
+    VideoProject, VideoScene, AvatarProfile, KnowledgeSource, User
 } from './types';
 import {
     getMetaAccounts, getMetaCampaigns, getMetaAdSets, getMetaAds,
@@ -19,6 +19,23 @@ import {
 import { loginWithFacebook, saveSocialToken, checkUrlForToken, deleteSocialToken } from './services/authService';
 
 // --- TS UNIVERSE BRAND DATA ---
+
+const MOCK_USER: User = {
+    id: 'u1',
+    name: 'Jay',
+    email: 'jay@hotelwellness.com',
+    role: 'admin',
+    permissions: {
+        can_view_pods: ['brand', 'marketing', 'creative', 'projects', 'operations', 'analytics', 'team'],
+        can_edit_pods: ['brand', 'marketing', 'creative', 'projects', 'operations', 'analytics', 'team'],
+        can_upload: true,
+        can_approve: true,
+        can_publish: true,
+        can_manage_team: true
+    },
+    brand_ids: ['ts-suites', 'ts-residence', 'ts-social', 'no-wellness', 'glvt-fitness'],
+    created_at: new Date().toISOString()
+};
 
 const BRAND_IDS = {
     SUITES: 'ts-suites',
