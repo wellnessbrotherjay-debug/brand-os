@@ -108,7 +108,7 @@ const GlobalFontManager: React.FC = () => {
 };
 
 export const Layout: React.FC<LayoutProps> = ({ currentView, setView, children }) => {
-    const { brands, activeBrandId, setActiveBrand, identities, currentUser, setCurrentUser } = useAppStore();
+    const { brands, activeBrandId, setActiveBrand, identities, currentUser, setCurrentUser, activeOriginSection, setActiveOriginSection } = useAppStore();
     const [appMode, setAppMode] = React.useState<'brand' | 'hospitality'>('brand');
 
     const currentIdentity = identities.find(i => i.brand_id === activeBrandId);
@@ -241,38 +241,45 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setView, children }
                             {/* Brand & Strategy Group */}
                             {currentUser?.role !== 'Designer' && (
                                 <div className="pt-2 mt-2 mb-2">
-                                    <NavItem
-                                        icon={<Database size={20} />}
-                                        label="Brand Origin"
-                                        isActive={currentView === 'brand_master'}
-                                        onClick={() => setView('brand_master')}
-                                        accentColor={accentBg}
-                                        textColor={textPrimary}
-                                    />
-                                    <NavItem
-                                        icon={<Palette size={20} />}
-                                        label="Identity Hub"
-                                        isActive={currentView === 'identity'}
-                                        onClick={() => setView('identity')}
-                                        accentColor={accentBg}
-                                        textColor={textPrimary}
-                                    />
-                                    <NavItem
-                                        icon={<Users size={20} />}
-                                        label="Customer Avatar"
-                                        isActive={currentView === 'customer_avatar'}
-                                        onClick={() => setView('customer_avatar')}
-                                        accentColor={accentBg}
-                                        textColor={textPrimary}
-                                    />
-                                    <NavItem
-                                        icon={<BrainCircuit size={20} />}
-                                        label="LLM Settings"
-                                        isActive={currentView === 'llm_settings'}
-                                        onClick={() => setView('llm_settings')}
-                                        accentColor={accentBg}
-                                        textColor={textPrimary}
-                                    />
+                                    <div className="mb-1">
+                                        <button
+                                            onClick={() => {
+                                                if (currentView !== 'brand_master') {
+                                                    setView('brand_master');
+                                                }
+                                                // Toggle expand logic could go here if we wanted it to be valid only when active
+                                            }}
+                                            className={`flex items-center w-full px-4 py-3 text-sm font-medium rounded-lg transition-colors opacity-90 hover:opacity-100 hover:bg-black/5 ${currentView === 'brand_master' ? 'bg-black/5' : ''}`}
+                                            style={{
+                                                color: currentView === 'brand_master' ? textPrimary : 'inherit'
+                                            }}
+                                        >
+                                            <span className="mr-3"><Database size={20} /></span>
+                                            Brand Origin
+                                            <ChevronDown size={14} className={`ml-auto transition-transform ${currentView === 'brand_master' ? 'rotate-180' : ''}`} />
+                                        </button>
+
+                                        {/* Collapsible Children */}
+                                        {currentView === 'brand_master' && (
+                                            <div className="ml-11 space-y-1 mt-1 border-l-2 border-black/5 pl-2 animate-in slide-in-from-top-2 duration-200">
+                                                {[
+                                                    { id: 'identity', label: 'Identity & Core' },
+                                                    { id: 'strategy', label: 'Strategy Layer' },
+                                                    { id: 'visuals', label: 'Visual Universe' },
+                                                    { id: 'knowledge', label: 'Knowledge Base' },
+                                                ].map((subItem) => (
+                                                    <button
+                                                        key={subItem.id}
+                                                        onClick={() => setActiveOriginSection(subItem.id)}
+                                                        className={`block w-full text-left px-3 py-2 text-xs font-medium rounded-md transition-colors ${activeOriginSection === subItem.id ? 'bg-black/5 font-bold' : 'opacity-60 hover:opacity-100 hover:bg-black/5'}`}
+                                                    >
+                                                        {subItem.label}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                    {/* The sub-items rendered properly using the hook */}
                                 </div>
                             )}
 

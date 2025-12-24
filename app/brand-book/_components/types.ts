@@ -266,6 +266,18 @@ export interface Brand {
 }
 
 
+export interface KnowledgeSource {
+  id: string;
+  brand_id: string;
+  type: 'text' | 'file';
+  name: string;
+  content: string; // Text content or Base64 data
+  mime_type?: string;
+  preview?: string;
+  created_at?: string;
+}
+
+
 export enum StrategySectionType {
   Purpose = 'Purpose',
   Mission = 'Mission',

@@ -10,7 +10,7 @@ import {
     MetaAdAccount, MetaCampaign, MetaAdSet, MetaAd, AnalyticsNotification, Task, TaskStatus, TaskPriority,
     ChatThread, ChatMessage, Pod, PodType, PodFile,
     CreativePrompt, GeneratedAsset, Moodboard,
-    VideoProject, VideoScene, AvatarProfile
+    VideoProject, VideoScene, AvatarProfile, KnowledgeSource
 } from './types';
 import {
     getMetaAccounts, getMetaCampaigns, getMetaAdSets, getMetaAds,
@@ -355,6 +355,15 @@ interface StoreContextType extends AppState {
     // User / Session Methods
     currentUser: any;
     setCurrentUser: (user: any) => void;
+
+    // Knowledge Base Methods
+    knowledgeSources: KnowledgeSource[];
+    addKnowledgeSource: (source: KnowledgeSource) => Promise<void>;
+    removeKnowledgeSource: (id: string) => Promise<void>;
+
+    // Deep Linking
+    activeOriginSection: string;
+    setActiveOriginSection: (section: string) => void;
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
@@ -365,6 +374,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const [strategySections, setStrategySections] = useState<BrandStrategySection[]>([]);
     const [identities, setIdentities] = useState<BrandIdentity[]>(initialIdentities);
     const [assets, setAssets] = useState<BrandAsset[]>(initialAssets);
+    const [knowledgeSources, setKnowledgeSources] = useState<KnowledgeSource[]>([]);
 
     // New State
     const [projects, setProjects] = useState<Project[]>(initialProjects);
@@ -406,7 +416,10 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const [podFiles, setPodFiles] = useState<PodFile[]>(initialPodFiles);
     const [podDiscussions, setPodDiscussions] = useState<any[]>([]);
     const [users, setUsers] = useState<any[]>([]);
-    const [currentUser, setCurrentUser] = useState<any>({ id: 'current_user', name: 'You', avatar_url: '', role: 'Admin' }); // Mock current user
+    const [currentUser, setCurrentUser] = useState<User>(MOCK_USER);
+
+    // Deep Linking State
+    const [activeOriginSection, setActiveOriginSection] = useState<string>('knowledge');
     const [taskComments, setTaskComments] = useState<any[]>([]);
     const [chatThreads, setChatThreads] = useState<ChatThread[]>(initialThreads);
     const [chatMessages, setChatMessages] = useState<ChatMessage[]>(initialMessages);
@@ -597,17 +610,129 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         };
 
         handleOAuth();
+        handleOAuth();
     }, [activeBrandId]);
+
+    // Knowledge Base Persistence
+    const loadKnowledgeSources = async (brandId: string) => {
+        const supabase = createClient<Database>(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        );
+        const { data, error } = await supabase
+            .from('brand_knowledge_base')
+            .select('*')
+            .eq('brand_id', brandId);
+
+        if (error) {
+            console.error('Error loading knowledge sources:', error);
+            return;
+        }
+
+        if (data) {
+            setKnowledgeSources(data as KnowledgeSource[]);
+        }
+    };
+
+    const addKnowledgeSource = async (source: KnowledgeSource) => {
+        setKnowledgeSources(prev => [...prev, source]);
+        const supabase = createClient<Database>(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        );
+        const { error } = await supabase
+            .from('brand_knowledge_base')
+            .insert({
+                id: source.id,
+                brand_id: source.brand_id,
+                type: source.type,
+                name: source.name,
+                content: source.content,
+                mime_type: source.mime_type,
+                preview: source.preview
+            } as any);
+        if (error) console.error('Error adding knowledge source:', error);
+    };
+
+    const removeKnowledgeSource = async (id: string) => {
+        setKnowledgeSources(prev => prev.filter(s => s.id !== id));
+        const supabase = createClient<Database>(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        );
+        await supabase.from('brand_knowledge_base').delete().eq('id', id);
+    };
+
+    useEffect(() => {
+        if (activeBrandId) {
+            loadKnowledgeSources(activeBrandId);
+        } else {
+            setKnowledgeSources([]);
+        }
+    }, [activeBrandId]);
+
+    // --- SUPABASE PERSISTENCE ---
+
+    const loadBrands = async () => {
+        const supabase = createClient<Database>(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        );
+        const { data, error } = await supabase.from('brands').select('*');
+        if (data && data.length > 0) setBrands(data);
+        // If empty, we might want to keep initialBrands or seed them?
+        // For now, we'll stick to initialBrands if DB is empty to avoid blank screen
+        if (error) console.error("Error loading brands:", error);
+    };
+
+    const loadIdentities = async () => {
+        const supabase = createClient<Database>(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        );
+        const { data, error } = await supabase.from('brand_identities').select('*');
+        if (data && data.length > 0) setIdentities(data as BrandIdentity[]);
+        if (error) console.error("Error loading identities:", error);
+    };
+
+    const loadStrategy = async () => {
+        const supabase = createClient<Database>(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        );
+        const { data, error } = await supabase.from('brand_strategy_sections').select('*');
+        if (data) setStrategySections(data as BrandStrategySection[]);
+        if (error) console.error("Error loading strategy:", error);
+    };
+
+    const loadAssets = async () => {
+        const supabase = createClient<Database>(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        );
+        const { data, error } = await supabase.from('brand_assets').select('*');
+        if (data) setAssets(data as BrandAsset[]);
+        if (error) console.error("Error loading assets:", error);
+    };
+
+    useEffect(() => {
+        loadBrands();
+        loadIdentities();
+        loadStrategy();
+        loadAssets();
+    }, []);
+
+
 
     const debugMeta = async () => {
         if (!activeBrandId) return { error: "No active brand" };
         return await debugMetaConnection(activeBrandId);
     };
 
-    const addBrand = (brand: Brand) => {
+    const addBrand = async (brand: Brand) => {
         setBrands([...brands, brand]);
         setActiveBrandId(brand.id);
-        setIdentities([...identities, {
+        const newIdentity: BrandIdentity = {
             id: crypto.randomUUID(),
             brand_id: brand.id,
             color_primary_hex: '#FFFFFF',
@@ -625,28 +750,58 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             instagram_feed: [],
             social_connections: [],
             avatars: []
-        }]);
+        };
+        setIdentities([...identities, newIdentity]);
+
+        // Persist to Supabase
+        const supabase = createClient<Database>(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        );
+        await supabase.from('brands').insert(brand as any);
+        await supabase.from('brand_identities').insert(newIdentity as any);
     };
 
-    const updateBrand = (id: string, updates: Partial<Brand>) => {
+    const updateBrand = async (id: string, updates: Partial<Brand>) => {
         setBrands(brands.map(b => b.id === id ? { ...b, ...updates } : b));
+        const supabase = createClient<Database>(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        );
+        await supabase.from('brands').update(updates as any).eq('id', id);
     };
 
-    const addStrategySections = (newSections: BrandStrategySection[]) => {
+    const addStrategySections = async (newSections: BrandStrategySection[]) => {
         setStrategySections(prev => {
             const filtered = prev.filter(p =>
                 !(p.brand_id === newSections[0].brand_id && newSections.some(n => n.section_type === p.section_type))
             );
             return [...filtered, ...newSections];
         });
+        const supabase = createClient<Database>(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        );
+        const { error } = await supabase.from('brand_strategy_sections').insert(newSections as any);
+        if (error) console.error("Error adding strategy sections:", error);
     };
 
-    const updateStrategySection = (id: string, content: string) => {
+    const updateStrategySection = async (id: string, content: string) => {
         setStrategySections(prev => prev.map(s => s.id === id ? { ...s, content, updated_at: new Date().toISOString() } : s));
+        const supabase = createClient<Database>(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        );
+        await supabase.from('brand_strategy_sections').update({ content, updated_at: new Date().toISOString() }).eq('id', id);
     };
 
-    const updateIdentity = (updatedId: BrandIdentity) => {
+    const updateIdentity = async (updatedId: BrandIdentity) => {
         setIdentities(prev => prev.map(i => i.brand_id === updatedId.brand_id ? updatedId : i));
+        const supabase = createClient<Database>(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        );
+        await supabase.from('brand_identities').upsert(updatedId as any).eq('brand_id', updatedId.brand_id);
     };
 
     const addContentIdeas = (ideas: ContentIdea[]) => setContentIdeas(prev => [...prev, ...ideas]);
@@ -680,7 +835,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         });
     };
 
-    const addAsset = (asset: BrandAsset) => {
+    const addAsset = async (asset: BrandAsset) => {
         setAssets(prev => [...prev, { ...asset, status: asset.status || 'Draft' }]);
         logActivity({
             id: crypto.randomUUID(),
@@ -688,6 +843,11 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             type: 'asset_created',
             description: `Asset uploaded: ${asset.title}`
         });
+        const supabase = createClient<Database>(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        );
+        await supabase.from('brand_assets').insert(asset as any);
     };
 
     const updateAsset = (id: string, updates: Partial<BrandAsset>) => {
@@ -893,7 +1053,9 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         users,
         currentUser,
         setCurrentUser,
-        addAvatar, updateAvatar, deleteAvatar
+        addAvatar, updateAvatar, deleteAvatar,
+        knowledgeSources, addKnowledgeSource, removeKnowledgeSource,
+        activeOriginSection, setActiveOriginSection
     };
 
     return (
