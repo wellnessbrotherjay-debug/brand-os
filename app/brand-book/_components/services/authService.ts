@@ -11,32 +11,33 @@ const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // --- FACEBOOK / INSTAGRAM AUTH (REDIRECT FLOW) ---
 
-// GUARD: Check if App ID is valid
-// We check for falsy values AND string representations of "undefined"/"null" which can happen in some build setups.
-if (!FB_APP_ID || FB_APP_ID === 'placeholder' || FB_APP_ID === 'undefined' || FB_APP_ID === 'null' || FB_APP_ID.trim() === '') {
-    const msg = `[AuthService] CRITICAL CONFIG ERROR: Facebook App ID is invalid. Value: '${FB_APP_ID}'`;
-    console.error(msg);
-    alert(`Configuration Error: Meta App ID is missing or invalid. (Value: ${FB_APP_ID}).\nPlease check NEXT_PUBLIC_FACEBOOK_APP_ID in .env.local`);
+export const loginWithFacebook = async () => {
+    // GUARD: Check if App ID is valid
+    // We check for falsy values AND string representations of "undefined"/"null" which can happen in some build setups.
+    if (!FB_APP_ID || FB_APP_ID === 'placeholder' || FB_APP_ID === 'undefined' || FB_APP_ID === 'null' || FB_APP_ID.trim() === '') {
+        const msg = `[AuthService] CRITICAL CONFIG ERROR: Facebook App ID is invalid. Value: '${FB_APP_ID}'`;
+        console.error(msg);
+        alert(`Configuration Error: Meta App ID is missing or invalid. (Value: ${FB_APP_ID}).\nPlease check NEXT_PUBLIC_FACEBOOK_APP_ID in .env.local`);
+        return null;
+    }
+
+    console.log("[AuthService] Redirecting to Meta with App ID:", FB_APP_ID);
+
+    // SDK is blocking HTTP localhost, so we use manual redirect flow.
+    // This is more robust for dev environments.
+    const redirectUri = window.location.origin + '/brand-book'; // Redirect back to Brand Book
+    const scope = 'ads_management,ads_read,business_management,pages_read_engagement,instagram_basic,instagram_content_publish,instagram_manage_comments,instagram_manage_insights,pages_show_list,public_profile';
+
+    // Construct OAuth URL
+    const authUrl = `https://www.facebook.com/v19.0/dialog/oauth?client_id=${FB_APP_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${scope}`;
+
+    console.log("[AuthService] Final Auth URL:", authUrl);
+
+    // Redirect
+    window.location.href = authUrl;
+
+    // Return null because we are leaving the page
     return null;
-}
-
-console.log("[AuthService] Redirecting to Meta with App ID:", FB_APP_ID);
-
-// SDK is blocking HTTP localhost, so we use manual redirect flow.
-// This is more robust for dev environments.
-const redirectUri = window.location.origin + '/brand-book'; // Redirect back to Brand Book
-const scope = 'ads_management,ads_read,business_management,pages_read_engagement,instagram_basic,instagram_content_publish,instagram_manage_comments,instagram_manage_insights,pages_show_list,public_profile';
-
-// Construct OAuth URL
-const authUrl = `https://www.facebook.com/v19.0/dialog/oauth?client_id=${FB_APP_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${scope}`;
-
-console.log("[AuthService] Final Auth URL:", authUrl);
-
-// Redirect
-window.location.href = authUrl;
-
-// Return null because we are leaving the page
-return null;
 };
 
 // New helper to parse hash after redirect AND save to DB
