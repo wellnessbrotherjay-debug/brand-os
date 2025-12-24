@@ -1548,9 +1548,9 @@ export const SocialKit: React.FC = () => {
                                             const { loginWithFacebook } = await import('../services/authService');
                                             loginWithFacebook();
                                         }}
-                                        className="text-[10px] bg-blue-600 text-white px-3 py-1.5 rounded-full font-bold flex items-center gap-1 hover:bg-blue-700 transition-colors"
+                                        className="text-xs bg-blue-600 text-white px-4 py-2 rounded-full font-bold flex items-center gap-1.5 hover:bg-blue-700 transition-all shadow-sm hover:shadow-md"
                                     >
-                                        <LogIn size={12} /> Connect Instagram
+                                        <LogIn size={14} /> Login to Instagram Profile
                                     </button>
                                 </div>
                                 <div className="flex gap-2 p-1 bg-gray-100 rounded-lg overflow-x-auto">
@@ -1670,7 +1670,24 @@ export const SocialKit: React.FC = () => {
                                                 <p className="text-xs font-bold">{conn.followerCount}</p>
                                                 <p className="text-[10px] opacity-50">Followers</p>
                                             </div>
-                                            <button className={`px-4 py-2 rounded text-xs font-bold ${conn.isConnected ? 'bg-white border border-gray-200 text-red-500' : 'bg-black text-white'}`}>
+                                            <button
+                                                onClick={async () => {
+                                                    const { loginWithFacebook, deleteSocialToken } = await import('../services/authService');
+                                                    if (conn.isConnected) {
+                                                        if (confirm(`Disconnect ${conn.platform}?`)) {
+                                                            await deleteSocialToken(activeBrandId!, conn.platform.toLowerCase() as any);
+                                                            window.location.reload(); // Refresh to show disconnected state
+                                                        }
+                                                    } else {
+                                                        if (conn.platform === 'Instagram' || conn.platform === 'Facebook') {
+                                                            loginWithFacebook();
+                                                        } else {
+                                                            alert(`${conn.platform} integration coming soon!`);
+                                                        }
+                                                    }
+                                                }}
+                                                className={`px-4 py-2 rounded text-xs font-bold transition-all ${conn.isConnected ? 'bg-white border border-gray-200 text-red-500 hover:bg-red-50' : 'bg-black text-white hover:opacity-80'}`}
+                                            >
                                                 {conn.isConnected ? 'Disconnect' : 'Connect'}
                                             </button>
                                         </div>

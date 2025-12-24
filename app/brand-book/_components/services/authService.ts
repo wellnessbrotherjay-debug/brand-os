@@ -17,10 +17,16 @@ export const loginWithFacebook = async () => {
     const redirectUri = window.location.origin + '/brand-book'; // Redirect back to Brand Book
     const scope = 'ads_management,ads_read,business_management,pages_read_engagement';
 
+    if (!FB_APP_ID || FB_APP_ID === 'undefined') {
+        console.error("[AuthService] Facebook App ID is missing! Ensure NEXT_PUBLIC_FACEBOOK_APP_ID is set in environment vars.");
+        alert("Configuration Error: Facebook App ID is missing. Please check your environment variables.");
+        return null;
+    }
+
     // Construct OAuth URL
     const authUrl = `https://www.facebook.com/v19.0/dialog/oauth?client_id=${FB_APP_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${scope}`;
 
-    console.log("Navigating to Meta Auth URL:", authUrl);
+    console.log("[AuthService] Navigating to Meta Auth URL:", authUrl);
 
     // Redirect
     window.location.href = authUrl;
