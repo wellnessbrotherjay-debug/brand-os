@@ -211,7 +211,14 @@ export const Identity: React.FC = () => {
 
     const [openFontPicker, setOpenFontPicker] = useState<'heading' | 'body' | null>(null);
     const [activeMoodboardIndex, setActiveMoodboardIndex] = useState<number | null>(null);
-    const [activeTab, setActiveTab] = useState<'strategy' | 'visuals'>('strategy');
+    const [activeTab, setActiveTab] = useState<'strategy' | 'visuals' | 'debug'>('strategy');
+    const [debugLogs, setDebugLogs] = useState<string[]>([]);
+
+    const addLog = (msg: string) => {
+        const timestamp = new Date().toLocaleTimeString();
+        setDebugLogs(prev => [`[${timestamp}] ${msg}`, ...prev]);
+        console.log(`[DEBUG] ${msg}`);
+    };
 
     const activeBrand = brands.find(b => b.id === activeBrandId);
     const identity = identities.find(i => i.brand_id === activeBrandId);
@@ -412,6 +419,12 @@ export const Identity: React.FC = () => {
                     className={`pb-4 text-sm font-bold uppercase tracking-wider transition-all ${activeTab === 'visuals' ? 'border-b-2 border-black text-black' : 'text-gray-400 hover:text-black'}`}
                 >
                     Visual Identity
+                </button>
+                <button
+                    onClick={() => setActiveTab('debug')}
+                    className={`pb-4 text-sm font-bold uppercase tracking-wider transition-all ${activeTab === 'debug' ? 'border-b-2 border-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'}`}
+                >
+                    Debug Console
                 </button>
             </div>
 
