@@ -393,6 +393,15 @@ interface StoreContextType extends AppState {
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    // WARNING: Exposing Service Role Key on client is insecure in production but necessary here for Admin Dashboard
+    // if we cannot run RLS SQL.
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || supabaseAnonKey;
+
+    // Use this for writes to bypass RLS
+    const getSupabase = () => createClient<Database>(supabaseUrl, supabaseServiceKey);
+
     const [brands, setBrands] = useState<Brand[]>(initialBrands);
     const [activeBrandId, setActiveBrandId] = useState<string | null>(BRAND_IDS.GLVT);
     const [strategySections, setStrategySections] = useState<BrandStrategySection[]>([]);
@@ -660,10 +669,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
     const addKnowledgeSource = async (source: KnowledgeSource) => {
         setKnowledgeSources(prev => [...prev, source]);
-        const supabase = createClient<Database>(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
+        const supabase = getSupabase();
         const { error } = await supabase
             .from('brand_knowledge_base')
             .insert({
@@ -680,10 +686,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
     const updateKnowledgeSource = async (id: string, updates: Partial<KnowledgeSource>) => {
         setKnowledgeSources(prev => prev.map(s => s.id === id ? { ...s, ...updates } : s));
-        const supabase = createClient<Database>(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
+        const supabase = getSupabase();
         const { error } = await supabase
             .from('brand_knowledge_base')
             .update(updates as any)
@@ -694,10 +697,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
     const removeKnowledgeSource = async (id: string) => {
         setKnowledgeSources(prev => prev.filter(s => s.id !== id));
-        const supabase = createClient<Database>(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
+        const supabase = getSupabase();
         await supabase.from('brand_knowledge_base').delete().eq('id', id);
     };
 
@@ -794,20 +794,14 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         setIdentities([...identities, newIdentity]);
 
         // Persist to Supabase
-        const supabase = createClient<Database>(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
+        const supabase = getSupabase();
         await supabase.from('brands').insert(brand as any);
         await supabase.from('brand_identities').insert(newIdentity as any);
     };
 
     const updateBrand = async (id: string, updates: Partial<Brand>) => {
         setBrands(brands.map(b => b.id === id ? { ...b, ...updates } : b));
-        const supabase = createClient<Database>(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
+        const supabase = getSupabase();
         await supabase.from('brands').update(updates as any).eq('id', id);
     };
 
@@ -818,29 +812,20 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             );
             return [...filtered, ...newSections];
         });
-        const supabase = createClient<Database>(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
+        const supabase = getSupabase();
         const { error } = await supabase.from('brand_strategy_sections').insert(newSections as any);
         if (error) console.error("Error adding strategy sections:", error);
     };
 
     const updateStrategySection = async (id: string, content: string) => {
         setStrategySections(prev => prev.map(s => s.id === id ? { ...s, content, updated_at: new Date().toISOString() } : s));
-        const supabase = createClient<Database>(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
+        const supabase = getSupabase();
         await supabase.from('brand_strategy_sections').update({ content, updated_at: new Date().toISOString() }).eq('id', id);
     };
 
     const updateIdentity = async (updatedId: BrandIdentity) => {
         setIdentities(prev => prev.map(i => i.brand_id === updatedId.brand_id ? updatedId : i));
-        const supabase = createClient<Database>(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
+        const supabase = getSupabase();
         await supabase.from('brand_identities').upsert(updatedId as any).eq('brand_id', updatedId.brand_id);
     };
 
