@@ -386,7 +386,8 @@ const PhonePreview = ({
                                         <div
                                             key={index}
                                             className={`aspect-square bg-gray-100 relative group cursor-pointer ${uploadTarget?.index === index ? 'ring-2 ring-blue-500' : ''}`}
-                                            onClick={() => {
+                                            onClick={(e) => {
+                                                e.stopPropagation();
                                                 if (onPostClick) {
                                                     onPostClick(index);
                                                 } else {
@@ -403,8 +404,10 @@ const PhonePreview = ({
                                             )}
                                             {/* Edit Overlay */}
                                             {!isLive && !overrideData && (
-                                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                                    <span className="text-white text-[10px] font-bold border border-white px-2 py-1 rounded">CHANGE</span>
+                                                <div className="absolute inset-0 bg-blue-600/80 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity backdrop-blur-[2px] z-10">
+                                                    <span className="text-white text-[10px] font-bold border border-white px-2 py-1 rounded flex items-center gap-1">
+                                                        <Edit2 size={10} /> EDIT POST
+                                                    </span>
                                                 </div>
                                             )}
                                         </div>
