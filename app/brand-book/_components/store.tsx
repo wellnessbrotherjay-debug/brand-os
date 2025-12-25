@@ -754,23 +754,12 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     };
 
 
-    const loadKnowledgeBase = async () => {
-        const supabase = createClient<Database>(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
-        const { data, error } = await supabase.from('brand_knowledge_base').select('*');
-        if (data) setKnowledgeSources(data as KnowledgeSource[]);
-        if (error) console.error("Error loading knowledge base:", error);
-    };
-
     useEffect(() => {
         // Hydration from DB
         loadBrands();
         loadIdentities();
         loadStrategy();
         loadAssets();
-        loadKnowledgeBase();
     }, []);
 
 
