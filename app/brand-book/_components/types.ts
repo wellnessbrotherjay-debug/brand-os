@@ -336,9 +336,11 @@ export interface Highlight {
 
 export interface SocialFeedItem {
   id: string;
-  type: 'image' | 'video' | 'reel' | 'short';
-  url: string;
+  type: 'image' | 'video' | 'reel' | 'short' | 'carousel';
+  url: string; // Primary/Thumbnail URL
+  media_urls?: string[]; // For carousels
   caption?: string;
+  hashtags?: string[];
   is_pinned?: boolean;
 }
 

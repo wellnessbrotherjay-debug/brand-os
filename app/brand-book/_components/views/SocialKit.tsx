@@ -41,6 +41,7 @@ const PhonePreview = ({
     setShowStory: (v: boolean) => void,
     onUpdate?: (updates: Partial<BrandIdentity>) => void,
     onEditHighlight?: (index: number) => void,
+    onPostClick?: (index: number) => void, // New Prop
     isLive?: boolean,
     customTitle?: string,
     overrideData?: any // For competitor mocks
@@ -383,8 +384,14 @@ const PhonePreview = ({
                                     return (
                                         <div
                                             key={index}
-                                            className="aspect-square bg-gray-100 relative group cursor-pointer"
-                                            onClick={() => triggerUpload({ type: 'grid', index })}
+                                            className={`aspect-square bg-gray-100 relative group cursor-pointer ${uploadTarget?.index === index ? 'ring-2 ring-blue-500' : ''}`}
+                                            onClick={() => {
+                                                if (onPostClick) {
+                                                    onPostClick(index);
+                                                } else {
+                                                    triggerUpload({ type: 'grid', index });
+                                                }
+                                            }}
                                         >
                                             {displayUrl ? (
                                                 <img src={displayUrl} className="w-full h-full object-cover" />
@@ -945,6 +952,7 @@ export const SocialKit: React.FC = () => {
 
     // Navigation State
     const [activeTab, setActiveTab] = useState<'profiles' | 'branding' | 'manager' | 'studio' | 'templates' | 'comparison'>('profiles');
+    const [selectedPostIndex, setSelectedPostIndex] = useState<number | null>(null);
     const [activePlatform, setActivePlatform] = useState<'Instagram' | 'YouTube' | 'TikTok' | 'Facebook' | 'LinkedIn' | 'Redbook' | 'Douyin'>('Instagram');
 
     // --- Comparison State ---
@@ -1498,6 +1506,169 @@ export const SocialKit: React.FC = () => {
         </div>
     );
 
+    // --- DETAILED POST EDITOR COMPONENT ---
+    const PostEditor = ({
+        index,
+        post,
+        onClose,
+        onUpdate
+    }: {
+        index: number,
+        post: SocialFeedItem,
+        onClose: () => void,
+        onUpdate: (updatedPost: SocialFeedItem) => void
+    }) => {
+        const fileRef = useRef<HTMLInputElement>(null);
+        const [caption, setCaption] = useState(post.caption || '');
+        const [hashtags, setHashtags] = useState(post.hashtags?.join(' ') || '');
+        const [mediaIndex, setMediaIndex] = useState(0);
+
+        // Ensure we have at least one media URL to work with
+        const images = post.media_urls?.length ? post.media_urls : (post.url ? [post.url] : []);
+
+        const handleSave = () => {
+            onUpdate({
+                ...post,
+                caption,
+                hashtags: hashtags.split(' ').filter(t => t.trim().length > 0),
+            });
+        };
+
+        const handleMediaUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+            if (e.target.files && e.target.files.length > 0) {
+                const newImages: string[] = [];
+                Array.from(e.target.files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        newImages.push(reader.result as string);
+                        if (newImages.length === e.target.files?.length) {
+                            // Append new images or replace if empty
+                            const updatedImages = [...images, ...newImages];
+                            onUpdate({
+                                ...post,
+                                url: updatedImages[0], // Primary
+                                media_urls: updatedImages,
+                                type: updatedImages.length > 1 ? 'carousel' : 'image'
+                            });
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+        };
+
+        return (
+            <div className="bg-white border-l border-gray-200 h-full w-[400px] flex flex-col shadow-xl z-20 animate-in slide-in-from-right-4 duration-300">
+                <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                    <h3 className="font-bold flex items-center gap-2"><Edit2 size={16} /> Edit Post #{index + 1}</h3>
+                    <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full"><X size={16} /></button>
+                </div>
+
+                <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                    {/* Media Preview (Phone Style) */}
+                    <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative group border border-gray-200 shadow-inner">
+                        {images.length > 0 ? (
+                            <img src={images[mediaIndex] || images[0]} className="w-full h-full object-cover" />
+                        ) : (
+                            <div className="flex items-center justify-center h-full text-gray-300"><ImageIcon size={48} /></div>
+                        )}
+
+                        {/* Carousel Dots */}
+                        {images.length > 1 && (
+                            <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 z-10">
+                                {images.map((_, i) => (
+                                    <div
+                                        key={i}
+                                        className={`w-1.5 h-1.5 rounded-full shadow-sm transition-all ${i === mediaIndex ? 'bg-blue-500 scale-125' : 'bg-white/70'}`}
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Navigation Arrows for Carousel */}
+                        {images.length > 1 && (
+                            <>
+                                <button
+                                    onClick={() => setMediaIndex(i => i > 0 ? i - 1 : i)}
+                                    className={`absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-1 rounded-full ${mediaIndex === 0 ? 'hidden' : ''}`}
+                                >
+                                    <ArrowLeft size={16} />
+                                </button>
+                                <button
+                                    onClick={() => setMediaIndex(i => i < images.length - 1 ? i + 1 : i)}
+                                    className={`absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-1 rounded-full ${mediaIndex === images.length - 1 ? 'hidden' : ''}`}
+                                >
+                                    <ArrowRight size={16} />
+                                </button>
+                            </>
+                        )}
+
+                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                                onClick={() => fileRef.current?.click()}
+                                className="bg-white text-black px-4 py-2 rounded-full font-bold text-xs flex items-center gap-2 hover:scale-105 transition-transform"
+                            >
+                                <Upload size={14} /> Replace / Add Media
+                            </button>
+                        </div>
+                    </div>
+
+                    {images.length > 0 && (
+                        <div className="flex gap-2 overflow-x-auto pb-2">
+                            {images.map((img, i) => (
+                                <div
+                                    key={i}
+                                    className={`w-16 h-16 shrink-0 rounded border-2 cursor-pointer overflow-hidden ${i === mediaIndex ? 'border-blue-500' : 'border-transparent'}`}
+                                    onClick={() => setMediaIndex(i)}
+                                >
+                                    <img src={img} className="w-full h-full object-cover" />
+                                </div>
+                            ))}
+                            <div
+                                onClick={() => fileRef.current?.click()}
+                                className="w-16 h-16 shrink-0 rounded border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50"
+                            >
+                                <Plus size={20} className="text-gray-300" />
+                            </div>
+                        </div>
+                    )}
+
+                    <input type="file" ref={fileRef} multiple className="hidden" accept="image/*,video/*" onChange={handleMediaUpload} />
+
+                    {/* Caption */}
+                    <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider mb-2 text-gray-500">Caption</label>
+                        <textarea
+                            className="w-full p-3 border border-gray-200 rounded-lg text-sm min-h-[100px] focus:ring-2 focus:ring-black focus:border-transparent outline-none resize-none"
+                            placeholder="Write a caption..."
+                            value={caption}
+                            onChange={e => setCaption(e.target.value)}
+                            onBlur={() => handleSave()}
+                        />
+                    </div>
+
+                    {/* Hashtags */}
+                    <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider mb-2 text-gray-500">Hashtags</label>
+                        <textarea
+                            className="w-full p-3 border border-gray-200 rounded-lg text-sm min-h-[60px] focus:ring-2 focus:ring-black focus:border-transparent outline-none resize-none font-mono text-blue-600"
+                            placeholder="#brand #lifestyle..."
+                            value={hashtags}
+                            onChange={e => setHashtags(e.target.value)}
+                            onBlur={() => handleSave()}
+                        />
+                    </div>
+                </div>
+
+                <div className="p-4 border-t border-gray-100 bg-gray-50">
+                    <button onClick={() => { handleSave(); onClose(); }} className="w-full bg-black text-white py-3 rounded-lg font-bold text-sm hover:opacity-90">
+                        Done
+                    </button>
+                </div>
+            </div>
+        );
+    };
+
     return (
         <div className="p-8 max-w-[1600px] mx-auto h-full flex flex-col">
             {/* Header */}
@@ -1613,29 +1784,54 @@ export const SocialKit: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Mockup Preview */}
-                        <div className="lg:col-span-7 bg-gray-100 rounded-xl border border-black/5 flex items-center justify-center p-8 relative">
-                            <div className={`shadow-2xl overflow-hidden bg-black border-[8px] border-black rounded-[2.5rem] relative transition-all duration-300 ${activePlatform === 'YouTube' || activePlatform === 'Facebook' || activePlatform === 'LinkedIn' ? 'w-[375px] h-[750px]' : 'w-[350px] h-[720px]'}`}>
-                                <div className="absolute top-0 left-0 right-0 h-8 bg-black/20 z-50 flex justify-between px-6 items-center text-[10px] text-white font-bold backdrop-blur-sm pointer-events-none">
-                                    <span>9:41</span>
-                                    <div className="flex gap-1">
-                                        <div className="w-3 h-3 bg-white rounded-full"></div>
-                                        <div className="w-3 h-3 bg-white rounded-full"></div>
+                        {/* Mockup Preview Area */}
+                        <div className="lg:col-span-7 bg-gray-100 rounded-xl border border-black/5 relative overflow-hidden flex">
+
+                            {/* Main Phone Container */}
+                            <div className={`flex-1 flex items-center justify-center p-8 transition-all duration-500 ${selectedPostIndex !== null ? 'mr-[400px]' : ''}`}>
+                                <div className={`shadow-2xl overflow-hidden bg-black border-[8px] border-black rounded-[2.5rem] relative transition-all duration-500 origin-center ${activePlatform === 'YouTube' || activePlatform === 'Facebook' || activePlatform === 'LinkedIn' ? 'w-[375px] h-[750px] scale-90' : 'w-[350px] h-[720px] scale-90'}`}>
+                                    <div className="absolute top-0 left-0 right-0 h-8 bg-black/20 z-50 flex justify-between px-6 items-center text-[10px] text-white font-bold backdrop-blur-sm pointer-events-none">
+                                        <span>9:41</span>
+                                        <div className="flex gap-1">
+                                            <div className="w-3 h-3 bg-white rounded-full"></div>
+                                            <div className="w-3 h-3 bg-white rounded-full"></div>
+                                        </div>
                                     </div>
+                                    <div className="pt-8 h-full bg-white">
+                                        {identity && activeBrand && <PhonePreview
+                                            platform={activePlatform}
+                                            identity={identity}
+                                            brand={activeBrand}
+                                            showStory={false}
+                                            setShowStory={() => { }}
+                                            onUpdate={handleIdentityUpdate}
+                                            onEditHighlight={(index) => setEditingHighlightIndex(index)}
+                                            onPostClick={(index) => setSelectedPostIndex(index)}
+                                        />}
+                                    </div>
+                                    <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-black/20 rounded-full z-50 pointer-events-none"></div>
                                 </div>
-                                <div className="pt-8 h-full bg-white">
-                                    {identity && activeBrand && <PhonePreview
-                                        platform={activePlatform}
-                                        identity={identity}
-                                        brand={activeBrand}
-                                        showStory={false}
-                                        setShowStory={() => { }}
-                                        onUpdate={handleIdentityUpdate}
-                                        onEditHighlight={(index) => setEditingHighlightIndex(index)}
-                                    />}
-                                </div>
-                                <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-black/20 rounded-full z-50 pointer-events-none"></div>
                             </div>
+
+                            {/* Side-by-Side Detailed Editor */}
+                            {selectedPostIndex !== null && identity?.instagram_feed && (
+                                <div className="absolute top-0 right-0 bottom-0 z-10 w-[400px]">
+                                    <PostEditor
+                                        index={selectedPostIndex}
+                                        post={identity.instagram_feed[selectedPostIndex] || { id: 'temp', type: 'image', url: '' }}
+                                        onClose={() => setSelectedPostIndex(null)}
+                                        onUpdate={(updatedPost) => {
+                                            const newFeed = [...(identity.instagram_feed || [])];
+                                            while (newFeed.length <= selectedPostIndex) {
+                                                newFeed.push({ id: crypto.randomUUID(), type: 'image', url: '' });
+                                            }
+                                            newFeed[selectedPostIndex] = updatedPost;
+                                            handleIdentityUpdate({ instagram_feed: newFeed });
+                                        }}
+                                    />
+                                </div>
+                            )}
+
                         </div>
                     </div>
                 )}
