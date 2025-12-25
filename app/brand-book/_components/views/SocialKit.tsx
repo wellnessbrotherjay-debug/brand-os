@@ -30,6 +30,7 @@ const PhonePreview = ({
     setShowStory,
     onUpdate,
     onEditHighlight,
+    onPostClick,
     isLive = false,
     customTitle = undefined,
     overrideData = null
