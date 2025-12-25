@@ -20,6 +20,14 @@ import { loginWithFacebook, saveSocialToken, checkUrlForToken, deleteSocialToken
 
 // --- TS UNIVERSE BRAND DATA ---
 
+const BRAND_IDS = {
+    SUITES: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    RESIDENCE: 'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380b22',
+    SOCIAL: 'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380c33',
+    WELLNESS: 'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380d44',
+    GLVT: 'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380e55'
+};
+
 const MOCK_USER: User = {
     id: 'u1',
     name: 'Jay',
@@ -33,16 +41,14 @@ const MOCK_USER: User = {
         can_publish: true,
         can_manage_team: true
     },
-    brand_ids: ['ts-suites', 'ts-residence', 'ts-social', 'no-wellness', 'glvt-fitness'],
+    brand_ids: [
+        'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+        'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380b22',
+        'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380c33',
+        'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380d44',
+        'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380e55'
+    ],
     created_at: new Date().toISOString()
-};
-
-const BRAND_IDS = {
-    SUITES: 'ts-suites',
-    RESIDENCE: 'ts-residence',
-    SOCIAL: 'ts-social',
-    WELLNESS: 'no-wellness',
-    GLVT: 'glvt-fitness'
 };
 
 const initialBrands: Brand[] = [
