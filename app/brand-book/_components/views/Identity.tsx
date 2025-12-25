@@ -274,9 +274,9 @@ export const Identity: React.FC = () => {
             const file = e.target.files[0];
             setLoading(true);
             try {
-                console.log("Starting upload for:", file.name);
+                addLog(`Starting upload for: ${file.name} (Size: ${file.size})`);
                 const publicUrl = await uploadAsset(file, activeBrand.id, 'identity');
-                console.log("Upload success, url:", publicUrl);
+                addLog(`Upload success. URL: ${publicUrl}`);
 
                 if (publicUrl) {
                     updateIdentity({ ...identity, logo_primary_url: publicUrl });
@@ -289,8 +289,10 @@ export const Identity: React.FC = () => {
                         file_url: publicUrl,
                         tags: ['logo', 'branding', 'identity']
                     });
+                    addLog("Identity updated and Asset added to DB.");
                 }
             } catch (error: any) {
+                addLog(`ERROR: ${error.message || JSON.stringify(error)}`);
                 console.error("Logo upload failed", error);
                 alert("Failed to upload logo: " + (error.message || "Unknown error"));
             } finally {
@@ -757,6 +759,32 @@ export const Identity: React.FC = () => {
                         </div>
                     </section>
 
+                </div>
+            )}
+
+            {activeTab === 'debug' && (
+                <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 grid grid-cols-2 gap-8">
+                    <div className="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-xs h-[500px] overflow-y-auto shadow-2xl">
+                        <h3 className="text-white mb-4 border-b border-white/20 pb-2 uppercase tracking-widest font-bold flex justify-between">
+                            Console Logs
+                            <button onClick={() => setDebugLogs([])} className="text-gray-500 hover:text-white">CLEAR</button>
+                        </h3>
+                        <div className="space-y-2">
+                            {debugLogs.length === 0 && <span className="opacity-50 italic">Waiting for activity...</span>}
+                            {debugLogs.map((log, i) => (
+                                <div key={i} className="border-l-2 border-green-900 pl-2 hover:bg-white/5 py-1">
+                                    {log}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="bg-gray-100 p-6 rounded-lg text-xs font-mono h-[500px] overflow-y-auto">
+                        <h3 className="mb-4 border-b border-black/10 pb-2 uppercase tracking-widest font-bold text-gray-500">Current Identity State</h3>
+                        <pre className="whitespace-pre-wrap text-gray-700">
+                            {JSON.stringify(identity, null, 2)}
+                        </pre>
+                    </div>
                 </div>
             )}
         </div>
