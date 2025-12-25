@@ -4,9 +4,17 @@ import { createClient } from '@supabase/supabase-js';
 import { Database } from '@/lib/database.types';
 
 // Use Service Role Key to bypass RLS
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+console.log('[Persist API] Init');
+console.log('[Persist API] URL defined:', !!supabaseUrl);
+console.log('[Persist API] Service Key defined:', !!serviceKey);
+if (serviceKey) console.log('[Persist API] Service Key start:', serviceKey.substring(0, 10));
+
 const supabase = createClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    supabaseUrl!,
+    serviceKey!
 );
 
 export async function POST(request: NextRequest) {
@@ -14,42 +22,40 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const { table, action, data, id } = body;
 
-        console.log(`[Persist API] ${action} on ${table}`, { id });
+        console.log(`[Persist API] ${action} on ${table}`, { id, dataSummary: data ? Object.keys(data) : 'none' });
 
         if (!table || !action) {
             return NextResponse.json({ error: 'Missing table or action' }, { status: 400 });
         }
 
         let result;
-        let query = supabase.from(table as any);
 
         switch (action) {
             case 'select':
-                // For select, we optionally filter by query if provided in data
-                // expected data: { query: { column: value } } or just empty for all
+                // For select, we MUST call select() first to get a FilterBuilder
+                let selectQuery = supabase.from(table as any).select('*');
                 if (data && data.query) {
                     for (const [key, value] of Object.entries(data.query)) {
-                        query = query.eq(key, value);
+                        selectQuery = selectQuery.eq(key, value);
                     }
                 }
-                result = await query.select('*');
+                result = await selectQuery;
                 break;
             case 'insert':
                 if (!data) return NextResponse.json({ error: 'Missing data for insert' }, { status: 400 });
-                result = await query.insert(data);
+                result = await supabase.from(table as any).insert(data);
                 break;
             case 'update':
                 if (!id || !data) return NextResponse.json({ error: 'Missing id or data for update' }, { status: 400 });
-                result = await query.update(data).eq('id', id);
+                result = await supabase.from(table as any).update(data).eq('id', id);
                 break;
             case 'delete':
                 if (!id) return NextResponse.json({ error: 'Missing id for delete' }, { status: 400 });
-                result = await query.delete().eq('id', id);
+                result = await supabase.from(table as any).delete().eq('id', id);
                 break;
             case 'upsert':
                 if (!data) return NextResponse.json({ error: 'Missing data for upsert' }, { status: 400 });
-                // For upsert, we typically match on Primary Key
-                result = await query.upsert(data);
+                result = await supabase.from(table as any).upsert(data);
                 break;
             default:
                 return NextResponse.json({ error: 'Invalid action' }, { status: 400 });

@@ -1,7 +1,7 @@
-
 import React, { useState, useRef } from 'react';
 import { useAppStore } from '../store';
 import { generateMoodboardPrompts, generateBrandStrategy } from '../services/geminiService';
+import { uploadAsset } from '../services/storageService';
 import { Loader2, Copy, Upload, Image as ImageIcon, Ruler, Type as TypeIcon, Palette as PaletteIcon, CheckCircle2, AlertOctagon, Star, Crown, ChevronDown, Plus, Trash2, Search, Zap, Info, Layers, Sparkles, Wand2, X } from 'lucide-react';
 import { BrandIdentity, StrategySectionType } from '../types';
 
@@ -262,55 +262,70 @@ export const Identity: React.FC = () => {
         }
     };
 
-    const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const result = reader.result as string;
-                updateIdentity({ ...identity, logo_primary_url: result });
-                addAsset({
-                    id: crypto.randomUUID(),
-                    brand_id: activeBrand.id,
-                    asset_type: 'logo',
-                    title: file.name,
-                    description: 'Primary Brand Logo',
-                    file_url: result,
-                    tags: ['logo', 'branding', 'identity']
-                });
-            };
-            reader.readAsDataURL(file);
+            setLoading(true);
+            try {
+                const publicUrl = await uploadAsset(file, activeBrand.id, 'identity');
+                if (publicUrl) {
+                    updateIdentity({ ...identity, logo_primary_url: publicUrl });
+                    addAsset({
+                        id: crypto.randomUUID(),
+                        brand_id: activeBrand.id,
+                        asset_type: 'logo',
+                        title: file.name,
+                        description: 'Primary Brand Logo',
+                        file_url: publicUrl,
+                        tags: ['logo', 'branding', 'identity']
+                    });
+                }
+            } catch (error) {
+                console.error("Logo upload failed", error);
+                alert("Failed to upload logo.");
+            } finally {
+                setLoading(false);
+            }
         }
     };
 
-    const handleMoodboardUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleMoodboardUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0] && activeMoodboardIndex !== null) {
             const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const result = reader.result as string;
-                const currentImages = [...(identity.brand_book_config?.moodboard_images || [])];
-                while (currentImages.length <= activeMoodboardIndex) currentImages.push('');
-                currentImages[activeMoodboardIndex] = result;
-                updateIdentity({
-                    ...identity,
-                    brand_book_config: {
-                        ...identity.brand_book_config,
-                        moodboard_images: currentImages
-                    }
-                });
-                addAsset({
-                    id: crypto.randomUUID(),
-                    brand_id: activeBrand.id,
-                    asset_type: 'image',
-                    title: file.name,
-                    description: 'Moodboard Image',
-                    file_url: result,
-                    tags: ['moodboard']
-                });
-                setActiveMoodboardIndex(null);
-            };
-            reader.readAsDataURL(file);
+            setLoading(true);
+            try {
+                const publicUrl = await uploadAsset(file, activeBrand.id, 'moodboard');
+
+                if (publicUrl) {
+                    const currentImages = [...(identity.brand_book_config?.moodboard_images || [])];
+                    while (currentImages.length <= activeMoodboardIndex) currentImages.push('');
+                    currentImages[activeMoodboardIndex] = publicUrl;
+
+                    updateIdentity({
+                        ...identity,
+                        brand_book_config: {
+                            ...identity.brand_book_config,
+                            moodboard_images: currentImages
+                        }
+                    });
+
+                    addAsset({
+                        id: crypto.randomUUID(),
+                        brand_id: activeBrand.id,
+                        asset_type: 'image',
+                        title: file.name,
+                        description: 'Moodboard Image',
+                        file_url: publicUrl,
+                        tags: ['moodboard']
+                    });
+                    setActiveMoodboardIndex(null);
+                }
+            } catch (error) {
+                console.error("Moodboard upload failed", error);
+                alert("Failed to upload image.");
+            } finally {
+                setLoading(false);
+            }
         }
     };
 
