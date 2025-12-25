@@ -393,16 +393,29 @@ interface StoreContextType extends AppState {
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    // Helper to proxy writes through nextjs API to bypass RLS (3rd try is the charm)
-    const persistData = async (table: string, action: 'insert' | 'update' | 'delete' | 'upsert', data?: any, id?: string) => {
+    // Helper to proxy DB operations through nextjs API to bypass RLS
+    const persistData = async (table: string, action: 'insert' | 'update' | 'delete' | 'upsert' | 'select', data?: any, id?: string) => {
         try {
-            await fetch('/api/brand-book/persist', {
+            const res = await fetch('/api/brand-book/persist', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ table, action, data, id })
             });
+            const json = await res.json();
+            if (json.error) {
+                console.error(`Failed to ${action} ${table}:`, json.error);
+                return null;
+            }
+            // For select, the API returns { success: true, count: ..., data: [...] } ?
+            // Wait, my API implementation follows Supabase result structure kind of?
+            // Let's assume the API returns { success: true, data: result.data } 
+            // Actually I need to check the API response format.
+            // The API returns { success: true, count: result.count } for mutation.
+            // I should update API to return data for select.
+            return json;
         } catch (e) {
-            console.error(`Failed to persist ${table} ${action}:`, e);
+            console.error(`Failed to proxy ${table} ${action}:`, e);
+            return null;
         }
     };
 
@@ -652,22 +665,9 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
     // Knowledge Base Persistence
     const loadKnowledgeSources = async (brandId: string) => {
-        const supabase = createClient<Database>(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
-        const { data, error } = await supabase
-            .from('brand_knowledge_base')
-            .select('*')
-            .eq('brand_id', brandId);
-
-        if (error) {
-            console.error('Error loading knowledge sources:', error);
-            return;
-        }
-
-        if (data) {
-            setKnowledgeSources(data as KnowledgeSource[]);
+        const res = await persistData('brand_knowledge_base', 'select', { query: { brand_id: brandId } });
+        if (res && res.data) {
+            setKnowledgeSources(res.data as KnowledgeSource[]);
         }
     };
 
@@ -705,45 +705,23 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     // --- SUPABASE PERSISTENCE ---
 
     const loadBrands = async () => {
-        const supabase = createClient<Database>(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
-        const { data, error } = await supabase.from('brands').select('*');
-        if (data && data.length > 0) setBrands(data);
-        // If empty, we might want to keep initialBrands or seed them?
-        // For now, we'll stick to initialBrands if DB is empty to avoid blank screen
-        if (error) console.error("Error loading brands:", error);
+        const res = await persistData('brands', 'select');
+        if (res && res.data && res.data.length > 0) setBrands(res.data);
     };
 
     const loadIdentities = async () => {
-        const supabase = createClient<Database>(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
-        const { data, error } = await supabase.from('brand_identities').select('*');
-        if (data && data.length > 0) setIdentities(data as BrandIdentity[]);
-        if (error) console.error("Error loading identities:", error);
+        const res = await persistData('brand_identities', 'select');
+        if (res && res.data && res.data.length > 0) setIdentities(res.data as BrandIdentity[]);
     };
 
     const loadStrategy = async () => {
-        const supabase = createClient<Database>(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
-        const { data, error } = await supabase.from('brand_strategy_sections').select('*');
-        if (data) setStrategySections(data as BrandStrategySection[]);
-        if (error) console.error("Error loading strategy:", error);
+        const res = await persistData('brand_strategy_sections', 'select');
+        if (res && res.data) setStrategySections(res.data as BrandStrategySection[]);
     };
 
     const loadAssets = async () => {
-        const supabase = createClient<Database>(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
-        const { data, error } = await supabase.from('brand_assets').select('*');
-        if (data) setAssets(data as BrandAsset[]);
-        if (error) console.error("Error loading assets:", error);
+        const res = await persistData('brand_assets', 'select');
+        if (res && res.data) setAssets(res.data as BrandAsset[]);
     };
 
 

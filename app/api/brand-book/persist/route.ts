@@ -24,6 +24,16 @@ export async function POST(request: NextRequest) {
         let query = supabase.from(table as any);
 
         switch (action) {
+            case 'select':
+                // For select, we optionally filter by query if provided in data
+                // expected data: { query: { column: value } } or just empty for all
+                if (data && data.query) {
+                    for (const [key, value] of Object.entries(data.query)) {
+                        query = query.eq(key, value);
+                    }
+                }
+                result = await query.select('*');
+                break;
             case 'insert':
                 if (!data) return NextResponse.json({ error: 'Missing data for insert' }, { status: 400 });
                 result = await query.insert(data);
@@ -50,7 +60,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: result.error.message }, { status: 500 });
         }
 
-        return NextResponse.json({ success: true, count: result.count });
+        return NextResponse.json({ success: true, count: result.count, data: result.data });
 
     } catch (error: any) {
         console.error('[Persist API Error]:', error);
