@@ -504,17 +504,25 @@ export const Identity: React.FC = () => {
                     <div className="grid grid-cols-12 gap-12">
                         <div className="col-span-5">
                             <h3 className="section-title mb-6">Logomark</h3>
-                            <div className="aspect-square bg-white border border-black/10 flex items-center justify-center relative group cursor-pointer mb-4 overflow-hidden" onClick={() => fileInputRef.current?.click()}>
-                                {identity.logo_primary_url ? (
+                            <div className="aspect-square bg-white border border-black/10 flex items-center justify-center relative group cursor-pointer mb-4 overflow-hidden"
+                                onClick={() => !loading && fileInputRef.current?.click()}>
+                                {loading ? (
+                                    <div className="flex flex-col items-center gap-2">
+                                        <Loader2 className="animate-spin text-black" size={24} />
+                                        <span className="text-xs uppercase tracking-widest text-black/50">Uploading...</span>
+                                    </div>
+                                ) : identity.logo_primary_url ? (
                                     <img src={identity.logo_primary_url} className="w-2/3 object-contain" />
                                 ) : (
                                     <span className="text-gray-300 text-sm font-medium">Upload Primary Logo</span>
                                 )}
-                                <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                    <span className="bg-white px-4 py-2 text-xs font-bold shadow-sm">CHANGE</span>
-                                </div>
+                                {!loading && (
+                                    <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                                        <span className="bg-white px-4 py-2 text-xs font-bold shadow-sm">CHANGE</span>
+                                    </div>
+                                )}
                             </div>
-                            <input type="file" ref={fileInputRef} className="hidden" onChange={handleLogoUpload} />
+                            <input type="file" ref={fileInputRef} className="hidden" onChange={handleLogoUpload} disabled={loading} />
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
