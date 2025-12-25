@@ -3,7 +3,7 @@ import React, { useState, useRef } from 'react';
 import { useAppStore } from '../store';
 import { analyzeBrandText, generateBrandStrategy } from '../services/geminiService';
 import { Brand, BrandStrategySection, StrategySectionType, BrandIdentity, KnowledgeSource } from '../types';
-import { Loader2, Sparkles, FileText, CheckCircle2, AlertCircle, Upload, X, Trash2, Image as ImageIcon, Plus, Palette } from 'lucide-react';
+import { Loader2, Sparkles, FileText, CheckCircle2, AlertCircle, Upload, X, Trash2, Image as ImageIcon, Plus, Palette, Pencil } from 'lucide-react';
 
 
 const REQUIRED_ASSETS = [
@@ -66,8 +66,8 @@ const REQUIRED_ASSETS = [
 export const BrandMaster: React.FC<{ setView: (v: any) => void }> = ({ setView }) => {
     const {
         addBrand, updateBrand, addStrategySections, updateIdentity, identities, brands, activeBrandId,
-        strategySections, addAsset,
-        knowledgeSources, addKnowledgeSource, removeKnowledgeSource,
+        strategySections, updateStrategySection, addAsset,
+        knowledgeSources, addKnowledgeSource, updateKnowledgeSource, removeKnowledgeSource,
         activeOriginSection, setActiveOriginSection
     } = useAppStore();
 
@@ -76,6 +76,15 @@ export const BrandMaster: React.FC<{ setView: (v: any) => void }> = ({ setView }
     // Local sources removed in favor of store
     const [textInput, setTextInput] = useState("");
     const [isAddingText, setIsAddingText] = useState(false);
+
+    // Knowledge Edit State
+    const [editingSourceId, setEditingSourceId] = useState<string | null>(null);
+    const [editContent, setEditContent] = useState("");
+    const [editName, setEditName] = useState("");
+
+    // Strategy Edit State
+    const [editingStrategyId, setEditingStrategyId] = useState<string | null>(null);
+    const [editStrategyContent, setEditStrategyContent] = useState("");
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const assetInputRef = useRef<HTMLInputElement>(null);
@@ -352,14 +361,76 @@ export const BrandMaster: React.FC<{ setView: (v: any) => void }> = ({ setView }
                             {/* Source List */}
                             <div className="space-y-2 mb-4">
                                 {knowledgeSources.map(source => (
-                                    <div key={source.id} className="flex justify-between items-center p-3 bg-gray-50 rounded border border-black/5 text-sm">
-                                        <div className="flex items-center gap-3">
-                                            {source.type === 'file' ? <FileText size={16} className="opacity-50" /> : <Sparkles size={16} className="opacity-50" />}
-                                            <span className="font-medium truncate max-w-[200px]">{source.name}</span>
-                                        </div>
-                                        <button onClick={() => removeKnowledgeSource(source.id)} className="text-red-400 hover:text-red-600">
-                                            <Trash2 size={14} />
-                                        </button>
+                                    <div key={source.id} className="p-3 bg-gray-50 rounded border border-black/5 text-sm transition-all">
+                                        {editingSourceId === source.id ? (
+                                            <div className="space-y-2 animate-in fade-in">
+                                                <input
+                                                    value={editName}
+                                                    onChange={(e) => setEditName(e.target.value)}
+                                                    className="w-full text-xs font-bold bg-white border border-black/10 rounded p-1"
+                                                    placeholder="Source Name"
+                                                />
+                                                {source.type === 'text' && (
+                                                    <textarea
+                                                        value={editContent}
+                                                        onChange={(e) => setEditContent(e.target.value)}
+                                                        className="w-full text-xs bg-white border border-black/10 rounded p-2 min-h-[80px]"
+                                                        placeholder="Content..."
+                                                    />
+                                                )}
+                                                <div className="flex justify-end gap-2 mt-2">
+                                                    <button
+                                                        onClick={() => setEditingSourceId(null)}
+                                                        className="px-2 py-1 text-xs font-medium text-gray-500 hover:text-black"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            updateKnowledgeSource(source.id, {
+                                                                name: editName,
+                                                                content: source.type === 'text' ? editContent : source.content
+                                                            });
+                                                            setEditingSourceId(null);
+                                                        }}
+                                                        className="px-3 py-1 text-xs font-bold bg-black text-white rounded hover:opacity-80"
+                                                    >
+                                                        Save
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="flex justify-between items-center">
+                                                <div className="flex items-center gap-3 overflow-hidden">
+                                                    {source.type === 'file' ? <FileText size={16} className="opacity-50 shrink-0" /> : <Sparkles size={16} className="opacity-50 shrink-0" />}
+                                                    <span className="font-medium truncate">{source.name}</span>
+                                                </div>
+                                                <div className="flex items-center gap-1">
+                                                    <button
+                                                        onClick={() => {
+                                                            setEditingSourceId(source.id);
+                                                            setEditName(source.name);
+                                                            setEditContent(source.content || "");
+                                                        }}
+                                                        className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                                                        title="Edit"
+                                                    >
+                                                        <Pencil size={14} />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            if (confirm('Are you sure you want to delete this source?')) {
+                                                                removeKnowledgeSource(source.id);
+                                                            }
+                                                        }}
+                                                        className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                                                        title="Delete"
+                                                    >
+                                                        <Trash2 size={14} />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                                 {knowledgeSources.length === 0 && <div className="text-center p-8 text-gray-400 text-xs italic">No sources added yet.</div>}
@@ -489,14 +560,59 @@ export const BrandMaster: React.FC<{ setView: (v: any) => void }> = ({ setView }
                                 </div>
                             ) : (
                                 activeStrategy.map(section => (
-                                    <div key={section.id} className="bg-white p-6 rounded-xl border border-black/5 shadow-sm">
-                                        <div className="flex justify-between items-start mb-3">
-                                            <h3 className="font-bold text-lg capitalize">{section.section_type.replace(/_/g, ' ')}</h3>
-                                            <span className="text-[10px] bg-gray-100 px-2 py-1 rounded uppercase tracking-wider opacity-60">{section.source}</span>
-                                        </div>
-                                        <div className="prose prose-sm max-w-none text-gray-600">
-                                            <p>{section.content}</p>
-                                        </div>
+                                    <div key={section.id} className="bg-white p-6 rounded-xl border border-black/5 shadow-sm transition-all group hover:border-black/10">
+                                        {editingStrategyId === section.id ? (
+                                            <div className="space-y-4 animate-in fade-in">
+                                                <div className="flex justify-between items-center">
+                                                    <h3 className="font-bold text-lg capitalize">{section.section_type.replace(/_/g, ' ')}</h3>
+                                                    <span className="text-[10px] bg-blue-50 text-blue-800 px-2 py-1 rounded uppercase tracking-wider">Editing</span>
+                                                </div>
+                                                <textarea
+                                                    value={editStrategyContent}
+                                                    onChange={(e) => setEditStrategyContent(e.target.value)}
+                                                    className="w-full min-h-[150px] p-3 border border-black/10 rounded-lg text-sm bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5"
+                                                />
+                                                <div className="flex justify-end gap-2">
+                                                    <button
+                                                        onClick={() => setEditingStrategyId(null)}
+                                                        className="px-3 py-2 text-xs font-bold text-gray-500 hover:text-black"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            updateStrategySection(section.id, editStrategyContent);
+                                                            setEditingStrategyId(null);
+                                                        }}
+                                                        className="px-4 py-2 text-xs font-bold bg-black text-white rounded-lg hover:opacity-80"
+                                                    >
+                                                        Save Changes
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="relative">
+                                                <div className="flex justify-between items-start mb-3">
+                                                    <h3 className="font-bold text-lg capitalize">{section.section_type.replace(/_/g, ' ')}</h3>
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-[10px] bg-gray-100 px-2 py-1 rounded uppercase tracking-wider opacity-60">{section.source}</span>
+                                                        <button
+                                                            onClick={() => {
+                                                                setEditingStrategyId(section.id);
+                                                                setEditStrategyContent(section.content);
+                                                            }}
+                                                            className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors opacity-0 group-hover:opacity-100"
+                                                            title="Edit Section"
+                                                        >
+                                                            <Pencil size={14} />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div className="prose prose-sm max-w-none text-gray-600">
+                                                    <p className="whitespace-pre-wrap">{section.content}</p>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 ))
                             )}

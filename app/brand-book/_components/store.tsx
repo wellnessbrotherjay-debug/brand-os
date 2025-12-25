@@ -376,6 +376,7 @@ interface StoreContextType extends AppState {
     // Knowledge Base Methods
     knowledgeSources: KnowledgeSource[];
     addKnowledgeSource: (source: KnowledgeSource) => Promise<void>;
+    updateKnowledgeSource: (id: string, updates: Partial<KnowledgeSource>) => Promise<void>;
     removeKnowledgeSource: (id: string) => Promise<void>;
 
     // Deep Linking
@@ -669,6 +670,20 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
                 preview: source.preview
             } as any);
         if (error) console.error('Error adding knowledge source:', error);
+    };
+
+    const updateKnowledgeSource = async (id: string, updates: Partial<KnowledgeSource>) => {
+        setKnowledgeSources(prev => prev.map(s => s.id === id ? { ...s, ...updates } : s));
+        const supabase = createClient<Database>(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        );
+        const { error } = await supabase
+            .from('brand_knowledge_base')
+            .update(updates as any)
+            .eq('id', id);
+
+        if (error) console.error('Error updating knowledge source:', error);
     };
 
     const removeKnowledgeSource = async (id: string) => {
@@ -1071,14 +1086,14 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         currentUser,
         setCurrentUser,
         addAvatar, updateAvatar, deleteAvatar,
-        knowledgeSources, addKnowledgeSource, removeKnowledgeSource,
+        knowledgeSources, addKnowledgeSource, updateKnowledgeSource, removeKnowledgeSource,
         activeOriginSection, setActiveOriginSection
     };
 
     return (
-        <StoreContext.Provider value={value}>
+        <StoreContext.Provider value={value} >
             {children}
-        </StoreContext.Provider>
+        </StoreContext.Provider >
     );
 };
 
