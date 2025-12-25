@@ -267,7 +267,10 @@ export const Identity: React.FC = () => {
             const file = e.target.files[0];
             setLoading(true);
             try {
+                console.log("Starting upload for:", file.name);
                 const publicUrl = await uploadAsset(file, activeBrand.id, 'identity');
+                console.log("Upload success, url:", publicUrl);
+
                 if (publicUrl) {
                     updateIdentity({ ...identity, logo_primary_url: publicUrl });
                     addAsset({
@@ -280,11 +283,13 @@ export const Identity: React.FC = () => {
                         tags: ['logo', 'branding', 'identity']
                     });
                 }
-            } catch (error) {
+            } catch (error: any) {
                 console.error("Logo upload failed", error);
-                alert("Failed to upload logo.");
+                alert("Failed to upload logo: " + (error.message || "Unknown error"));
             } finally {
                 setLoading(false);
+                // Reset input so same file can be selected again
+                if (fileInputRef.current) fileInputRef.current.value = '';
             }
         }
     };
@@ -371,7 +376,8 @@ export const Identity: React.FC = () => {
     const handleStrategyUpdate = (type: StrategySectionType, value: string) => {
         const section = strategySections.find(s => s.brand_id === activeBrandId && s.section_type === type);
         if (section) {
-            updateStrategySection(section.id, { content: value });
+            // Fix: updateStrategySection expects string content, not object
+            updateStrategySection(section.id, value);
         } else {
             // Placeholder for creation logic
         }

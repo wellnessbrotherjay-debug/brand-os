@@ -8,6 +8,11 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export const uploadAsset = async (file: File, brandId: string, projectId?: string) => {
     try {
+        console.log("StorageService: Uploading...", { fileName: file.name, size: file.size });
+        if (!supabaseUrl || !supabaseAnonKey) {
+            throw new Error("Supabase URL or Key missing in StorageService");
+        }
+
         const fileExt = file.name.split('.').pop();
         const fileName = `${brandId}/${projectId || 'general'}/${crypto.randomUUID()}.${fileExt}`;
         const filePath = `assets/${fileName}`;
@@ -16,7 +21,10 @@ export const uploadAsset = async (file: File, brandId: string, projectId?: strin
             .from('brand-os-assets')
             .upload(filePath, file);
 
-        if (error) throw error;
+        if (error) {
+            console.error("StorageService Error:", error);
+            throw error;
+        }
 
         const { data: { publicUrl } } = supabase.storage
             .from('brand-os-assets')
