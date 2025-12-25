@@ -42,11 +42,11 @@ export const Dashboard: React.FC<{ setView: (v: any) => void }> = ({ setView }) 
   const textHeading = "font-bold";
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
-      <header className="mb-8 flex items-center justify-between">
+    <div className="p-6 max-w-7xl mx-auto">
+      <header className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Welcome back, {activeBrand.name}</h1>
-          <p className={`mt-2 text-lg ${textMuted}`}>{activeBrand.tagline || "Let's build your brand."}</p>
+          <p className={`mt-1 text-base ${textMuted}`}>{activeBrand.tagline || "Let's build your brand."}</p>
         </div>
 
         {/* Clickable Logo Area */}
@@ -124,14 +124,14 @@ export const Dashboard: React.FC<{ setView: (v: any) => void }> = ({ setView }) 
               <CheckCircle2 className="text-green-600 w-5 h-5" />
               <div className="flex-1">
                 <p className="text-sm font-medium">Brand Basics</p>
-                <p className={`text-xs ${textMuted}`}>Core profile setup complete.</p>
+                <p className={`text-sm ${textMuted}`}>Core profile setup complete.</p>
               </div>
             </div>
             <div className={`flex items-center gap-3 p-3 rounded-lg border border-black/5 ${strategyProgress < 100 ? 'bg-white/50' : 'bg-black/5'}`}>
               {strategyProgress === 100 ? <CheckCircle2 className="text-green-600 w-5 h-5" /> : <Circle className="opacity-40 w-5 h-5" />}
               <div className="flex-1">
                 <p className="text-sm font-medium">Strategic Foundation</p>
-                <p className={`text-xs ${textMuted}`}>Define your UVP, Mission, and Vision.</p>
+                <p className={`text-sm ${textMuted}`}>Define your UVP, Mission, and Vision.</p>
               </div>
               {strategyProgress < 100 && (
                 <button onClick={() => setView('strategy')} className="bg-black text-white px-3 py-1 rounded text-xs hover:opacity-80">
@@ -143,7 +143,7 @@ export const Dashboard: React.FC<{ setView: (v: any) => void }> = ({ setView }) 
               {identityProgress === 100 ? <CheckCircle2 className="text-green-600 w-5 h-5" /> : <Circle className="opacity-40 w-5 h-5" />}
               <div className="flex-1">
                 <p className="text-sm font-medium">Visual Guidelines</p>
-                <p className={`text-xs ${textMuted}`}>Set colors, fonts, and style.</p>
+                <p className={`text-sm ${textMuted}`}>Set colors, fonts, and style.</p>
               </div>
               {identityProgress < 100 && (
                 <button onClick={() => setView('identity')} className="bg-black text-white px-3 py-1 rounded text-xs hover:opacity-80">
@@ -156,8 +156,8 @@ export const Dashboard: React.FC<{ setView: (v: any) => void }> = ({ setView }) 
 
         {/* Quick Chart */}
         <div className={cardClass}>
-          <h2 className="text-lg font-bold mb-6">Activity This Week</h2>
-          <div className="h-48">
+          <h2 className="text-lg font-bold mb-4">Activity This Week</h2>
+          <div className="h-40">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={mockData}>
                 <XAxis dataKey="name" tick={{ fontSize: 12, fill: 'currentColor', opacity: 0.5 }} axisLine={false} tickLine={false} />

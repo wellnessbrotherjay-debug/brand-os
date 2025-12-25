@@ -519,13 +519,13 @@ export const Identity: React.FC = () => {
             {/* VISUAL IDENTITY VIEW    */}
             {/* ======================= */}
             {activeTab === 'visuals' && (
-                <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-16">
+                <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-12">
 
                     {/* LOGO & PALETTE SECTION */}
-                    <div className="grid grid-cols-12 gap-12">
-                        <div className="col-span-5">
-                            <h3 className="section-title mb-6">Logomark</h3>
-                            <div className="aspect-square bg-white border border-black/10 flex items-center justify-center relative group cursor-pointer mb-4 overflow-hidden"
+                    <div className="grid grid-cols-2 gap-8">
+                        <div>
+                            <h3 className="section-title mb-4">Logomark</h3>
+                            <div className="h-64 max-w-md bg-white border border-black/10 flex items-center justify-center relative group cursor-pointer mb-4 overflow-hidden rounded-lg"
                                 onClick={() => !loading && fileInputRef.current?.click()}>
                                 {loading ? (
                                     <div className="flex flex-col items-center gap-2">
@@ -567,47 +567,47 @@ export const Identity: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="col-span-7">
-                            <h3 className="section-title mb-6">Color System</h3>
-                            <div className="flex gap-6 mb-8">
+                        <div>
+                            <h3 className="section-title mb-4">Color System</h3>
+                            <div className="flex gap-8 mb-8">
                                 <div className="space-y-3">
-                                    <div className="w-24 h-24 rounded-full shadow-lg ring-4 ring-white" style={{ backgroundColor: identity.color_primary_hex }}></div>
+                                    <div className="w-28 h-28 rounded-full shadow-lg ring-4 ring-white" style={{ backgroundColor: identity.color_primary_hex }}></div>
                                     <input
                                         value={identity.color_primary_hex}
                                         onChange={(e) => handleChange('color_primary_hex', e.target.value)}
-                                        className="block w-24 text-center font-mono text-xs border-none bg-transparent focus:ring-0"
+                                        className="block w-28 text-center font-mono text-sm border-none bg-transparent focus:ring-0"
                                     />
-                                    <label className="block text-center text-[10px] items-center uppercase tracking-widest opacity-50">Primary</label>
+                                    <label className="block text-center text-xs uppercase tracking-widest opacity-60 font-medium">Primary</label>
                                 </div>
                                 <div className="space-y-3">
-                                    <div className="w-24 h-24 rounded-full shadow-lg ring-4 ring-white" style={{ backgroundColor: identity.color_secondary_hex }}></div>
+                                    <div className="w-28 h-28 rounded-full shadow-lg ring-4 ring-white" style={{ backgroundColor: identity.color_secondary_hex }}></div>
                                     <input
                                         value={identity.color_secondary_hex}
                                         onChange={(e) => handleChange('color_secondary_hex', e.target.value)}
-                                        className="block w-24 text-center font-mono text-xs border-none bg-transparent focus:ring-0"
+                                        className="block w-28 text-center font-mono text-sm border-none bg-transparent focus:ring-0"
                                     />
-                                    <label className="block text-center text-[10px] items-center uppercase tracking-widest opacity-50">Secondary</label>
+                                    <label className="block text-center text-xs uppercase tracking-widest opacity-60 font-medium">Secondary</label>
                                 </div>
                                 <div className="space-y-3">
-                                    <div className="w-24 h-24 rounded-full shadow-lg ring-4 ring-white" style={{ backgroundColor: identity.color_accent_hex }}></div>
+                                    <div className="w-28 h-28 rounded-full shadow-lg ring-4 ring-white" style={{ backgroundColor: identity.color_accent_hex }}></div>
                                     <input
                                         value={identity.color_accent_hex}
                                         onChange={(e) => handleChange('color_accent_hex', e.target.value)}
-                                        className="block w-24 text-center font-mono text-xs border-none bg-transparent focus:ring-0"
+                                        className="block w-28 text-center font-mono text-sm border-none bg-transparent focus:ring-0"
                                     />
-                                    <label className="block text-center text-[10px] items-center uppercase tracking-widest opacity-50">Accent</label>
+                                    <label className="block text-center text-xs uppercase tracking-widest opacity-60 font-medium">Accent</label>
                                 </div>
                             </div>
 
                             <div className="border-t border-black/5 pt-6">
                                 <div className="flex justify-between items-center mb-4">
                                     <label className="label-xs">Extended Palette</label>
-                                    <button onClick={addColor} className="text-[10px] font-bold uppercase tracking-wider text-black hover:opacity-60 flex items-center gap-1"><Plus size={10} /> Add Color</button>
+                                    <button onClick={addColor} className="text-xs font-bold uppercase tracking-wider text-black hover:opacity-60 flex items-center gap-1"><Plus size={12} /> Add Color</button>
                                 </div>
                                 <div className="grid grid-cols-3 gap-4">
                                     {identity.extra_colors?.map((color, idx) => (
-                                        <div key={idx} className="flex items-center gap-3 p-2 border border-dashed border-gray-200 group relative">
-                                            <div className="w-8 h-8 rounded-full shadow-sm shrink-0 cursor-pointer border border-black/5" style={{ backgroundColor: color.hex }}>
+                                        <div key={idx} className="flex items-center gap-3 p-3 border border-dashed border-gray-200 rounded group relative">
+                                            <div className="w-10 h-10 rounded-full shadow-sm shrink-0 cursor-pointer border border-black/5" style={{ backgroundColor: color.hex }}>
                                                 <input
                                                     type="color"
                                                     className="opacity-0 w-full h-full cursor-pointer"
@@ -619,12 +619,12 @@ export const Identity: React.FC = () => {
                                                 <input
                                                     value={color.name}
                                                     onChange={(e) => updateColor(idx, 'name', e.target.value)}
-                                                    className="w-full text-xs font-bold border-none p-0 focus:ring-0 bg-transparent truncate"
+                                                    className="w-full text-sm font-bold border-none p-0 focus:ring-0 bg-transparent truncate"
                                                 />
                                                 <input
                                                     value={color.usage}
                                                     onChange={(e) => updateColor(idx, 'usage', e.target.value)}
-                                                    className="w-full text-[10px] opacity-50 border-none p-0 focus:ring-0 bg-transparent truncate"
+                                                    className="w-full text-xs opacity-50 border-none p-0 focus:ring-0 bg-transparent truncate"
                                                 />
                                             </div>
                                             <button onClick={() => removeColor(idx)} className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"><X size={10} /></button>
@@ -639,8 +639,8 @@ export const Identity: React.FC = () => {
 
                     {/* TYPOGRAPHY */}
                     <section>
-                        <h3 className="section-title mb-8">Typography</h3>
-                        <div className="grid grid-cols-2 gap-12">
+                        <h3 className="section-title mb-6">Typography</h3>
+                        <div className="grid grid-cols-2 gap-8">
                             <div>
                                 <div className="flex justify-between items-baseline mb-2">
                                     <label className="label-xs">Heading Font</label>
