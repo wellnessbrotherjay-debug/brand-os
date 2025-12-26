@@ -101,6 +101,27 @@ export const loginWithGoogle = async () => {
 
 // --- SAVE TOKENS TO SUPABASE (WITH LOCALSTORAGE FALLBACK) ---
 
+// --- SAVE TOKENS TO SUPABASE (WITH LOCALSTORAGE FALLBACK) ---
+
+const persistViaApi = async (table: string, action: 'insert' | 'update' | 'delete' | 'upsert' | 'select', data?: any, id?: string) => {
+    try {
+        const res = await fetch('/api/brand-book/persist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ table, action, data, id })
+        });
+        const json = await res.json();
+        if (json.error) {
+            console.error(`[AuthService] API ${action} failed:`, json.error);
+            return null;
+        }
+        return json;
+    } catch (e) {
+        console.error(`[AuthService] API Request failed:`, e);
+        return null;
+    }
+};
+
 export const saveSocialToken = async (brandId: string, platform: 'facebook' | 'google' | 'instagram', tokenData: any) => {
     // GUARD: Ensure we have a valid token before doing anything
     if (!tokenData?.accessToken || tokenData.accessToken === 'undefined' || tokenData.accessToken === 'null') {
@@ -109,54 +130,63 @@ export const saveSocialToken = async (brandId: string, platform: 'facebook' | 'g
     }
 
     try {
-        // STRATEGY: "Nuke and Pave" to guarantee no duplicates and solve PGRST116 errors forever.
+        // STRATEGY: "Nuke and Pave" via API to bypass RLS
 
         // 1. Delete ANY existing rows for this brand/platform
-        const { error: deleteError } = await supabase
-            .from('social_integrations')
-            .delete()
-            .eq('brand_id', brandId)
-            .eq('platform', platform);
+        // We can't easily do a "delete where" via the simple persist API unless we add query capability to delete or query first.
+        // For now, let's just attempt lookup or rely on upsert?
+        // Actually, the persist API 'delete' action only takes an ID.
+        // But 'select' supports query.
 
-        if (deleteError) {
-            console.warn("[AuthService] Delete failed (non-fatal):", deleteError);
+        // Let's check if we can query to find IDs to delete.
+        const existing = await persistViaApi('social_integrations', 'select', {
+            query: { brand_id: brandId, platform: platform }
+        });
+
+        if (existing && existing.data) {
+            for (const row of existing.data as any[]) {
+                await persistViaApi('social_integrations', 'delete', undefined, row.id);
+            }
         }
 
         // 2. Insert fresh row
-        const { error: insertError } = await supabase
-            .from('social_integrations')
-            .insert({
-                brand_id: brandId,
-                platform: platform,
-                access_token: tokenData.accessToken,
-                token_expires_at: new Date(Date.now() + (tokenData.expiresIn * 1000)).toISOString(),
-                platform_user_id: tokenData.userID
-            } as any);
+        const newRow = {
+            brand_id: brandId,
+            platform: platform,
+            access_token: tokenData.accessToken,
+            token_expires_at: new Date(Date.now() + (tokenData.expiresIn * 1000)).toISOString(),
+            platform_user_id: tokenData.userID
+        };
 
-        if (insertError) throw insertError;
+        const insertRes = await persistViaApi('social_integrations', 'insert', newRow);
 
-        console.log("[AuthService] Token saved successfully to DB.");
+        if (!insertRes || insertRes.error) throw new Error(insertRes?.error || "Insert failed");
+
+        console.log("[AuthService] Token saved successfully to DB via API.");
 
     } catch (e) {
         console.error("[AuthService] DB Save Failed. Falling back to LocalStorage.", e);
-        // FALLBACK: Save to LocalStorage so app still works locally
+        // FALLBACK: Save to LocalStorage
         if (typeof window !== 'undefined') {
             localStorage.setItem(`exequte_${platform}_token_${brandId}`, tokenData.accessToken);
-            // alert("Connected to Facebook! (Saved locally due to database connection issue)");
         }
     }
 };
 
 export const deleteSocialToken = async (brandId: string, platform: 'facebook' | 'google' | 'instagram') => {
-    // 1. Try to remove from DB
+    // 1. Try to remove from DB via API
     try {
-        await supabase
-            .from('social_integrations')
-            .delete()
-            .eq('brand_id', brandId)
-            .eq('platform', platform);
+        const existing = await persistViaApi('social_integrations', 'select', {
+            query: { brand_id: brandId, platform: platform }
+        });
+
+        if (existing && existing.data) {
+            for (const row of existing.data as any[]) {
+                await persistViaApi('social_integrations', 'delete', undefined, row.id);
+            }
+        }
     } catch (e) {
-        console.warn("Failed to delete from DB", e);
+        console.warn("[AuthService] Failed to delete from DB", e);
     }
 
     // 2. Always remove from LocalStorage

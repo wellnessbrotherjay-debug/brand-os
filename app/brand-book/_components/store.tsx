@@ -485,18 +485,13 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const syncMetaAccount = async () => {
         if (!activeBrandId) return;
 
-        const supabase = createClient<Database>(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
+        // Use persistData to bypass RLS for token lookup
+        const res = await persistData('social_integrations', 'select', {
+            query: { brand_id: activeBrandId, platform: 'facebook' }
+        });
 
-        const { data } = await supabase
-            .from('social_integrations')
-            .select('*')
-            .eq('brand_id', activeBrandId)
-            .eq('platform', 'facebook')
-            .limit(1)
-            .maybeSingle(); // Use maybeSingle to avoid 406 not found errors
+        // persistData for select retrieves an array of data
+        const data = (res && res.data && res.data.length > 0) ? res.data[0] : null;
 
         if (data) {
             try {

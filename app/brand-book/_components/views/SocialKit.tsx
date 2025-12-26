@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useAppStore } from '../store';
+import { toPng } from 'html-to-image';
 import { generateCreativeCopy, searchInstagramUsers } from '../services/geminiService';
 import { SocialSearchModal } from './SocialSearchModal';
 import { TemplatesView as GlobalTemplatesView } from './Templates';
@@ -12,6 +13,7 @@ import {
     Copy, SmartphoneNfc, Scaling, Type, Download, Layout
 } from 'lucide-react';
 import { Highlight, SocialFeedItem, CreativeRequest, CreativeVersion, SocialConnection, BrandIdentity, Brand } from '../types';
+import { toast } from 'sonner';
 
 // Logos URLs (Generic/Mock for UI)
 const LOGO_IG = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/2048px-Instagram_icon.png";
@@ -45,10 +47,13 @@ const PhonePreview = ({
     onPostClick?: (index: number) => void, // New Prop
     isLive?: boolean,
     customTitle?: string,
-    overrideData?: any // For competitor mocks
+    overrideData?: any, // For competitor mocks
+    viewMode?: 'profile' | 'post',
+    postData?: any
 }) => {
     const [tab, setTab] = useState<'posts' | 'reels' | 'tagged'>('posts');
     const { activeBrandId } = useAppStore();
+    const [currentSlide, setCurrentSlide] = useState(0); // For post carousel
 
     // Live Instagram Data State
     const [liveProfile, setLiveProfile] = useState<any>(null);
@@ -257,6 +262,114 @@ const PhonePreview = ({
 
     switch (platform) {
         case 'Instagram':
+            if (viewMode === 'post' && postData) {
+                const images = postData.media_urls?.length ? postData.media_urls : (postData.url ? [postData.url] : []);
+
+                return (
+                    <div className="bg-white text-black h-full overflow-y-auto custom-scrollbar relative font-sans">
+                        {/* Post Header */}
+                        <div className="flex items-center justify-between p-3 border-b border-gray-100 sticky top-0 bg-white z-10">
+                            <div className="flex items-center gap-2">
+                                <ArrowLeft size={24} className="cursor-pointer" />
+                                <div className="font-bold text-sm">Posts</div>
+                            </div>
+                        </div>
+
+                        {/* Post Item */}
+                        <div className="pb-4">
+                            {/* User Info */}
+                            <div className="flex items-center justify-between px-3 py-2">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-8 h-8 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
+                                        {data.logo ? <img src={data.logo} className="w-full h-full object-cover" /> : <User size={16} />}
+                                    </div>
+                                    <span className="font-bold text-sm">{data.name}</span>
+                                </div>
+                                <MoreHorizontal size={20} />
+                            </div>
+
+                            {/* Media */}
+                            <div className="w-full aspect-square bg-gray-100 relative group">
+                                {images.length > 0 ? (
+                                    postData.type === 'video' ? (
+                                        <video src={images[currentSlide] || images[0]} className="w-full h-full object-cover" controls />
+                                    ) : (
+                                        <img src={images[currentSlide] || images[0]} className="w-full h-full object-cover" />
+                                    )
+                                ) : (
+                                    <div className="flex items-center justify-center h-full text-gray-300">
+                                        <ImageIcon size={48} />
+                                    </div>
+                                )}
+
+                                {/* Carousel Navigation */}
+                                {images.length > 1 && (
+                                    <>
+                                        {currentSlide > 0 && (
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); setCurrentSlide(curr => curr - 1); }}
+                                                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                <ArrowLeft size={16} />
+                                            </button>
+                                        )}
+                                        {currentSlide < images.length - 1 && (
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); setCurrentSlide(curr => curr + 1); }}
+                                                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                <ArrowRight size={16} />
+                                            </button>
+                                        )}
+                                        <div className="absolute top-4 right-4 bg-black/60 text-white text-[10px] px-2 py-1 rounded-full font-bold">
+                                            {currentSlide + 1}/{images.length}
+                                        </div>
+                                        <div className="absolute bottom-[-20px] left-0 right-0 flex justify-center gap-1">
+                                            {images.map((_: any, i: number) => (
+                                                <div key={i} className={`w-1.5 h-1.5 rounded-full ${i === currentSlide ? 'bg-blue-500' : 'bg-gray-300'}`} />
+                                            ))}
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+
+                            {/* Actions */}
+                            <div className="px-3 pt-3 pb-2">
+                                <div className="flex justify-between items-center mb-2">
+                                    <div className="flex gap-4">
+                                        <Heart size={24} />
+                                        <MessageCircle size={24} />
+                                        <Send size={24} />
+                                    </div>
+                                    <div className="flex gap-4">
+                                        {images.length > 1 && (
+                                            <div className="flex gap-1.5 items-center justify-center">
+                                                {images.map((_: any, i: number) => (
+                                                    <div key={i} className={`w-1.5 h-1.5 rounded-full ${i === currentSlide ? 'bg-blue-500' : 'bg-gray-300'}`} />
+                                                ))}
+                                            </div>
+                                        )}
+                                        <div className="flex-1" />
+                                        <Save size={24} />
+                                    </div>
+                                </div>
+                                <div className="font-bold text-sm mb-1">1,240 likes</div>
+                                <div className="text-sm">
+                                    <span className="font-bold mr-2">{data.name}</span>
+                                    {postData.caption}
+                                </div>
+                                {postData.hashtags && postData.hashtags.length > 0 && (
+                                    <div className="text-sm text-blue-900 mt-1">
+                                        {postData.hashtags.map((t: string) => `${t.startsWith('#') ? '' : '#'}${t} `)}
+                                    </div>
+                                )}
+                                <div className="text-[10px] text-gray-500 mt-2 uppercase">2 hours ago</div>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+
             return (
                 <div className="bg-white text-black h-full overflow-y-auto custom-scrollbar relative">
                     <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileSelect} />
@@ -280,8 +393,8 @@ const PhonePreview = ({
                                     className="w-20 h-20 rounded-full p-[2px] bg-gradient-to-tr from-yellow-400 to-purple-600 cursor-pointer"
                                     onClick={() => setShowStory(true)}
                                 >
-                                    <div className="w-full h-full rounded-full border-2 border-white overflow-hidden bg-gray-100">
-                                        {data.logo && <img src={data.logo} className="w-full h-full object-cover" />}
+                                    <div className="w-full h-full rounded-full border-2 border-white overflow-hidden bg-gray-100 flex items-center justify-center">
+                                        {data.logo ? <img src={data.logo} className="w-full h-full object-cover" /> : <User size={24} className="text-gray-300" />}
                                     </div>
                                 </div>
                                 {!isLive && !overrideData && (
@@ -395,6 +508,7 @@ const PhonePreview = ({
                                                 }
                                             }}
                                         >
+                                            {/* Media Content */}
                                             {displayUrl ? (
                                                 <img src={displayUrl} className="w-full h-full object-cover" />
                                             ) : (
@@ -402,6 +516,18 @@ const PhonePreview = ({
                                                     <Plus />
                                                 </div>
                                             )}
+
+                                            {/* Icons: Carousel / Video */}
+                                            {feedItem?.type === 'carousel' || (feedItem?.media_urls && feedItem.media_urls.length > 1) ? (
+                                                <div className="absolute top-2 right-2 text-white drop-shadow-md">
+                                                    <Layers size={14} fill="white" fillOpacity={0.5} />
+                                                </div>
+                                            ) : feedItem?.type === 'video' ? (
+                                                <div className="absolute top-2 right-2 text-white drop-shadow-md">
+                                                    <PlayCircle size={14} fill="white" fillOpacity={0.5} />
+                                                </div>
+                                            ) : null}
+
                                             {/* Edit Overlay */}
                                             {!isLive && !overrideData && (
                                                 <div className="absolute inset-0 bg-blue-600/80 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity backdrop-blur-[2px] z-10">
@@ -417,7 +543,7 @@ const PhonePreview = ({
                         )}
 
                         {tab === 'reels' && (
-                            <div className="grid grid-cols-3 gap-0.5">
+                            <div className="grid grid-cols-3 gap-0.5 overflow-hidden">
                                 {[1, 2, 3, 4, 5, 6].map(i => (
                                     <div key={i} className="aspect-[9/16] bg-black relative group cursor-pointer">
                                         <div className="absolute bottom-1 left-1 text-white text-[10px] flex items-center gap-1">
@@ -457,7 +583,7 @@ const PhonePreview = ({
                         <p className="mt-4 text-sm opacity-90 text-center whitespace-pre-wrap">{identity.tiktok_config?.bio || identity.instagram_bio}</p>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-0.5">
+                    <div className="grid grid-cols-3 gap-0.5 overflow-hidden">
                         {[1, 2, 3, 4, 5, 6].map(i => (
                             <div key={i} className="aspect-[3/4] bg-gray-800 relative group cursor-pointer">
                                 <div className="absolute bottom-1 left-1 flex items-center gap-1 text-[10px]">
@@ -1526,6 +1652,8 @@ export const SocialKit: React.FC = () => {
         const [caption, setCaption] = useState(post.caption || '');
         const [hashtags, setHashtags] = useState(post.hashtags?.join(' ') || '');
         const [mediaIndex, setMediaIndex] = useState(0);
+        const [isPreviewMode, setIsPreviewMode] = useState(false);
+        const { addAsset, activeBrandId } = useAppStore();
 
         // Ensure we have at least one media URL to work with
         const images = post.media_urls?.length ? post.media_urls : (post.url ? [post.url] : []);
@@ -1538,6 +1666,31 @@ export const SocialKit: React.FC = () => {
             });
         };
 
+        const handleSaveDesign = async () => {
+            const node = document.getElementById('phone-preview-container');
+            if (node) {
+                try {
+                    const dataUrl = await toPng(node);
+                    // Save as asset
+                    addAsset({
+                        id: crypto.randomUUID(),
+                        brand_id: activeBrandId || 'default',
+                        project_id: 'social-kit',
+                        asset_type: 'image',
+                        title: `Design Capture ${new Date().toLocaleTimeString()}`,
+                        description: `Captured from Social Kit Post Editor`,
+                        file_url: dataUrl,
+                        tags: ['design', 'capture'],
+                        status: 'Draft'
+                    });
+                    toast.success('Design saved to Assets!');
+                } catch (error) {
+                    console.error('Failed to capture design:', error);
+                    toast.error('Failed to save design.');
+                }
+            }
+        };
+
         const handleMediaUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
             if (e.target.files && e.target.files.length > 0) {
                 const newImages: string[] = [];
@@ -1545,19 +1698,32 @@ export const SocialKit: React.FC = () => {
                     const reader = new FileReader();
                     reader.onloadend = () => {
                         newImages.push(reader.result as string);
-                        if (newImages.length === e.target.files?.length) {
-                            // Append new images or replace if empty
-                            const updatedImages = [...images, ...newImages];
+                        if (file.type.startsWith('video/')) {
+                            // Video Handling
                             onUpdate({
                                 ...post,
-                                url: updatedImages[0], // Primary
-                                media_urls: updatedImages,
-                                type: updatedImages.length > 1 ? 'carousel' : 'image'
+                                url: reader.result as string,
+                                media_urls: newImages.length > 0 ? [...images, ...newImages] : [reader.result as string],
+                                type: 'video'
                             });
+                        } else {
+                            // Image Handling
+                            if (newImages.length === e.target.files?.length) {
+                                // Append new images or replace if empty
+                                const updatedImages = [...images, ...newImages];
+                                onUpdate({
+                                    ...post,
+                                    url: updatedImages[0], // Primary
+                                    media_urls: updatedImages,
+                                    type: updatedImages.length > 1 ? 'carousel' : 'image'
+                                });
+                            }
                         }
                     };
                     reader.readAsDataURL(file);
                 });
+                // Reset input to allow re-uploading same file
+                e.target.value = '';
             }
         };
 
@@ -1565,109 +1731,159 @@ export const SocialKit: React.FC = () => {
             <div className="bg-white border-l border-gray-200 h-full w-[400px] flex flex-col shadow-xl z-20 animate-in slide-in-from-right-4 duration-300">
                 <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                     <h3 className="font-bold flex items-center gap-2"><Edit2 size={16} /> Edit Post #{index + 1}</h3>
-                    <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full"><X size={16} /></button>
+                    <div className="flex items-center gap-2">
+                        <div className="bg-gray-200 p-0.5 rounded-lg flex text-xs font-bold">
+                            <button
+                                onClick={() => setIsPreviewMode(false)}
+                                className={`px-3 py-1.5 rounded-md transition-all ${!isPreviewMode ? 'bg-white shadow-sm text-black' : 'text-gray-500 hover:text-gray-900'}`}
+                            >
+                                Edit
+                            </button>
+                            <button
+                                onClick={() => setIsPreviewMode(true)}
+                                className={`px-3 py-1.5 rounded-md transition-all ${isPreviewMode ? 'bg-white shadow-sm text-black' : 'text-gray-500 hover:text-gray-900'}`}
+                            >
+                                Preview
+                            </button>
+                        </div>
+                        <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full"><X size={16} /></button>
+                    </div>
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                    {/* Media Preview (Phone Style) */}
-                    <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative group border border-gray-200 shadow-inner">
-                        {images.length > 0 ? (
-                            <img src={images[mediaIndex] || images[0]} className="w-full h-full object-cover" />
-                        ) : (
-                            <div className="flex items-center justify-center h-full text-gray-300"><ImageIcon size={48} /></div>
-                        )}
-
-                        {/* Carousel Dots */}
-                        {images.length > 1 && (
-                            <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 z-10">
-                                {images.map((_, i) => (
-                                    <div
-                                        key={i}
-                                        className={`w-1.5 h-1.5 rounded-full shadow-sm transition-all ${i === mediaIndex ? 'bg-blue-500 scale-125' : 'bg-white/70'}`}
-                                    />
-                                ))}
+                    {isPreviewMode ? (
+                        <div className="h-full flex items-center justify-center bg-gray-100 rounded-xl overflow-hidden border border-gray-200">
+                            {/* Simplified Preview using PhonePreview logic but for single post */}
+                            <div className="w-[320px] h-[600px] bg-white scale-90 origin-center pointer-events-none">
+                                <PhonePreview
+                                    platform="Instagram"
+                                    identity={identity}
+                                    brand={brand as any} // Cast safely 
+                                    showStory={false}
+                                    setShowStory={() => { }}
+                                    viewMode="post"
+                                    postData={{ ...post, caption: caption, hashtags: hashtags.split(' ').filter(t => t.trim().length > 0) }}
+                                    overrideData={{
+                                        feed: [] // Not used in post view
+                                    }}
+                                />
                             </div>
-                        )}
-
-                        {/* Navigation Arrows for Carousel */}
-                        {images.length > 1 && (
-                            <>
-                                <button
-                                    onClick={() => setMediaIndex(i => i > 0 ? i - 1 : i)}
-                                    className={`absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-1 rounded-full ${mediaIndex === 0 ? 'hidden' : ''}`}
-                                >
-                                    <ArrowLeft size={16} />
-                                </button>
-                                <button
-                                    onClick={() => setMediaIndex(i => i < images.length - 1 ? i + 1 : i)}
-                                    className={`absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-1 rounded-full ${mediaIndex === images.length - 1 ? 'hidden' : ''}`}
-                                >
-                                    <ArrowRight size={16} />
-                                </button>
-                            </>
-                        )}
-
-                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button
-                                onClick={() => fileRef.current?.click()}
-                                className="bg-white text-black px-4 py-2 rounded-full font-bold text-xs flex items-center gap-2 hover:scale-105 transition-transform"
-                            >
-                                <Upload size={14} /> Replace / Add Media
-                            </button>
                         </div>
-                    </div>
+                    ) : (
+                        <>
+                            {/* Media Preview (Phone Style) */}
+                            <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative group border border-gray-200 shadow-inner">
+                                {images.length > 0 ? (
+                                    post.type === 'video' ? (
+                                        <video src={images[mediaIndex] || images[0]} className="w-full h-full object-cover" controls />
+                                    ) : (
+                                        <img src={images[mediaIndex] || images[0]} className="w-full h-full object-cover" />
+                                    )
+                                ) : (
+                                    <div className="flex items-center justify-center h-full text-gray-300"><ImageIcon size={48} /></div>
+                                )}
 
-                    {images.length > 0 && (
-                        <div className="flex gap-2 overflow-x-auto pb-2">
-                            {images.map((img, i) => (
-                                <div
-                                    key={i}
-                                    className={`w-16 h-16 shrink-0 rounded border-2 cursor-pointer overflow-hidden ${i === mediaIndex ? 'border-blue-500' : 'border-transparent'}`}
-                                    onClick={() => setMediaIndex(i)}
-                                >
-                                    <img src={img} className="w-full h-full object-cover" />
+                                {/* Carousel Dots */}
+                                {images.length > 1 && (
+                                    <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 z-10">
+                                        {images.map((_, i) => (
+                                            <div
+                                                key={i}
+                                                className={`w-1.5 h-1.5 rounded-full shadow-sm transition-all ${i === mediaIndex ? 'bg-blue-500 scale-125' : 'bg-white/70'}`}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* Navigation Arrows for Carousel */}
+                                {images.length > 1 && (
+                                    <>
+                                        <button
+                                            onClick={() => setMediaIndex(i => i > 0 ? i - 1 : i)}
+                                            className={`absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-1 rounded-full ${mediaIndex === 0 ? 'hidden' : ''}`}
+                                        >
+                                            <ArrowLeft size={16} />
+                                        </button>
+                                        <button
+                                            onClick={() => setMediaIndex(i => i < images.length - 1 ? i + 1 : i)}
+                                            className={`absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-1 rounded-full ${mediaIndex === images.length - 1 ? 'hidden' : ''}`}
+                                        >
+                                            <ArrowRight size={16} />
+                                        </button>
+                                    </>
+                                )}
+
+                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button
+                                        onClick={() => fileRef.current?.click()}
+                                        className="bg-white text-black px-4 py-2 rounded-full font-bold text-xs flex items-center gap-2 hover:scale-105 transition-transform"
+                                    >
+                                        <Upload size={14} /> Replace / Add Media
+                                    </button>
                                 </div>
-                            ))}
-                            <div
-                                onClick={() => fileRef.current?.click()}
-                                className="w-16 h-16 shrink-0 rounded border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50"
-                            >
-                                <Plus size={20} className="text-gray-300" />
                             </div>
-                        </div>
+
+                            {images.length > 0 && (
+                                <div className="flex gap-2 overflow-x-auto pb-2">
+                                    {images.map((img, i) => (
+                                        <div
+                                            key={i}
+                                            className={`w-16 h-16 shrink-0 rounded border-2 cursor-pointer overflow-hidden ${i === mediaIndex ? 'border-blue-500' : 'border-transparent'}`}
+                                            onClick={() => setMediaIndex(i)}
+                                        >
+                                            <img src={img} className="w-full h-full object-cover" />
+                                        </div>
+                                    ))}
+                                    <div
+                                        onClick={() => fileRef.current?.click()}
+                                        className="w-16 h-16 shrink-0 rounded border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50"
+                                    >
+                                        <Plus size={20} className="text-gray-300" />
+                                    </div>
+                                </div>
+                            )}
+
+                            <input type="file" ref={fileRef} multiple className="hidden" accept="image/*,video/*" onChange={handleMediaUpload} />
+
+                            {/* Caption */}
+                            <div>
+                                <label className="block text-xs font-bold uppercase tracking-wider mb-2 text-gray-500">Caption</label>
+                                <textarea
+                                    className="w-full p-3 bg-white text-black border border-gray-200 rounded-lg text-sm min-h-[100px] focus:ring-2 focus:ring-black focus:border-transparent outline-none resize-none"
+                                    placeholder="Write a caption..."
+                                    value={caption}
+                                    onChange={e => setCaption(e.target.value)}
+                                    onBlur={() => handleSave()}
+                                />
+                            </div>
+
+                            {/* Hashtags */}
+                            <div>
+                                <label className="block text-xs font-bold uppercase tracking-wider mb-2 text-gray-500">Hashtags</label>
+                                <textarea
+                                    className="w-full p-3 bg-white text-black border border-gray-200 rounded-lg text-sm min-h-[60px] focus:ring-2 focus:ring-black focus:border-transparent outline-none resize-none font-mono"
+                                    placeholder="#brand #lifestyle..."
+                                    value={hashtags}
+                                    onChange={e => setHashtags(e.target.value)}
+                                    onBlur={() => handleSave()}
+                                />
+                            </div>
+                        </>
                     )}
-
-                    <input type="file" ref={fileRef} multiple className="hidden" accept="image/*,video/*" onChange={handleMediaUpload} />
-
-                    {/* Caption */}
-                    <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider mb-2 text-gray-500">Caption</label>
-                        <textarea
-                            className="w-full p-3 border border-gray-200 rounded-lg text-sm min-h-[100px] focus:ring-2 focus:ring-black focus:border-transparent outline-none resize-none"
-                            placeholder="Write a caption..."
-                            value={caption}
-                            onChange={e => setCaption(e.target.value)}
-                            onBlur={() => handleSave()}
-                        />
-                    </div>
-
-                    {/* Hashtags */}
-                    <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider mb-2 text-gray-500">Hashtags</label>
-                        <textarea
-                            className="w-full p-3 border border-gray-200 rounded-lg text-sm min-h-[60px] focus:ring-2 focus:ring-black focus:border-transparent outline-none resize-none font-mono text-blue-600"
-                            placeholder="#brand #lifestyle..."
-                            value={hashtags}
-                            onChange={e => setHashtags(e.target.value)}
-                            onBlur={() => handleSave()}
-                        />
-                    </div>
                 </div>
 
                 <div className="p-4 border-t border-gray-100 bg-gray-50">
-                    <button onClick={() => { handleSave(); onClose(); }} className="w-full bg-black text-white py-3 rounded-lg font-bold text-sm hover:opacity-90">
-                        Done
-                    </button>
+                    <div className="flex gap-2">
+                        <button onClick={handleSaveDesign} className="flex-1 bg-white border border-gray-200 text-black py-3 rounded-lg font-bold text-sm hover:bg-gray-50 flex items-center justify-center gap-2">
+                            <Layout size={16} /> Save Design
+                        </button>
+                        <button onClick={() => { handleSave(); onClose(); toast.success("Post scheduled") }} className="flex-1 bg-black text-white py-3 rounded-lg font-bold text-sm hover:opacity-90 flex items-center justify-center gap-2">
+                            Post
+                        </button>
+                        <button onClick={() => { handleSave(); onClose(); }} className="flex-1 bg-gray-100 text-gray-800 py-3 rounded-lg font-bold text-sm hover:bg-gray-200">
+                            Done
+                        </button>
+                    </div>
                 </div>
             </div>
         );
@@ -1793,7 +2009,7 @@ export const SocialKit: React.FC = () => {
 
                             {/* Main Phone Container */}
                             <div className={`flex-1 flex items-center justify-center p-8 transition-all duration-500 ${selectedPostIndex !== null ? 'mr-[400px]' : ''}`}>
-                                <div className={`shadow-2xl overflow-hidden bg-black border-[8px] border-black rounded-[2.5rem] relative transition-all duration-500 origin-center ${activePlatform === 'YouTube' || activePlatform === 'Facebook' || activePlatform === 'LinkedIn' ? 'w-[375px] h-[750px] scale-90' : 'w-[350px] h-[720px] scale-90'}`}>
+                                <div id="phone-preview-container" className={`shadow-2xl overflow-hidden bg-black border-[8px] border-black rounded-[2.5rem] relative transition-all duration-500 origin-center ${activePlatform === 'YouTube' || activePlatform === 'Facebook' || activePlatform === 'LinkedIn' ? 'w-[375px] h-[750px] scale-90' : 'w-[350px] h-[720px] scale-90'}`}>
                                     <div className="absolute top-0 left-0 right-0 h-8 bg-black/20 z-50 flex justify-between px-6 items-center text-[10px] text-white font-bold backdrop-blur-sm pointer-events-none">
                                         <span>9:41</span>
                                         <div className="flex gap-1">

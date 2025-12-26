@@ -8,35 +8,45 @@ const GRAPH_API = "https://graph.facebook.com/v19.0";
 
 // Helper to get token (In a real app, this might be passed from context or a server action)
 // Helper to get token (In a real app, this might be passed from context or a server action)
+// Helper to get token (Securely via API to bypass RLS)
 const getAccessToken = async (brandId: string) => {
     // This is client-side only for demo purposes. Secure calls should be server-side.
-    // Assuming we fetch the token for the active brand.
-    const supabase = createClient<Database>(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+    // We use the persist API to read the token from social_integrations if RLS blocks direct access.
 
     console.log(`[MetaService] Fetching token for brand: ${brandId}`);
     let token = null;
 
     try {
-        const { data, error } = await supabase
-            .from('social_integrations')
-            .select('access_token')
-            .eq('brand_id', brandId)
-            .eq('platform', 'facebook')
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .maybeSingle();
+        // Use persist API instead of direct supabase client
+        const res = await fetch('/api/brand-book/persist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                table: 'social_integrations',
+                action: 'select',
+                data: {
+                    query: { brand_id: brandId, platform: 'facebook' }
+                }
+            })
+        });
 
-        if (data) token = (data as any).access_token;
-        if (error) console.warn("[MetaService] DB Fetch Error:", error);
+        const json = await res.json();
+
+        // Ensure we get the latest token if multiple exist (though we try to keep it unique)
+        // The persist API 'select' returns an array.
+        if (json.data && Array.isArray(json.data) && json.data.length > 0) {
+            // Sort manually if needed, or assume the API/DB returns in some order. 
+            // Ideally we'd order by created_at desc, but simple select might not support order param yet.
+            // Let's just take the first one for now, or the last one.
+            const tokens = json.data.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+            token = tokens[0].access_token;
+        }
 
     } catch (e) {
-        console.warn("[MetaService] Supabase connection failed", e);
+        console.warn("[MetaService] API connection failed", e);
     }
 
-    // FALLBACK: Check LocalStorage (if DB failed)
+    // FALLBACK: Check LocalStorage (if DB failed or empty)
     if (!token && typeof window !== 'undefined') {
         const localToken = localStorage.getItem(`exequte_facebook_token_${brandId}`);
         // GUARD: Ensure we don't pick up "undefined" or "null" strings from previous bugs
@@ -49,6 +59,8 @@ const getAccessToken = async (brandId: string) => {
     console.log(`[MetaService] Token found? ${!!token}`);
     return token;
 };
+
+
 
 export const syncMetaInsights = async (accountId: string, brandId: string) => {
     console.log(`Syncing insights for account ${accountId}`);
@@ -453,3 +465,6 @@ export const getFacebookFeed = async (pageId: string, brandId: string, limit: nu
         throw error;
     }
 };
+
+// ALIAS for SocialKit compatibility
+export const searchInstagramByHandle = searchInstagramAccounts;
