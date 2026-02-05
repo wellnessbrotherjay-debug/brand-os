@@ -1803,9 +1803,9 @@ export const SocialKit: React.FC = () => {
             </div>
 
             {/* Content */}
-            <div className="flex-1 min-h-0">
+            <div className="flex-1 min-h-0 relative">
                 {activeTab === 'profiles' && (
-                    <div className="flex gap-8 h-full">
+                    <div className="flex gap-4 h-full">
                         {/* New MediaOS Sidebar */}
                         <div className="w-64 shrink-0 flex flex-col gap-6">
                             {/* ACCESS */}
@@ -1874,7 +1874,7 @@ export const SocialKit: React.FC = () => {
                         </div>
 
                         {/* Main Editor Console */}
-                        <div className="flex-1 flex flex-col bg-white rounded-3xl shadow-2xl shadow-black/5 border border-black/5 overflow-hidden">
+                        <div className={`flex-1 min-w-0 flex flex-col bg-white rounded-3xl shadow-2xl shadow-black/5 border border-black/5 overflow-hidden transition-all duration-500 ${layoutMode === 'Split' ? 'max-w-xl' : ''}`}>
                             <div className="px-8 py-6 border-b border-black/5 flex justify-between items-center">
                                 <h3 className="font-bold flex items-center gap-2">
                                     <div className="w-2 h-6 bg-blue-600 rounded-full" />
@@ -2014,7 +2014,23 @@ export const SocialKit: React.FC = () => {
                         </div>
 
                         {/* Phone Mockup Area */}
-                        <div className={`${layoutMode === 'Split' ? 'w-[1000px]' : 'w-[500px]'} shrink-0 bg-gray-100/50 rounded-3xl border border-black/5 p-10 flex flex-col items-center justify-center overflow-hidden transition-all duration-700`}>
+                        <div className={`${layoutMode === 'Split' ? 'w-[820px]' : 'w-[420px]'} shrink-0 bg-gray-100/50 rounded-3xl border border-black/5 p-6 flex flex-col items-center justify-center overflow-hidden transition-all duration-700 relative`}>
+                            {/* Detailed Post Editor Overlay */}
+                            {selectedPostIndex !== null && (
+                                <div className="absolute inset-0 z-[60] bg-white/10 backdrop-blur-sm flex justify-end">
+                                    <PostEditor
+                                        index={selectedPostIndex}
+                                        post={proposedIdentity?.instagram_feed?.[selectedPostIndex] || identity?.instagram_feed?.[selectedPostIndex] || { id: 'new', type: 'image', url: '' }}
+                                        onClose={() => setSelectedPostIndex(null)}
+                                        onUpdate={(updatedPost) => {
+                                            const currentFeed = proposedIdentity?.instagram_feed || identity?.instagram_feed || [];
+                                            const newFeed = [...currentFeed];
+                                            newFeed[selectedPostIndex] = updatedPost;
+                                            handleProposedUpdate({ instagram_feed: newFeed });
+                                        }}
+                                    />
+                                </div>
+                            )}
                             <div className="flex gap-10 items-center justify-center" style={{ transform: `scale(${phoneScale})`, transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)' }}>
                                 {/* LIVE PREVIEW (Only in Split Mode) */}
                                 {layoutMode === 'Split' && (
