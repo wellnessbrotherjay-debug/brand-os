@@ -476,7 +476,7 @@ export interface BrandIdentity {
 
 // --- NEW WORKSPACE TYPES ---
 
-export type TeamRole = 'Marketing' | 'Design' | 'Creative' | 'Admin';
+export type TeamRole = 'Marketing' | 'Design' | 'Creative' | 'Creator' | 'Admin';
 
 export interface TeamMember {
   id: string;

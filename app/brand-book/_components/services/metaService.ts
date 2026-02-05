@@ -466,5 +466,43 @@ export const getFacebookFeed = async (pageId: string, brandId: string, limit: nu
     }
 };
 
+export const publishToInstagram = async (brandId: string, mediaUrl: string, caption: string, mediaType: 'IMAGE' | 'VIDEO' | 'REELS' = 'IMAGE') => {
+    try {
+        // 1. Get the IG Business Account ID first if not provided
+        // We find the first page with an IG account for this brand
+        const pagesResult = await getFacebookPages(brandId);
+        const pageWithIG = pagesResult.pages?.find((p: any) => p.hasInstagram);
+
+        if (!pageWithIG) {
+            throw new Error("No connected Instagram Business Account found.");
+        }
+
+        const igBusinessAccountId = pageWithIG.instagramBusinessAccountId;
+
+        const response = await fetch('/api/instagram/publish', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                igBusinessAccountId,
+                brandId,
+                mediaUrl,
+                caption,
+                mediaType
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to publish to Instagram');
+        }
+
+        return data;
+    } catch (error: any) {
+        console.error('[publishToInstagram Error]:', error);
+        throw error;
+    }
+};
+
 // ALIAS for SocialKit compatibility
 export const searchInstagramByHandle = searchInstagramAccounts;

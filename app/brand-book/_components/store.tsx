@@ -719,6 +719,13 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         if (res && res.data) setAssets(res.data as BrandAsset[]);
     };
 
+    const loadTeamMembers = async () => {
+        const res = await persistData('team_members', 'select');
+        if (res && res.data && res.data.length > 0) {
+            setTeamMembers(res.data as TeamMember[]);
+        }
+    };
+
 
     useEffect(() => {
         // Hydration from DB
@@ -726,6 +733,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         loadIdentities();
         loadStrategy();
         loadAssets();
+        loadTeamMembers();
     }, []);
 
 
@@ -948,9 +956,20 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const updateSceneVisual = (id: string, url: string) => setVideoScenes(prev => prev.map(s => s.id === id ? { ...s, asset_url: url } : s));
 
     // Team Logic
-    const addTeamMember = (member: TeamMember) => setTeamMembers(prev => [...prev, member]);
-    const updateTeamMember = (id: string, updates: Partial<TeamMember>) => setTeamMembers(prev => prev.map(m => m.id === id ? { ...m, ...updates } : m));
-    const deleteTeamMember = (id: string) => setTeamMembers(prev => prev.filter(m => m.id !== id));
+    const addTeamMember = async (member: TeamMember) => {
+        setTeamMembers(prev => [...prev, member]);
+        await persistData('team_members', 'insert', member);
+    };
+
+    const updateTeamMember = async (id: string, updates: Partial<TeamMember>) => {
+        setTeamMembers(prev => prev.map(m => m.id === id ? { ...m, ...updates } : m));
+        await persistData('team_members', 'update', updates, id);
+    };
+
+    const deleteTeamMember = async (id: string) => {
+        setTeamMembers(prev => prev.filter(m => m.id !== id));
+        await persistData('team_members', 'delete', undefined, id);
+    };
 
     const updateLLMSettings = (settings: LLMSettings) => {
         setLLMSettings(prev => {

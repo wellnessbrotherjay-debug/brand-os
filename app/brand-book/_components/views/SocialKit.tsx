@@ -35,7 +35,9 @@ const PhonePreview = ({
     onPostClick,
     isLive = false,
     customTitle = undefined,
-    overrideData = null
+    overrideData = null,
+    viewMode = 'profile',
+    postData = null
 }: {
     platform: string,
     identity: BrandIdentity,
@@ -1076,7 +1078,7 @@ const AddCompetitorModal = ({
 
 
 export const SocialKit: React.FC = () => {
-    const { activeBrandId, brands, identities, updateIdentity, creativeRequests, addCreativeRequest, addAsset, assets } = useAppStore();
+    const { activeBrandId, brands, identities, updateIdentity, creativeRequests, addCreativeRequest, addAsset, assets, connectors } = useAppStore();
     const activeBrand = brands.find(b => b.id === activeBrandId);
     const identity = identities.find(i => i.brand_id === activeBrandId);
 
@@ -1388,6 +1390,19 @@ export const SocialKit: React.FC = () => {
                                     />
                                 )}
                             </div>
+                            {comparisonMode === 'internal' && (
+                                <button
+                                    onClick={() => {
+                                        if (proposedIdentity) {
+                                            handleIdentityUpdate(proposedIdentity);
+                                            toast.success("Draft identity applied to live!");
+                                        }
+                                    }}
+                                    className="mt-6 bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-md active:scale-95 flex items-center gap-2"
+                                >
+                                    <CheckCircle2 size={18} /> Apply Draft to Live Profile
+                                </button>
+                            )}
                         </div>
 
                         {showTextComparison && (
@@ -1755,18 +1770,20 @@ export const SocialKit: React.FC = () => {
                         <div className="h-full flex items-center justify-center bg-gray-100 rounded-xl overflow-hidden border border-gray-200">
                             {/* Simplified Preview using PhonePreview logic but for single post */}
                             <div className="w-[320px] h-[600px] bg-white scale-90 origin-center pointer-events-none">
-                                <PhonePreview
-                                    platform="Instagram"
-                                    identity={identity}
-                                    brand={brand as any} // Cast safely 
-                                    showStory={false}
-                                    setShowStory={() => { }}
-                                    viewMode="post"
-                                    postData={{ ...post, caption: caption, hashtags: hashtags.split(' ').filter(t => t.trim().length > 0) }}
-                                    overrideData={{
-                                        feed: [] // Not used in post view
-                                    }}
-                                />
+                                {identity && activeBrand && (
+                                    <PhonePreview
+                                        platform="Instagram"
+                                        identity={identity}
+                                        brand={activeBrand} // Adjusted to activeBrand
+                                        showStory={false}
+                                        setShowStory={() => { }}
+                                        viewMode="post"
+                                        postData={{ ...post, caption: caption, hashtags: hashtags.split(' ').filter(t => t.trim().length > 0) }}
+                                        overrideData={{
+                                            feed: [] // Not used in post view
+                                        }}
+                                    />
+                                )}
                             </div>
                         </div>
                     ) : (
@@ -1877,8 +1894,35 @@ export const SocialKit: React.FC = () => {
                         <button onClick={handleSaveDesign} className="flex-1 bg-white border border-gray-200 text-black py-3 rounded-lg font-bold text-sm hover:bg-gray-50 flex items-center justify-center gap-2">
                             <Layout size={16} /> Save Design
                         </button>
-                        <button onClick={() => { handleSave(); onClose(); toast.success("Post scheduled") }} className="flex-1 bg-black text-white py-3 rounded-lg font-bold text-sm hover:opacity-90 flex items-center justify-center gap-2">
-                            Post
+                        <button
+                            onClick={async () => {
+                                handleSave();
+                                if (!activeBrandId) return;
+
+                                const isMeta = post.type === 'video' || post.type === 'image' || post.type === 'carousel';
+                                if (isMeta && confirm("Publish this post live to Instagram?")) {
+                                    toast.loading("Publishing to Instagram...");
+                                    try {
+                                        const { publishToInstagram } = await import('../services/metaService');
+                                        await publishToInstagram(
+                                            activeBrandId,
+                                            post.url,
+                                            caption,
+                                            post.type === 'video' ? 'REELS' : 'IMAGE'
+                                        );
+                                        toast.success("Successfully published to Instagram!");
+                                        onClose();
+                                    } catch (err: any) {
+                                        toast.error(`Publish failed: ${err.message}`);
+                                    }
+                                } else {
+                                    toast.success("Post scheduled in Brand OS");
+                                    onClose();
+                                }
+                            }}
+                            className="flex-1 bg-black text-white py-3 rounded-lg font-bold text-sm hover:opacity-90 flex items-center justify-center gap-2"
+                        >
+                            Publish
                         </button>
                         <button onClick={() => { handleSave(); onClose(); }} className="flex-1 bg-gray-100 text-gray-800 py-3 rounded-lg font-bold text-sm hover:bg-gray-200">
                             Done
@@ -2027,6 +2071,7 @@ export const SocialKit: React.FC = () => {
                                             onUpdate={handleIdentityUpdate}
                                             onEditHighlight={(index) => setEditingHighlightIndex(index)}
                                             onPostClick={(index) => setSelectedPostIndex(index)}
+                                            isLive={connectors.find(c => c.type.toLowerCase() === activePlatform.toLowerCase())?.connected}
                                         />}
                                     </div>
                                     <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-black/20 rounded-full z-50 pointer-events-none"></div>

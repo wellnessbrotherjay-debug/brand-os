@@ -158,8 +158,9 @@ export const TeamManagement: React.FC = () => {
                                     <td className="px-6 py-4">
                                         <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider
                                         ${member.role === 'Admin' ? 'bg-purple-100 text-purple-700' :
-                                                member.role === 'Design' ? 'bg-pink-100 text-pink-700' :
-                                                    member.role === 'Marketing' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}
+                                                member.role === 'Creator' ? 'bg-indigo-100 text-indigo-700' :
+                                                    member.role === 'Design' ? 'bg-pink-100 text-pink-700' :
+                                                        member.role === 'Marketing' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}
                                     `}>
                                             {member.role}
                                         </span>
@@ -268,7 +269,7 @@ export const TeamManagement: React.FC = () => {
                             <div>
                                 <label className="block text-xs font-bold uppercase tracking-wider mb-2 text-gray-500">Role</label>
                                 <div className="grid grid-cols-2 gap-3">
-                                    {['Marketing', 'Design', 'Creative', 'Admin'].map(role => (
+                                    {['Marketing', 'Design', 'Creative', 'Creator', 'Admin'].map(role => (
                                         <button
                                             key={role}
                                             onClick={() => setNewMember({ ...newMember, role: role as TeamRole })}
