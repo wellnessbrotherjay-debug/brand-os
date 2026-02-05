@@ -748,7 +748,13 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
     const loadIdentities = async () => {
         const res = await persistData('brand_identities', 'select');
-        if (res && res.data && res.data.length > 0) setIdentities(res.data as BrandIdentity[]);
+        // Only replace seed data if Supabase actually has data
+        if (res && res.data && res.data.length > 0) {
+            setIdentities(res.data as BrandIdentity[]);
+        } else {
+            // Keep initialIdentities if DB is empty - this preserves our seed data!
+            console.log('📦 Using seed data for identities (Supabase empty)');
+        }
     };
 
     const loadStrategy = async () => {
