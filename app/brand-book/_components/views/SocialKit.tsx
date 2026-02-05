@@ -598,197 +598,26 @@ const PhonePreview = ({
             );
         case 'Facebook':
             return (
-                <div className="bg-gray-100 text-black h-full overflow-y-auto custom-scrollbar relative">
-                    {/* Facebook Header */}
-                    <div className="bg-white pb-4 mb-2">
-                        <div className="h-40 bg-gray-300 relative group cursor-pointer" onClick={() => triggerUpload({ type: 'cover' })}>
-                            {liveProfile?.coverPhotoUrl ? (
-                                <img src={liveProfile.coverPhotoUrl} className="w-full h-full object-cover" />
-                            ) : identity?.facebook_config?.cover_url ? (
-                                <img src={identity.facebook_config.cover_url} className="w-full h-full object-cover" />
-                            ) : (
-                                <div className="flex items-center justify-center h-full opacity-20"><ImageIcon /></div>
-                            )}
-                            {!isLive && !overrideData && <div className="absolute bottom-2 right-2 bg-white/90 p-1.5 rounded-full text-black shadow-sm text-xs font-bold flex items-center gap-1"><Camera size={12} /> Edit Cover</div>}
-                        </div>
-                        <div className="px-4 relative">
-                            <div className="w-32 h-32 rounded-full border-4 border-white bg-gray-200 -mt-16 relative group cursor-pointer overflow-hidden" onClick={() => triggerUpload({ type: 'avatar' })}>
-                                {liveProfile?.profilePictureUrl ? (
-                                    <img src={liveProfile.profilePictureUrl} className="w-full h-full object-cover" />
-                                ) : data.logo ? (
-                                    <img src={data.logo} className="w-full h-full object-cover" />
-                                ) : null}
-                                {!isLive && !overrideData && <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100"><Camera className="text-white" /></div>}
-                            </div>
-                            <h2 className="text-2xl font-bold mt-2 text-black">
-                                {liveProfile?.name || data.name}
-                                {isLive && <span className="bg-green-500 w-2 h-2 rounded-full ml-2 animate-pulse inline-block align-middle"></span>}
-                            </h2>
-                            <p className="text-gray-500 font-bold text-sm">
-                                {isLoadingLive ? '...' : (liveProfile?.likes ? `${liveProfile.likes.toLocaleString()} likes` : '1.2K likes')} • {isLoadingLive ? '...' : (liveProfile?.followers ? `${liveProfile.followers.toLocaleString()} followers` : '1.4K followers')}
-                            </p>
-
-                            <div className="flex gap-2 mt-4">
-                                <button className="flex-1 bg-blue-600 text-white font-bold py-2 rounded-lg text-sm flex items-center justify-center gap-2">
-                                    <MessageCircle size={16} /> WhatsApp
-                                </button>
-                                <button className="px-4 bg-gray-200 text-black font-bold py-2 rounded-lg text-sm">
-                                    Message
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* FB Feed */}
-                    <div className="px-2 space-y-4 pb-10">
-                        <div className="bg-white p-4 rounded-lg shadow-sm">
-                            <div className="text-sm font-bold mb-2">Intro</div>
-                            <p className="text-sm text-gray-600 text-center py-4">{liveProfile?.about || identity.facebook_config?.bio || "Add a bio..."}</p>
-                            {liveProfile?.website && (
-                                <a href={liveProfile.website} target="_blank" className="text-blue-600 text-sm block text-center mt-2 truncate">{liveProfile.website}</a>
-                            )}
-                        </div>
-                        <div className="bg-white p-4 rounded-lg shadow-sm">
-                            <div className="flex justify-between items-center mb-2">
-                                <div className="text-sm font-bold">Posts</div>
-                                <div className="text-xs text-blue-600">See all</div>
-                            </div>
-
-                            {/* Live Feed Items */}
-                            {isLive && liveMedia.length > 0 ? (
-                                <div className="space-y-4">
-                                    {liveMedia.map((item: any) => (
-                                        <div key={item.id} className="border-b border-gray-100 pb-4 last:border-0">
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden">
-                                                    {liveProfile?.profilePictureUrl && <img src={liveProfile.profilePictureUrl} className="w-full h-full object-cover" />}
-                                                </div>
-                                                <div>
-                                                    <p className="font-bold text-xs">{liveProfile?.name || data.name}</p>
-                                                    <p className="text-[10px] text-gray-500">{new Date(item.createdTime).toLocaleDateString()}</p>
-                                                </div>
-                                            </div>
-                                            {item.message && <p className="text-sm mb-2">{item.message}</p>}
-                                            {item.fullPicture && (
-                                                <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden mb-2">
-                                                    <img src={item.fullPicture} className="w-full h-full object-cover" />
-                                                </div>
-                                            )}
-                                            <div className="flex gap-4 text-xs text-gray-500">
-                                                <span>{item.likesCount} Likes</span>
-                                                <span>{item.commentsCount} Comments</span>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="grid grid-cols-3 gap-1 rounded-lg overflow-hidden">
-                                    {[1, 2, 3, 4, 5, 6].map(i => <div key={i} className="aspect-square bg-gray-100"></div>)}
-                                </div>
-                            )}
-
+                <div className="bg-gray-100 h-full overflow-y-auto custom-scrollbar font-sans text-black">
+                    <div className="h-40 bg-gray-300 relative group cursor-pointer" onClick={() => triggerUpload({ type: 'cover' })}>
+                        {identity.facebook_config?.cover_url && <img src={identity.facebook_config.cover_url} className="w-full h-full object-cover" />}
+                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                            <Camera className="text-white" />
                         </div>
                     </div>
                 </div>
             );
-
-        case 'YouTube':
-            return (
-                <div className="bg-white text-black h-full overflow-y-auto custom-scrollbar relative">
-                    <div className="h-24 bg-gray-200 relative group cursor-pointer" onClick={() => triggerUpload({ type: 'banner' })}>
-                        {identity?.youtube_config?.banner_url && <img src={identity.youtube_config.banner_url} className="w-full h-full object-cover" />}
-                        {!isLive && !overrideData && <div className="absolute top-2 right-2 bg-black/50 p-1 rounded-full text-white"><Camera size={12} /></div>}
-                    </div>
-                    <div className="px-4 py-4">
-                        <div className="flex gap-3 mb-4">
-                            <div className="w-16 h-16 rounded-full bg-gray-200 shrink-0 overflow-hidden" onClick={() => triggerUpload({ type: 'avatar' })}>
-                                {data.logo && <img src={data.logo} className="w-full h-full object-cover" />}
-                            </div>
-                            <div>
-                                <h2 className="text-xl font-bold">{data.name}</h2>
-                                <p className="text-xs text-gray-600">@handle • 1.4M subscribers • 154 videos</p>
-                                <p className="text-xs text-gray-500 mt-1 whitespace-pre-wrap">{identity.youtube_config?.bio || "More about this channel..."}</p>
-                            </div>
-                        </div>
-                        <button className="w-full bg-black text-white font-bold text-sm py-2 rounded-full mb-6">Subscribe</button>
-
-                        <div className="flex gap-4 border-b border-gray-100 mb-4 overflow-x-auto">
-                            {['Home', 'Videos', 'Shorts', 'Live', 'Playlists'].map(t => (
-                                <div key={t} className="pb-2 text-sm font-bold whitespace-nowrap first:border-b-2 first:border-black">{t}</div>
-                            ))}
-                        </div>
-
-                        <div className="space-y-4 pb-10">
-                            {[1, 2, 3].map(i => (
-                                <div key={i}>
-                                    <div className="aspect-video bg-gray-200 rounded-lg mb-2 relative group cursor-pointer" onClick={() => triggerUpload({ type: 'grid', index: i })}>
-                                        <div className="absolute inset-0 flex items-center justify-center text-gray-400"><PlayCircle /></div>
-                                    </div>
-                                    <div className="flex gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-gray-200 shrink-0"></div>
-                                        <div>
-                                            <div className="h-3 w-48 bg-gray-100 rounded mb-1"></div>
-                                            <div className="h-2 w-24 bg-gray-100 rounded"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            );
-
-        case 'LinkedIn':
-            return (
-                <div className="bg-[#F3F2EF] text-black h-full overflow-y-auto custom-scrollbar relative">
-                    <div className="bg-white mb-2 pb-4">
-                        <div className="h-24 bg-gray-300 relative group cursor-pointer" onClick={() => triggerUpload({ type: 'cover' })}>
-                            {identity?.linkedin_config?.cover_url && <img src={identity.linkedin_config.cover_url} className="w-full h-full object-cover" />}
-                            {!isLive && !overrideData && <div className="absolute top-2 right-2 bg-white p-1 rounded-sm"><Camera size={12} /></div>}
-                        </div>
-                        <div className="px-4 relative mb-2">
-                            <div className="w-20 h-20 bg-white p-1 rounded-sm shadow-sm -mt-10 overflow-hidden cursor-pointer" onClick={() => triggerUpload({ type: 'avatar' })}>
-                                {data.logo && <img src={data.logo} className="w-full h-full object-cover" />}
-                            </div>
-                            <div className="flex justify-between items-start mt-2">
-                                <div>
-                                    <h2 className="text-lg font-bold">{data.name}</h2>
-                                    <p className="text-xs text-gray-600">Hospitality • 10,234 followers</p>
-                                </div>
-                                <img src={data.logo} className="w-8 h-8 object-contain" />
-                            </div>
-                            <button className="mt-3 bg-blue-600 text-white font-bold text-sm py-1 px-4 rounded-full flex items-center gap-1">
-                                <Plus size={14} /> Follow
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="bg-white p-4 mb-2">
-                        <h3 className="font-bold text-sm mb-2">About</h3>
-                        <p className="text-xs text-gray-600 whitespace-pre-wrap">{identity?.linkedin_config?.bio || identity.instagram_bio}</p>
-                    </div>
-
-                    <div className="bg-white p-4 mb-2">
-                        <h3 className="font-bold text-sm mb-2">Posts</h3>
-                        <div className="flex gap-2 border-b border-gray-100 mb-4 text-xs font-bold text-gray-500">
-                            <span className="text-green-700 border-b-2 border-green-700 pb-1">Images</span>
-                            <span>Documents</span>
-                            <span>Videos</span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2">
-                            {[1, 2, 3, 4].map(i => (
-                                <div key={i} className="aspect-square bg-gray-100 rounded-sm relative" onClick={() => triggerUpload({ type: 'grid', index: i })}></div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            );
-
         default:
-            return <div>Select Platform</div>;
+            return (
+                <div className="flex items-center justify-center h-full bg-gray-50 text-gray-400">
+                    <div className="text-center">
+                        <Smartphone size={48} className="mx-auto mb-4 opacity-20" />
+                        <p className="text-sm">Preview for {platform} coming soon</p>
+                    </div>
+                </div>
+            );
     }
 };
-
 // --- MODALS ---
 
 const HighlightEditorModal = ({
@@ -1097,7 +926,10 @@ export const SocialKit: React.FC = () => {
         if (identity) setProposedIdentity({ ...identity });
     }, [identity]);
 
-    // ... (Other states remain unchanged) ...
+    // Layout & Access State (MediaOS Style)
+    const [accessMode, setAccessMode] = useState<'Admin' | 'Creator'>('Admin');
+    const [layoutMode, setLayoutMode] = useState<'Single' | 'Split'>('Single');
+
     const [editingHighlightIndex, setEditingHighlightIndex] = useState<number | null>(null);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [loginHandle, setLoginHandle] = useState("");
@@ -1897,7 +1729,8 @@ export const SocialKit: React.FC = () => {
                         <button
                             onClick={async () => {
                                 handleSave();
-                                if (!activeBrandId) return;
+                                const brandId = activeBrandId;
+                                if (!brandId) return;
 
                                 const isMeta = post.type === 'video' || post.type === 'image' || post.type === 'carousel';
                                 if (isMeta && confirm("Publish this post live to Instagram?")) {
@@ -1905,7 +1738,7 @@ export const SocialKit: React.FC = () => {
                                     try {
                                         const { publishToInstagram } = await import('../services/metaService');
                                         await publishToInstagram(
-                                            activeBrandId,
+                                            brandId,
                                             post.url,
                                             caption,
                                             post.type === 'video' ? 'REELS' : 'IMAGE'
@@ -1971,65 +1804,134 @@ export const SocialKit: React.FC = () => {
             {/* Content */}
             <div className="flex-1 min-h-0">
                 {activeTab === 'profiles' && (
-                    // Inline Profiles View logic to use updated PhonePreview
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full">
-                        {/* Sidebar / Editor */}
-                        <div className="lg:col-span-5 flex flex-col h-full bg-white rounded-xl shadow-sm border border-black/5 overflow-hidden">
-                            <div className="p-6 border-b border-black/5">
-                                <div className="flex justify-between items-center mb-4">
-                                    <h2 className="text-xl font-bold">Profile Editor</h2>
+                    <div className="flex gap-8 h-full">
+                        {/* New MediaOS Sidebar */}
+                        <div className="w-64 shrink-0 flex flex-col gap-6">
+                            {/* ACCESS */}
+                            <div className="bg-white/40 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-sm">
+                                <h4 className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-3">Access</h4>
+                                <div className="flex p-1 bg-gray-100/50 rounded-xl">
                                     <button
-                                        onClick={async () => {
-                                            const { loginWithFacebook } = await import('../services/authService');
-                                            loginWithFacebook();
-                                        }}
-                                        className="text-xs bg-blue-600 text-white px-4 py-2 rounded-full font-bold flex items-center gap-1.5 hover:bg-blue-700 transition-all shadow-sm hover:shadow-md"
-                                    >
-                                        <LogIn size={14} /> Login to Instagram Profile
-                                    </button>
-                                </div>
-                                <div className="flex gap-2 p-1 bg-gray-100 rounded-lg overflow-x-auto">
-                                    {(['Instagram', 'TikTok', 'YouTube', 'Facebook', 'LinkedIn'] as const).map(p => (
-                                        <button
-                                            key={p}
-                                            onClick={() => setActivePlatform(p)}
-                                            className={`px-3 py-2 text-xs font-bold rounded-md transition-all whitespace-nowrap ${activePlatform === p ? 'bg-white shadow-sm text-black' : 'text-gray-500'}`}
-                                        >
-                                            {p}
-                                        </button>
-                                    ))}
+                                        onClick={() => setAccessMode('Admin')}
+                                        className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${accessMode === 'Admin' ? 'bg-white shadow text-black' : 'text-gray-400'}`}
+                                    >Admin</button>
+                                    <button
+                                        onClick={() => setAccessMode('Creator')}
+                                        className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${accessMode === 'Creator' ? 'bg-white shadow text-black' : 'text-gray-400'}`}
+                                    >Creator</button>
                                 </div>
                             </div>
 
-                            <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                                {/* Avatar / Cover */}
-                                <div className="flex items-center gap-4">
-                                    <div className="w-20 h-20 rounded-full bg-gray-100 border border-black/10 flex items-center justify-center overflow-hidden relative group cursor-pointer" onClick={() => profileUploadRef.current?.click()}>
-                                        {identity?.logo_primary_url && <img src={identity.logo_primary_url} className="w-full h-full object-cover" />}
-                                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                                            <Camera className="text-white" />
-                                        </div>
+                            {/* LAYOUT */}
+                            <div className="bg-white/40 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-sm">
+                                <h4 className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-3">Layout</h4>
+                                <div className="flex p-1 bg-gray-100/50 rounded-xl">
+                                    <button
+                                        onClick={() => setLayoutMode('Single')}
+                                        className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${layoutMode === 'Single' ? 'bg-white shadow text-black' : 'text-gray-400'}`}
+                                    >Single</button>
+                                    <button
+                                        onClick={() => setLayoutMode('Split')}
+                                        className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${layoutMode === 'Split' ? 'bg-white shadow text-black' : 'text-gray-400'}`}
+                                    >Split</button>
+                                </div>
+                            </div>
+
+                            {/* Logo & Description */}
+                            <div className="px-2">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <div className="w-6 h-6 bg-black rounded flex items-center justify-center">
+                                        <Layers size={14} className="text-white" />
                                     </div>
-                                    <div>
-                                        <button onClick={() => profileUploadRef.current?.click()} className="text-xs bg-black text-white px-3 py-2 rounded font-bold mb-1 block">Change Avatar</button>
-                                        <p className="text-[10px] opacity-50">Recommended: 1080x1080px</p>
-                                        <input type="file" ref={profileUploadRef} className="hidden" accept="image/*" onChange={(e) => {
-                                            if (e.target.files?.[0]) {
-                                                const reader = new FileReader();
-                                                reader.onloadend = () => handleIdentityUpdate({ logo_primary_url: reader.result });
-                                                reader.readAsDataURL(e.target.files[0]);
-                                            }
-                                        }} />
+                                    <span className="font-bold text-sm tracking-tight">MediaOS <span className="text-[10px] opacity-40">v4.5 BETA</span></span>
+                                </div>
+                                <p className="text-[10px] text-gray-400 leading-relaxed font-medium">
+                                    Manage your brand identity across all social platforms in one unified interface.
+                                </p>
+                            </div>
+
+                            {/* Platforms Radio */}
+                            <div className="flex flex-col gap-1 mt-auto">
+                                {(['Instagram', 'TikTok', 'YouTube', 'Facebook', 'LinkedIn'] as const).map(p => (
+                                    <button
+                                        key={p}
+                                        onClick={() => setActivePlatform(p)}
+                                        className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all ${activePlatform === p ? 'bg-white shadow-sm ring-1 ring-black/5 text-black' : 'text-gray-400 hover:text-gray-600'}`}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            {p === 'Instagram' && <Instagram size={16} />}
+                                            {p === 'TikTok' && <Video size={16} />}
+                                            {p === 'YouTube' && <Youtube size={16} />}
+                                            {p === 'Facebook' && <Facebook size={16} />}
+                                            {p === 'LinkedIn' && <Linkedin size={16} />}
+                                            <span className="text-xs font-bold">{p}</span>
+                                        </div>
+                                        <div className={`w-3 h-3 rounded-full border-2 transition-all ${activePlatform === p ? 'border-blue-500 bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]' : 'border-gray-200'}`} />
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Main Editor Console */}
+                        <div className="flex-1 flex flex-col bg-white rounded-3xl shadow-2xl shadow-black/5 border border-black/5 overflow-hidden">
+                            <div className="px-8 py-6 border-b border-black/5 flex justify-between items-center">
+                                <h3 className="font-bold flex items-center gap-2">
+                                    <div className="w-2 h-6 bg-blue-600 rounded-full" />
+                                    Profile Editor
+                                </h3>
+                                <div className="flex items-center gap-4">
+                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Live Sync Status:</span>
+                                    <div className="flex items-center gap-1.5 px-3 py-1 bg-green-50 rounded-full border border-green-100">
+                                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                                        <span className="text-[10px] font-bold text-green-700">ACTIVE</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex-1 overflow-y-auto p-8 space-y-10">
+                                {/* AVATAR & HEADER */}
+                                <div className="flex items-start gap-8">
+                                    <div className="relative group">
+                                        <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 p-[3px]">
+                                            <div
+                                                className="w-full h-full rounded-full border-[3px] border-white overflow-hidden bg-gray-50 flex items-center justify-center cursor-pointer"
+                                                onClick={() => profileUploadRef.current?.click()}
+                                            >
+                                                {identity?.logo_primary_url ? (
+                                                    <img src={identity.logo_primary_url} className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <User size={32} className="text-gray-300" />
+                                                )}
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => profileUploadRef.current?.click()}
+                                            className="absolute -bottom-1 -right-1 bg-black text-white p-2 rounded-full shadow-lg border-2 border-white hover:scale-110 transition-transform"
+                                        >
+                                            <Camera size={14} />
+                                        </button>
+                                    </div>
+
+                                    <div className="flex-1 space-y-1">
+                                        <h4 className="text-sm font-bold">{activePlatform} Identity</h4>
+                                        <p className="text-xs text-gray-400 font-medium">Manage your public presence and bio details.</p>
+                                        <div className="flex gap-3 pt-2">
+                                            <button className="text-[10px] font-bold bg-black text-white px-4 py-2 rounded-lg hover:opacity-80 transition-all">Upload New</button>
+                                            <button className="text-[10px] font-bold bg-gray-100 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200 transition-all">Remove</button>
+                                        </div>
                                     </div>
                                 </div>
 
-                                {/* Fields */}
+                                {/* BIO SECTION */}
                                 <div className="space-y-4">
-                                    <div>
-                                        <label className="block text-xs font-bold uppercase tracking-wider mb-2 opacity-50">Bio / Description</label>
+                                    <div className="flex items-center justify-between">
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Bio / Description</label>
+                                        <span className="text-[10px] font-mono text-gray-300">{(activePlatform === 'Instagram' ? identity?.instagram_bio : '').length}/150</span>
+                                    </div>
+                                    <div className="relative">
                                         <textarea
-                                            className="w-full border border-gray-200 rounded-lg p-3 text-sm h-32 bg-white"
-                                            placeholder={`Enter your ${activePlatform} bio...`}
+                                            className="w-full bg-gray-50/50 border border-black/5 rounded-2xl p-5 text-sm h-40 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all outline-none resize-none font-medium leading-relaxed shadow-inner"
+                                            placeholder={`Craft your ${activePlatform} story...`}
                                             value={
                                                 activePlatform === 'Instagram' ? identity?.instagram_bio :
                                                     activePlatform === 'TikTok' ? (identity?.tiktok_config?.bio || identity?.instagram_bio) :
@@ -2043,24 +1945,50 @@ export const SocialKit: React.FC = () => {
                                                 if (activePlatform === 'YouTube') handleIdentityUpdate({ youtube_config: { ...identity?.youtube_config, bio: val } });
                                             }}
                                         />
+                                        <div className="absolute right-4 bottom-4">
+                                            <Sparkles size={16} className="text-gray-300 hover:text-blue-500 cursor-pointer transition-colors" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* WEBSITE */}
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">External Links</label>
+                                    <div className="flex items-center gap-3 bg-gray-50 p-1.5 rounded-2xl border border-black/5 shadow-inner">
+                                        <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                                            <Globe size={18} className="text-blue-500" />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            className="flex-1 bg-transparent border-none outline-none text-sm font-bold text-gray-700 placeholder:text-gray-300"
+                                            placeholder="www.yourbrand.com"
+                                            value={identity?.instagram_website || ''}
+                                            onChange={(e) => handleIdentityUpdate({ instagram_website: e.target.value })}
+                                        />
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Footer Actions */}
+                            <div className="p-8 bg-gray-50/50 border-t border-black/5 flex justify-end gap-3">
+                                <button className="px-6 py-3 bg-white border border-black/5 rounded-xl text-xs font-bold text-gray-600 hover:bg-white shadow-sm transition-all active:scale-95">Discard</button>
+                                <button className="px-8 py-3 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 shadow-lg shadow-blue-500/20 transition-all active:scale-95">Push Changes Life</button>
+                            </div>
                         </div>
 
-                        {/* Mockup Preview Area */}
-                        <div className="lg:col-span-7 bg-gray-100 rounded-xl border border-black/5 relative overflow-hidden flex">
+                        {/* Phone Mockup Area */}
+                        <div className="w-[450px] shrink-0 bg-gray-100/50 rounded-3xl border border-black/5 p-10 flex flex-col items-center justify-center overflow-hidden">
+                            <div className="relative group scale-105">
+                                {/* Glossy Reflection Effect */}
+                                <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/20 to-transparent pointer-events-none z-50 rounded-t-[3rem]" />
 
-                            {/* Main Phone Container */}
-                            <div className={`flex-1 flex items-center justify-center p-8 transition-all duration-500 ${selectedPostIndex !== null ? 'mr-[400px]' : ''}`}>
-                                <div id="phone-preview-container" className={`shadow-2xl overflow-hidden bg-black border-[8px] border-black rounded-[2.5rem] relative transition-all duration-500 origin-center ${activePlatform === 'YouTube' || activePlatform === 'Facebook' || activePlatform === 'LinkedIn' ? 'w-[375px] h-[750px] scale-90' : 'w-[350px] h-[720px] scale-90'}`}>
-                                    <div className="absolute top-0 left-0 right-0 h-8 bg-black/20 z-50 flex justify-between px-6 items-center text-[10px] text-white font-bold backdrop-blur-sm pointer-events-none">
-                                        <span>9:41</span>
-                                        <div className="flex gap-1">
-                                            <div className="w-3 h-3 bg-white rounded-full"></div>
-                                            <div className="w-3 h-3 bg-white rounded-full"></div>
-                                        </div>
+                                <div id="phone-preview-container" className="shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] overflow-hidden bg-black border-[12px] border-black rounded-[3.5rem] relative w-[340px] h-[690px]">
+                                    {/* Notch */}
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-black rounded-b-2xl z-50 flex items-center justify-center gap-1.5">
+                                        <div className="w-2 h-2 rounded-full bg-[#1a1a1a]" />
+                                        <div className="w-10 h-1.5 rounded-full bg-[#1a1a1a]" />
                                     </div>
+
                                     <div className="pt-8 h-full bg-white">
                                         {identity && activeBrand && <PhonePreview
                                             platform={activePlatform}
@@ -2074,29 +2002,17 @@ export const SocialKit: React.FC = () => {
                                             isLive={connectors.find(c => c.type.toLowerCase() === activePlatform.toLowerCase())?.connected}
                                         />}
                                     </div>
-                                    <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-black/20 rounded-full z-50 pointer-events-none"></div>
+
+                                    {/* Home Indicator */}
+                                    <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-32 h-1 bg-black/10 rounded-full z-50" />
                                 </div>
                             </div>
 
-                            {/* Side-by-Side Detailed Editor */}
-                            {selectedPostIndex !== null && identity?.instagram_feed && (
-                                <div className="absolute top-0 right-0 bottom-0 z-10 w-[400px]">
-                                    <PostEditor
-                                        index={selectedPostIndex}
-                                        post={identity.instagram_feed[selectedPostIndex] || { id: 'temp', type: 'image', url: '' }}
-                                        onClose={() => setSelectedPostIndex(null)}
-                                        onUpdate={(updatedPost) => {
-                                            const newFeed = [...(identity.instagram_feed || [])];
-                                            while (newFeed.length <= selectedPostIndex) {
-                                                newFeed.push({ id: crypto.randomUUID(), type: 'image', url: '' });
-                                            }
-                                            newFeed[selectedPostIndex] = updatedPost;
-                                            handleIdentityUpdate({ instagram_feed: newFeed });
-                                        }}
-                                    />
-                                </div>
-                            )}
-
+                            <div className="mt-8 flex gap-4">
+                                <button className="p-3 bg-white rounded-xl shadow-sm border border-black/5 hover:scale-110 transition-transform"><Smartphone size={20} className="text-gray-400" /></button>
+                                <button className="p-3 bg-white rounded-xl shadow-sm border border-black/5 hover:scale-110 transition-transform"><Monitor size={20} className="text-gray-400" /></button>
+                                <button className="p-3 bg-white rounded-xl shadow-sm border border-black/5 hover:scale-110 transition-transform"><Maximize2 size={20} className="text-gray-400" /></button>
+                            </div>
                         </div>
                     </div>
                 )}

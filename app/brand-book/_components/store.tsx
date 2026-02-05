@@ -107,6 +107,8 @@ const baseIdentity = {
         { label: 'Education', percentage: 34, color_hex: '#e5e7eb' }
     ],
     instagram_bio: 'Strength made elegant.\n🏋️ Elite fitness & wellness\n📍 Bali, Indonesia\n👇 Book your transformation',
+    instagram_website: 'www.glvt.com',
+    logo_primary_url: 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=200',
     instagram_highlights: [
         {
             id: 'h1', title: 'Classes', cover_image: 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=200', stories: [
@@ -743,18 +745,52 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
     const loadBrands = async () => {
         const res = await persistData('brands', 'select');
-        if (res && res.data && res.data.length > 0) setBrands(res.data);
+        if (res && res.data && res.data.length > 0) {
+            const dbBrands = res.data as Brand[];
+            // Merge DB brands with initial brands to preserve seed data IDs
+            const merged = [...initialBrands];
+            dbBrands.forEach(db => {
+                const idx = merged.findIndex(m => m.id === db.id);
+                if (idx >= 0) merged[idx] = db;
+                else merged.push(db);
+            });
+            setBrands(merged);
+        }
     };
 
     const loadIdentities = async () => {
         const res = await persistData('brand_identities', 'select');
-        // Only replace seed data if Supabase actually has data
-        if (res && res.data && res.data.length > 0) {
-            setIdentities(res.data as BrandIdentity[]);
-        } else {
-            // Keep initialIdentities if DB is empty - this preserves our seed data!
-            console.log('📦 Using seed data for identities (Supabase empty)');
-        }
+        const dbIdentities = (res && res.data) ? (res.data as BrandIdentity[]) : [];
+
+        // Merge initialIdentities with DB data
+        // This ensures that even if the DB is empty or missing fields, our beautiful seed data shows up
+        const merged = initialIdentities.map(initial => {
+            const fromDb = dbIdentities.find(db => db.brand_id === initial.brand_id);
+            if (!fromDb) return initial;
+
+            return {
+                ...initial,
+                ...fromDb,
+                // Prioritize seed data for these fields if DB versions are empty/missing
+                instagram_bio: fromDb.instagram_bio || initial.instagram_bio,
+                instagram_highlights: (fromDb.instagram_highlights && fromDb.instagram_highlights.length > 0)
+                    ? fromDb.instagram_highlights
+                    : initial.instagram_highlights,
+                instagram_feed: (fromDb.instagram_feed && fromDb.instagram_feed.length > 0)
+                    ? fromDb.instagram_feed
+                    : initial.instagram_feed,
+                brand_book_config: {
+                    ...initial.brand_book_config,
+                    ...(fromDb.brand_book_config || {}),
+                    moodboard_images: (fromDb.brand_book_config?.moodboard_images?.length)
+                        ? fromDb.brand_book_config.moodboard_images
+                        : initial.brand_book_config?.moodboard_images
+                }
+            };
+        });
+
+        setIdentities(merged);
+        console.log('📦 Identities loaded (merged with seed data)');
     };
 
     const loadStrategy = async () => {
