@@ -929,6 +929,7 @@ export const SocialKit: React.FC = () => {
     // Layout & Access State (MediaOS Style)
     const [accessMode, setAccessMode] = useState<'Admin' | 'Creator'>('Admin');
     const [layoutMode, setLayoutMode] = useState<'Single' | 'Split'>('Single');
+    const [phoneScale, setPhoneScale] = useState(1);
 
     const [editingHighlightIndex, setEditingHighlightIndex] = useState<number | null>(null);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -1926,23 +1927,23 @@ export const SocialKit: React.FC = () => {
                                 <div className="space-y-4">
                                     <div className="flex items-center justify-between">
                                         <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Bio / Description</label>
-                                        <span className="text-[10px] font-mono text-gray-300">{(activePlatform === 'Instagram' ? identity?.instagram_bio : '').length}/150</span>
+                                        <span className="text-[10px] font-mono text-gray-300">{(activePlatform === 'Instagram' ? (proposedIdentity?.instagram_bio || '') : '').length}/150</span>
                                     </div>
                                     <div className="relative">
                                         <textarea
                                             className="w-full bg-gray-50/50 border border-black/5 rounded-2xl p-5 text-sm h-40 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all outline-none resize-none font-medium leading-relaxed shadow-inner"
                                             placeholder={`Craft your ${activePlatform} story...`}
                                             value={
-                                                activePlatform === 'Instagram' ? identity?.instagram_bio :
-                                                    activePlatform === 'TikTok' ? (identity?.tiktok_config?.bio || identity?.instagram_bio) :
-                                                        activePlatform === 'YouTube' ? (identity?.youtube_config?.bio || activeBrand?.tagline) :
-                                                            activeBrand?.tagline
+                                                activePlatform === 'Instagram' ? (proposedIdentity?.instagram_bio || '') :
+                                                    activePlatform === 'TikTok' ? (proposedIdentity?.tiktok_config?.bio || proposedIdentity?.instagram_bio || '') :
+                                                        activePlatform === 'YouTube' ? (proposedIdentity?.youtube_config?.bio || activeBrand?.tagline || '') :
+                                                            (activeBrand?.tagline || '')
                                             }
                                             onChange={(e) => {
                                                 const val = e.target.value;
-                                                if (activePlatform === 'Instagram') handleIdentityUpdate({ instagram_bio: val });
-                                                if (activePlatform === 'TikTok') handleIdentityUpdate({ tiktok_config: { ...identity?.tiktok_config, bio: val } });
-                                                if (activePlatform === 'YouTube') handleIdentityUpdate({ youtube_config: { ...identity?.youtube_config, bio: val } });
+                                                if (activePlatform === 'Instagram') handleProposedUpdate({ instagram_bio: val });
+                                                if (activePlatform === 'TikTok') handleProposedUpdate({ tiktok_config: { ...proposedIdentity?.tiktok_config, bio: val } });
+                                                if (activePlatform === 'YouTube') handleProposedUpdate({ youtube_config: { ...proposedIdentity?.youtube_config, bio: val } });
                                             }}
                                         />
                                         <div className="absolute right-4 bottom-4">
@@ -1952,66 +1953,141 @@ export const SocialKit: React.FC = () => {
                                 </div>
 
                                 {/* WEBSITE */}
-                                <div className="space-y-4">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">External Links</label>
-                                    <div className="flex items-center gap-3 bg-gray-50 p-1.5 rounded-2xl border border-black/5 shadow-inner">
-                                        <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
-                                            <Globe size={18} className="text-blue-500" />
+                                {accessMode === 'Admin' ? (
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">External Links</label>
+                                        <div className="flex items-center gap-3 bg-gray-50 p-1.5 rounded-2xl border border-black/5 shadow-inner">
+                                            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                                                <Globe size={18} className="text-blue-500" />
+                                            </div>
+                                            <input
+                                                type="text"
+                                                className="flex-1 bg-transparent border-none outline-none text-sm font-bold text-gray-700 placeholder:text-gray-300"
+                                                placeholder="www.yourbrand.com"
+                                                value={proposedIdentity?.instagram_website || ''}
+                                                onChange={(e) => handleProposedUpdate({ instagram_website: e.target.value })}
+                                            />
                                         </div>
-                                        <input
-                                            type="text"
-                                            className="flex-1 bg-transparent border-none outline-none text-sm font-bold text-gray-700 placeholder:text-gray-300"
-                                            placeholder="www.yourbrand.com"
-                                            value={identity?.instagram_website || ''}
-                                            onChange={(e) => handleIdentityUpdate({ instagram_website: e.target.value })}
-                                        />
                                     </div>
-                                </div>
+                                ) : (
+                                    <div className="bg-blue-50/50 p-6 rounded-2xl border border-blue-100/50">
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <Sparkles size={18} className="text-blue-500" />
+                                            <h4 className="text-xs font-bold text-blue-900">Creator Hub Tips</h4>
+                                        </div>
+                                        <p className="text-[10px] text-blue-800/70 leading-relaxed">
+                                            Focus on your storytelling. Institutional links are managed by your Brand Admin to ensure consistency across all digital touchpoints.
+                                        </p>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Footer Actions */}
                             <div className="p-8 bg-gray-50/50 border-t border-black/5 flex justify-end gap-3">
-                                <button className="px-6 py-3 bg-white border border-black/5 rounded-xl text-xs font-bold text-gray-600 hover:bg-white shadow-sm transition-all active:scale-95">Discard</button>
-                                <button className="px-8 py-3 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 shadow-lg shadow-blue-500/20 transition-all active:scale-95">Push Changes Life</button>
+                                <button
+                                    onClick={() => identity && setProposedIdentity({ ...identity })}
+                                    className="px-6 py-3 bg-white border border-black/5 rounded-xl text-xs font-bold text-gray-600 hover:bg-white shadow-sm transition-all active:scale-95"
+                                >
+                                    Reset Draft
+                                </button>
+                                <button
+                                    onClick={async () => {
+                                        if (proposedIdentity) {
+                                            toast.promise(
+                                                (async () => {
+                                                    await handleIdentityUpdate(proposedIdentity);
+                                                    return "Updates pushed to all platform identities.";
+                                                })(),
+                                                {
+                                                    loading: 'Pushing updates to 5 platforms...',
+                                                    success: (data) => data,
+                                                    error: 'Failed to push updates.',
+                                                }
+                                            );
+                                        }
+                                    }}
+                                    className="px-8 py-3 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 shadow-lg shadow-blue-500/20 transition-all active:scale-95"
+                                >
+                                    Push Changes Live
+                                </button>
                             </div>
                         </div>
 
                         {/* Phone Mockup Area */}
-                        <div className="w-[450px] shrink-0 bg-gray-100/50 rounded-3xl border border-black/5 p-10 flex flex-col items-center justify-center overflow-hidden">
-                            <div className="relative group scale-105">
-                                {/* Glossy Reflection Effect */}
-                                <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/20 to-transparent pointer-events-none z-50 rounded-t-[3rem]" />
-
-                                <div id="phone-preview-container" className="shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] overflow-hidden bg-black border-[12px] border-black rounded-[3.5rem] relative w-[340px] h-[690px]">
-                                    {/* Notch */}
-                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-black rounded-b-2xl z-50 flex items-center justify-center gap-1.5">
-                                        <div className="w-2 h-2 rounded-full bg-[#1a1a1a]" />
-                                        <div className="w-10 h-1.5 rounded-full bg-[#1a1a1a]" />
+                        <div className={`${layoutMode === 'Split' ? 'w-[1000px]' : 'w-[500px]'} shrink-0 bg-gray-100/50 rounded-3xl border border-black/5 p-10 flex flex-col items-center justify-center overflow-hidden transition-all duration-700`}>
+                            <div className="flex gap-10 items-center justify-center" style={{ transform: `scale(${phoneScale})`, transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)' }}>
+                                {/* LIVE PREVIEW (Only in Split Mode) */}
+                                {layoutMode === 'Split' && (
+                                    <div className="relative opacity-60 grayscale-[0.2] scale-90">
+                                        <div className="absolute -top-10 left-1/2 -translate-x-1/2 text-[10px] font-bold text-gray-400 bg-gray-200 px-3 py-1 rounded-full whitespace-nowrap">LIVE VERSION</div>
+                                        <div className="shadow-[0_30px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden bg-black border-[12px] border-black rounded-[3.5rem] relative w-[340px] h-[690px]">
+                                            <div className="pt-8 h-full bg-white">
+                                                {identity && activeBrand && <PhonePreview
+                                                    platform={activePlatform}
+                                                    identity={identity}
+                                                    brand={activeBrand}
+                                                    showStory={false}
+                                                    setShowStory={() => { }}
+                                                />}
+                                            </div>
+                                        </div>
                                     </div>
+                                )}
 
-                                    <div className="pt-8 h-full bg-white">
-                                        {identity && activeBrand && <PhonePreview
-                                            platform={activePlatform}
-                                            identity={identity}
-                                            brand={activeBrand}
-                                            showStory={false}
-                                            setShowStory={() => { }}
-                                            onUpdate={handleIdentityUpdate}
-                                            onEditHighlight={(index) => setEditingHighlightIndex(index)}
-                                            onPostClick={(index) => setSelectedPostIndex(index)}
-                                            isLive={connectors.find(c => c.type.toLowerCase() === activePlatform.toLowerCase())?.connected}
-                                        />}
+                                {/* PROPOSED PREVIEW */}
+                                <div className="relative group">
+                                    {layoutMode === 'Split' && (
+                                        <div className="absolute -top-10 left-1/2 -translate-x-1/2 text-[10px] font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full animate-pulse ring-1 ring-blue-100 whitespace-nowrap">PROPOSED DRAFT</div>
+                                    )}
+                                    {/* Glossy Reflection Effect */}
+                                    <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/20 to-transparent pointer-events-none z-50 rounded-t-[3rem]" />
+
+                                    <div id="phone-preview-container" className="shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] overflow-hidden bg-black border-[12px] border-black rounded-[3.5rem] relative w-[340px] h-[690px]">
+                                        {/* Notch */}
+                                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-black rounded-b-2xl z-50 flex items-center justify-center gap-1.5">
+                                            <div className="w-2 h-2 rounded-full bg-[#1a1a1a]" />
+                                            <div className="w-10 h-1.5 rounded-full bg-[#1a1a1a]" />
+                                        </div>
+
+                                        <div className="pt-8 h-full bg-white">
+                                            {(proposedIdentity || identity) && activeBrand && <PhonePreview
+                                                platform={activePlatform}
+                                                identity={proposedIdentity || identity!}
+                                                brand={activeBrand}
+                                                showStory={false}
+                                                setShowStory={() => { }}
+                                                onUpdate={handleProposedUpdate}
+                                                onEditHighlight={(index) => setEditingHighlightIndex(index)}
+                                                onPostClick={(index) => setSelectedPostIndex(index)}
+                                                isLive={connectors.find(c => c.type.toLowerCase() === activePlatform.toLowerCase())?.connected}
+                                            />}
+                                        </div>
+
+                                        {/* Home Indicator */}
+                                        <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-32 h-1 bg-black/10 rounded-full z-50" />
                                     </div>
-
-                                    {/* Home Indicator */}
-                                    <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-32 h-1 bg-black/10 rounded-full z-50" />
                                 </div>
                             </div>
 
                             <div className="mt-8 flex gap-4">
-                                <button className="p-3 bg-white rounded-xl shadow-sm border border-black/5 hover:scale-110 transition-transform"><Smartphone size={20} className="text-gray-400" /></button>
-                                <button className="p-3 bg-white rounded-xl shadow-sm border border-black/5 hover:scale-110 transition-transform"><Monitor size={20} className="text-gray-400" /></button>
-                                <button className="p-3 bg-white rounded-xl shadow-sm border border-black/5 hover:scale-110 transition-transform"><Maximize2 size={20} className="text-gray-400" /></button>
+                                <button
+                                    onClick={() => setPhoneScale(0.8)}
+                                    className={`p-3 rounded-xl shadow-sm border border-black/5 hover:scale-110 transition-all ${phoneScale === 0.8 ? 'bg-black text-white' : 'bg-white text-gray-400'}`}
+                                >
+                                    <Smartphone size={20} />
+                                </button>
+                                <button
+                                    onClick={() => setPhoneScale(1.0)}
+                                    className={`p-3 rounded-xl shadow-sm border border-black/5 hover:scale-110 transition-all ${phoneScale === 1.0 ? 'bg-black text-white' : 'bg-white text-gray-400'}`}
+                                >
+                                    <Monitor size={20} />
+                                </button>
+                                <button
+                                    onClick={() => setPhoneScale(1.2)}
+                                    className={`p-3 rounded-xl shadow-sm border border-black/5 hover:scale-110 transition-all ${phoneScale === 1.2 ? 'bg-black text-white' : 'bg-white text-gray-400'}`}
+                                >
+                                    <Maximize2 size={20} />
+                                </button>
                             </div>
                         </div>
                     </div>
