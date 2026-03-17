@@ -389,15 +389,10 @@ function TabletStationContent() {
           <CloudflarePlayer
             key={videoId1}
             videoId={videoId1}
-            playing={displayPhase === 'work' || displayPhase === 'prep'}
+            playing={true}
             loop={true}
             muted={true}
             controls={false}
-            style={{
-              objectFit: layoutConfig.videoFit,
-              transform: `scale(${layoutConfig.videoScale / 100}) translate(${(layoutConfig.videoPosition.x - 50) * -0.5}%, ${(layoutConfig.videoPosition.y - 50) * -0.5}%)`,
-              transformOrigin: 'center center',
-            }}
           />
           {studioMode === 'studio-b' && (
             <div className="absolute top-2 left-2 z-10 bg-black/40 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10">
@@ -411,15 +406,10 @@ function TabletStationContent() {
             <CloudflarePlayer
               key={videoId2}
               videoId={videoId2}
-              playing={displayPhase === 'work' || displayPhase === 'prep'}
+              playing={true}
               loop={true}
               muted={true}
               controls={false}
-              style={{
-                objectFit: layoutConfig.videoFit,
-                transform: `scale(${layoutConfig.videoScale / 100}) translate(${(layoutConfig.videoPosition.x - 50) * -0.5}%, ${(layoutConfig.videoPosition.y - 50) * -0.5}%)`,
-                transformOrigin: 'center center',
-              }}
             />
             <div className="absolute top-2 left-2 z-10 bg-black/40 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10">
               <p className="text-[10px] font-bold uppercase tracking-widest text-[#C8A871]">Exercise 2</p>
@@ -432,7 +422,7 @@ function TabletStationContent() {
       <div className="absolute top-0 left-0 right-0 h-32 bg-[#F1EDE5] z-30 flex items-center justify-between px-10 shadow-lg">
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-black uppercase tracking-[0.2em] text-[#F1EDE5]">AVRL</h1>
+            <h1 className="text-3xl font-black uppercase tracking-[0.2em] text-[#F1EDE5]">AVLR</h1>
           </div>
           <p className="text-[10px] uppercase tracking-[0.4em] font-bold text-[#121112]">STATION {stationId}</p>
         </div>
@@ -472,7 +462,7 @@ function TabletStationContent() {
       </div>
 
       <div className="absolute bottom-10 left-10 z-20">
-        <p className="text-[11px] uppercase tracking-[0.8em] font-black text-white/80 drop-shadow-md">AVRL</p>
+        <p className="text-[11px] uppercase tracking-[0.8em] font-black text-white/80 drop-shadow-md">AVLR</p>
       </div>
 
       {/* Interaction Overlay to 'unlock' autoplay */}

@@ -36,8 +36,8 @@ export default function CloudflarePlayer({
         autoplay={shouldPlay}
         loop={loop}
         muted={muted}
-        responsive={false}
-        className="w-full h-full object-contain"
+        responsive={true}
+        className="w-full h-full"
         primaryColor="#ffffff"
         preload="auto"
       />
