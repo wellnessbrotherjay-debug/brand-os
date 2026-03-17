@@ -26,7 +26,9 @@ export const loginWithFacebook = async () => {
     // SDK is blocking HTTP localhost, so we use manual redirect flow.
     // This is more robust for dev environments.
     const redirectUri = window.location.origin + '/brand-book'; // Redirect back to Brand Book
-    const scope = 'ads_management,ads_read,business_management,pages_read_engagement,instagram_basic,instagram_content_publish,instagram_manage_comments,instagram_manage_insights,pages_show_list,public_profile';
+    // Reducing scopes to essentials to avoid "Invalid Scopes" error if app is not fully reviewed/configured for all features.
+    // Restoring ads_management, ads_read, and business_management as they are likely approved and needed for data sync.
+    const scope = 'ads_management,ads_read,business_management,pages_read_engagement,pages_show_list,public_profile';
 
     // Construct OAuth URL
     const authUrl = `https://www.facebook.com/v19.0/dialog/oauth?client_id=${FB_APP_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${scope}`;

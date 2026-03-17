@@ -17,8 +17,10 @@ export function resolveExerciseMedia(
   if (!exercise) return null;
   const activeLibrary = options.library ?? EXERCISE_MEDIA;
   const fallbackMedia =
-    activeLibrary.find((entry) => entry.name.toLowerCase() === exercise.name.toLowerCase()) ??
-    getMediaForExercise(exercise.name);
+    activeLibrary.find(
+      (entry) =>
+        (entry.name || "").toLowerCase() === (exercise.name || "").toLowerCase()
+    ) ?? getMediaForExercise(exercise.name || "");
   const storedVideo = exercise.video ?? null;
   const fallbackVideo = fallbackMedia?.video ?? null;
   const isLocalVideo = storedVideo?.startsWith("/videos/");
@@ -31,7 +33,7 @@ export function resolveExerciseMedia(
   return {
     name: exercise.name,
     equipment: exercise.equipment ?? fallbackMedia?.equipment ?? "Configured in Builder",
-    video: resolvedVideo,
+    video: resolvedVideo || "",
     muscles: exercise.muscles ?? fallbackMedia?.muscles,
     cues: exercise.cues ?? fallbackMedia?.cues,
   };

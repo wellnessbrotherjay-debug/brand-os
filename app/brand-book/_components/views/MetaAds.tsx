@@ -285,7 +285,6 @@ export const MetaAds: React.FC = () => {
 
     const handleDisconnect = async () => {
         if (confirm("Are you sure you want to disconnect Meta Ads? This will remove the local token.")) {
-            // @ts-ignore - store type update pending
             await disconnectSocialPlatform('facebook');
             setIsSettingsOpen(false);
             window.location.reload(); // Force reload to clear state cleanly

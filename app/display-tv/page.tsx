@@ -71,6 +71,14 @@ export default function DisplayTvPage() {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [workoutCountdown, setWorkoutCountdown] = useState(60 * 36);
+  const [globalTimer, setGlobalTimer] = useState({
+    timeLeft: 0,
+    phase: 'prep' as SessionPhase,
+    isActive: false,
+    workTime: 45,
+    restTime: 15,
+    targetEndTime: null as Date | null,
+  });
 
   const { activeVenue } = useVenueContext();
   const { library: exerciseLibrary } = useExerciseMediaLibrary();
@@ -106,10 +114,17 @@ export default function DisplayTvPage() {
     const unsubPlan = storage.subscribe(STORAGE_KEYS.plan, handlePlanUpdate);
     const unsubSession = storage.subscribe(STORAGE_KEYS.session, handleSessionUpdate);
 
+    // ✅ Added: Local storage session polling to ensure sync even without StorageEvents
+    const interval = window.setInterval(() => {
+      const latest = storage.getSession();
+      if (latest) setSession(latest);
+    }, 1000);
+
     return () => {
       unsubSetup?.();
       unsubPlan?.();
       unsubSession?.();
+      window.clearInterval(interval);
     };
   }, []);
 
@@ -165,9 +180,240 @@ export default function DisplayTvPage() {
       })
       .subscribe();
 
+    // Global timer subscription (READ-ONLY - don't run countdown here)
+    const timerChannel = supabaseClient
+      .channel('global-timer-tv')
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'global_timer',
+        filter: 'id=eq.active',
+      }, (payload) => {
+        const timerData = payload.new as any;
+        console.log('🔥 Display TV: Global timer UPDATE received!', {
+          phase: timerData.phase,
+          timeLeft: timerData.time_left,
+          target_end_time: timerData.target_end_time,
+          is_active: timerData.is_active,
+        });
+
+        if (timerData && timerData.target_end_time) {
+          // Calculate time left from target end time - this eliminates lag!
+          const targetEndTime = new Date(timerData.target_end_time).getTime();
+          const now = Date.now();
+          const calculatedTimeLeft = Math.max(0, Math.ceil((targetEndTime - now) / 1000));
+
+          console.log('🎨 Display TV: Phase switch to', timerData.phase, 'Time:', calculatedTimeLeft, 'Color:', timerData.phase === 'work' ? '#FF4D4D' : '#32CD32');
+
+          setGlobalTimer({
+            timeLeft: calculatedTimeLeft,
+            phase: timerData.phase || 'work',
+            isActive: true,
+            workTime: timerData.work_time || 45,
+            restTime: timerData.rest_time || 15,
+            targetEndTime: new Date(timerData.target_end_time),
+          });
+        } else if (timerData) {
+          // Fallback to old method if target_end_time not available
+          console.log('Display TV: Using fallback for phase', timerData.phase);
+          setGlobalTimer({
+            timeLeft: timerData.time_left || 45,
+            phase: timerData.phase || 'work',
+            isActive: true,
+            workTime: timerData.work_time || 45,
+            restTime: timerData.rest_time || 15,
+            targetEndTime: null,
+          });
+        }
+      })
+      .subscribe((status) => {
+        console.log('Display TV: Subscription status:', status);
+      });
+
+    // Local countdown that calculates from target time
+    const localInterval = setInterval(() => {
+      setGlobalTimer(prev => {
+        // Always run countdown if we have a valid target end time
+        if (!prev.targetEndTime) return prev;
+
+        // Calculate time left from target end time
+        const targetEndTime = prev.targetEndTime.getTime();
+        const now = Date.now();
+        const diff = targetEndTime - now;
+
+        let calculatedTimeLeft = Math.ceil(diff / 1000);
+
+        // Ensure we show at least 1 second if timer is active and target is in future
+        if (diff > 100 && calculatedTimeLeft <= 0) {
+          calculatedTimeLeft = 1;
+        } else if (diff <= 0) {
+          calculatedTimeLeft = 0;
+        }
+
+        return {
+          ...prev,
+          timeLeft: calculatedTimeLeft,
+        };
+      });
+    }, 500); // ✅ Increased from 100ms to 500ms to reduce iPad CPU load
+
+    // Fetch initial timer state (READ-ONLY) - do this immediately
+    const fetchTimer = async () => {
+      console.log('Display TV: Fetching initial timer state...');
+      const { data, error } = await supabaseClient
+        .from('global_timer')
+        .select('*')
+        .eq('id', 'active')
+        .single();
+
+      console.log('Display TV: Fetched timer data:', data, 'Error:', error);
+
+      if (data) {
+        let calculatedTimeLeft = 45; // Default to 45 seconds
+        let targetEndTime = null;
+        let phase = data.phase || 'work';
+        let isActive = true; // Always force active for display TV
+
+        if (data.target_end_time) {
+          // Use target end time for precise calculation
+          targetEndTime = new Date(data.target_end_time);
+          const now = Date.now();
+          const diff = targetEndTime.getTime() - now;
+
+          // Calculate time left, but ensure it's reasonable
+          if (diff > 0) {
+            calculatedTimeLeft = Math.ceil(diff / 1000);
+            console.log('Display TV: Using target end time:', data.target_end_time, 'Calculated:', calculatedTimeLeft);
+          } else {
+            // Target is in the past, timer might be expired
+            console.log('Display TV: Target end time is in the past, using default');
+            calculatedTimeLeft = data.time_left || 45;
+            // Set a new target end time
+            targetEndTime = new Date(Date.now() + calculatedTimeLeft * 1000);
+            await supabaseClient
+              .from('global_timer')
+              .update({ target_end_time: targetEndTime.toISOString() })
+              .eq('id', 'active');
+          }
+        } else {
+          // No target end time, calculate from time_left
+          calculatedTimeLeft = data.time_left || 45;
+          targetEndTime = new Date(Date.now() + calculatedTimeLeft * 1000);
+
+          // Update the database with target end time for future sync
+          await supabaseClient
+            .from('global_timer')
+            .update({
+              target_end_time: targetEndTime.toISOString(),
+              is_active: true,
+            })
+            .eq('id', 'active');
+          console.log('Display TV: Set target end time for existing timer');
+        }
+
+        // Ensure we never show 00:00 when timer should be active
+        if (calculatedTimeLeft <= 0) {
+          console.log('Display TV: Calculated time <= 0 but timer is active, using default');
+          calculatedTimeLeft = 45;
+          targetEndTime = new Date(Date.now() + 45000);
+          await supabaseClient
+            .from('global_timer')
+            .update({
+              time_left: 45,
+              target_end_time: targetEndTime.toISOString(),
+            })
+            .eq('id', 'active');
+        }
+
+        setGlobalTimer({
+          timeLeft: calculatedTimeLeft,
+          phase: phase,
+          isActive: isActive, // Always true for display TV
+          workTime: data.work_time || 45,
+          restTime: data.rest_time || 15,
+          targetEndTime: targetEndTime,
+        });
+        console.log('Display TV: Initial sync complete - timeLeft:', calculatedTimeLeft, 'phase:', phase);
+      } else if (!error) {
+        // No timer exists, create one (display-tv can create as backup)
+        console.log('Display TV: No timer found, creating one...');
+        const newTargetEndTime = new Date(Date.now() + 45000); // 45 seconds from now
+        const { data: newData } = await supabaseClient
+          .from('global_timer')
+          .insert({
+            id: 'active',
+            time_left: 45,
+            phase: 'work',
+            is_active: true,
+            work_time: 45,
+            rest_time: 15,
+            target_end_time: newTargetEndTime.toISOString(),
+          })
+          .select()
+          .single();
+
+        if (newData) {
+          setGlobalTimer({
+            timeLeft: 45,
+            phase: 'work',
+            isActive: true,
+            workTime: 45,
+            restTime: 15,
+            targetEndTime: newTargetEndTime,
+          });
+          console.log('Display TV: Created new timer');
+        }
+      } else {
+        console.log('Display TV: Error fetching timer:', error);
+      }
+    };
+
+    // Fetch immediately
+    fetchTimer();
+
+    // Polling fallback - fetch timer every 1 second to ensure we never miss updates
+    const pollInterval = setInterval(async () => {
+      try {
+        const { data } = await supabaseClient
+          .from('global_timer')
+          .select('*')
+          .eq('id', 'active')
+          .single();
+
+        if (data && data.target_end_time) {
+          const targetEndTime = new Date(data.target_end_time);
+          const now = Date.now();
+          const diff = targetEndTime.getTime() - now;
+          let calculatedTimeLeft = Math.ceil(diff / 1000);
+
+          if (diff > 100 && calculatedTimeLeft <= 0) {
+            calculatedTimeLeft = 1;
+          } else if (diff <= 0) {
+            calculatedTimeLeft = 0;
+          }
+
+          console.log('🔄 Display TV: Polling update - phase:', data.phase, 'timeLeft:', calculatedTimeLeft);
+
+          setGlobalTimer({
+            timeLeft: calculatedTimeLeft,
+            phase: data.phase || 'work',
+            isActive: true,
+            workTime: data.work_time || 45,
+            restTime: data.rest_time || 15,
+            targetEndTime: targetEndTime,
+          });
+        }
+      } catch (error) {
+        console.error('Display TV: Polling error:', error);
+      }
+    }, 1000); // Poll every 1 second
+
     return () => {
       mounted = false;
       if (channel) supabaseClient.removeChannel(channel);
+      if (timerChannel) supabaseClient.removeChannel(timerChannel);
+      clearInterval(localInterval);
+      clearInterval(pollInterval);
     };
   }, []);
 
@@ -191,10 +437,19 @@ export default function DisplayTvPage() {
   }, [stations, currentStationId]);
 
   const currentMedia = resolveExerciseMedia(currentExercise, { library: exerciseLibrary });
-  const currentPhase: SessionPhase = session?.phase ?? "prep";
-  const remainingTime = session?.remaining ?? setup?.workTime ?? 0;
+  // Always use global timer if it has valid data, otherwise fall back to session timer
+  const hasValidGlobalTimer = globalTimer.timeLeft >= 0 && globalTimer.targetEndTime !== null;
+  const currentPhase: SessionPhase = hasValidGlobalTimer ? globalTimer.phase : (session?.phase ?? "prep");
+  const remainingTime = hasValidGlobalTimer ? globalTimer.timeLeft : (session?.remaining ?? setup?.workTime ?? 0);
   const currentRound = session?.round ?? 1;
   const totalRounds = setup?.rounds ?? 1;
+
+  // Force global timer to be active if it has valid data
+  useEffect(() => {
+    if (hasValidGlobalTimer && !globalTimer.isActive) {
+      setGlobalTimer(prev => ({ ...prev, isActive: true }));
+    }
+  }, [hasValidGlobalTimer, globalTimer.isActive]);
 
   const workoutName = plan?.goal ?? "Workout";
   const timingFormat = setup
@@ -236,8 +491,14 @@ export default function DisplayTvPage() {
           <div>Phase: {currentPhase}</div>
           <div>Remaining: {remainingTime}s</div>
           <div>Round: {currentRound}</div>
-          <div>Plan: {JSON.stringify(plan)}</div>
-          <div>Session: {JSON.stringify(session)}</div>
+          <div className="border-t border-blue-400 pt-2 mt-2">
+            <div className="font-bold mb-1">Global Timer:</div>
+            <div>isActive: {globalTimer.isActive.toString()}</div>
+            <div>timeLeft: {globalTimer.timeLeft}</div>
+            <div>phase: {globalTimer.phase}</div>
+            <div>targetEndTime: {globalTimer.targetEndTime ? globalTimer.targetEndTime.toISOString() : 'null'}</div>
+            <div>hasValidGlobalTimer: {hasValidGlobalTimer.toString()}</div>
+          </div>
         </div>
       )}
 
@@ -283,26 +544,38 @@ export default function DisplayTvPage() {
           </div>
 
           <div
-            className="flex flex-col items-center gap-4 rounded-[24px] border-2 px-6 py-8 text-center border-brand-primary bg-brand-primary/10 shadow-[0_0_55px_rgba(0,191,255,0.25)]"
+            className="flex flex-col items-center gap-4 rounded-[24px] border-2 px-6 py-8 text-center"
+            style={{
+              borderColor: primaryBrand,
+              backgroundColor: hexToRgba(primaryBrand, 0.12),
+              boxShadow: `0 0 55px ${hexToRgba(primaryBrand, 0.25)}`,
+            }}
           >
-            <p className="text-xs uppercase tracking-[0.45em] text-brand-primary">
+            <p className="text-xs uppercase tracking-[0.45em]" style={{ color: primaryBrand }}>
               Time Remaining
             </p>
             <p
-              className="text-4xl font-black text-brand-primary drop-shadow-[0_0_25px_rgba(0,191,255,0.35)]"
+              className="text-4xl font-black"
+              style={{ color: primaryBrand, textShadow: `0 0 25px ${hexToRgba(primaryBrand, 0.35)}` }}
             >
               {remainingTime}s
             </p>
           </div>
 
           <div
-            className="flex flex-col items-center gap-4 rounded-[24px] border-2 px-6 py-8 text-center border-brand-accent bg-brand-accent/10 shadow-[0_0_55px_rgba(255,209,0,0.25)]"
+            className="flex flex-col items-center gap-4 rounded-[24px] border-2 px-6 py-8 text-center"
+            style={{
+              borderColor: accentBrand,
+              backgroundColor: hexToRgba(accentBrand, 0.12),
+              boxShadow: `0 0 55px ${hexToRgba(accentBrand, 0.25)}`,
+            }}
           >
-            <p className="text-xs uppercase tracking-[0.45em] text-brand-accent">
+            <p className="text-xs uppercase tracking-[0.45em]" style={{ color: accentBrand }}>
               Active Station
             </p>
             <p
-              className="text-3xl font-black text-brand-accent drop-shadow-[0_0_25px_rgba(255,209,0,0.35)]"
+              className="text-3xl font-black"
+              style={{ color: accentBrand, textShadow: `0 0 25px ${hexToRgba(accentBrand, 0.35)}` }}
             >
               {currentStationId ? `Station ${currentStationId}` : "TBD"}
             </p>

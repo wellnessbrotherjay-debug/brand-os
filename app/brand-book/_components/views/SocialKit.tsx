@@ -907,7 +907,7 @@ const AddCompetitorModal = ({
 
 
 export const SocialKit: React.FC = () => {
-    const { activeBrandId, brands, identities, updateIdentity, creativeRequests, addCreativeRequest, addAsset, assets, connectors } = useAppStore();
+    const { activeBrandId, brands, identities, updateIdentity, creativeRequests, addCreativeRequest, addAsset, assets, connectors, connectSocialPlatform, disconnectSocialPlatform, loginWithFacebook } = useAppStore();
     const activeBrand = brands.find(b => b.id === activeBrandId);
     const identity = identities.find(i => i.brand_id === activeBrandId);
 
@@ -2141,11 +2141,10 @@ export const SocialKit: React.FC = () => {
                                             </div>
                                             <button
                                                 onClick={async () => {
-                                                    const { loginWithFacebook, deleteSocialToken } = await import('../services/authService');
                                                     if (conn.isConnected) {
                                                         if (confirm(`Disconnect ${conn.platform}?`)) {
-                                                            await deleteSocialToken(activeBrandId!, conn.platform.toLowerCase() as any);
-                                                            window.location.reload(); // Refresh to show disconnected state
+                                                            await disconnectSocialPlatform(conn.platform.toLowerCase() as any);
+                                                            // The store method now handles identity sync
                                                         }
                                                     } else {
                                                         if (conn.platform === 'Instagram' || conn.platform === 'Facebook') {
@@ -2181,7 +2180,12 @@ export const SocialKit: React.FC = () => {
                                             <p className="text-xs opacity-60">Sync campaigns & audiences</p>
                                         </div>
                                     </div>
-                                    <button className="px-4 py-2 rounded text-xs font-bold bg-black text-white hover:opacity-80">Connect</button>
+                                    <button
+                                        onClick={() => connectSocialPlatform('facebook')}
+                                        className="px-4 py-2 rounded text-xs font-bold bg-black text-white hover:opacity-80"
+                                    >
+                                        Connect
+                                    </button>
                                 </div>
                                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-black/5">
                                     <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-gray-200">
@@ -2250,6 +2254,6 @@ export const SocialKit: React.FC = () => {
                     }}
                 />
             </div>
-        </div>
+        </div >
     );
 };

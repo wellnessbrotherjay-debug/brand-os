@@ -97,16 +97,20 @@ export function mergeLibraries(master: VenueLibraryRecord[], custom: VenueLibrar
     ...custom,
     ...master.filter((item) => !overrideMap.has(item.slug)),
   ];
-  return merged.sort((a, b) => a.name.localeCompare(b.name));
+  return merged.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
 }
 
 async function fetchLibraryRows(type: LibraryType, venueId?: string | null) {
   const table = TABLE_MAP[type];
   const targetVenue = venueId ?? getActiveVenueId() ?? null;
 
+  const venueQuery = targetVenue 
+    ? supabase.from(table).select("*").eq("venue_id", targetVenue)
+    : supabase.from(table).select("*").is("venue_id", null);
+
   const [masterResult, venueResult] = await Promise.all([
     supabase.from(table).select("*").is("venue_id", null),
-    supabase.from(table).select("*").eq("venue_id", targetVenue),
+    venueQuery,
   ]);
 
   if (masterResult.error) throw masterResult.error;

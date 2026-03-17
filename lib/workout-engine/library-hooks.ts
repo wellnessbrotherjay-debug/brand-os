@@ -27,8 +27,8 @@ export function mapExerciseLibraryRecord(record: VenueLibraryRecord): ExerciseMe
     typeof metadata.equipment === "string" ? metadata.equipment : "dumbbells";
 
   return {
-    name: record.name,
-    equipment: record.equipment ?? fallbackEquipment,
+    name: record.name || record.exercise_name || "",
+    equipment: record.equipment || record.required_equipment || fallbackEquipment,
     video: record.video_url ?? record.media_url ?? "",
     muscles,
     cues,
@@ -48,6 +48,7 @@ export function useExerciseMediaLibrary() {
       try {
         const records = await loadVenueLibrary("exercise", { venueId: activeVenue?.id ?? null });
         if (cancelled) return;
+        
         if (records.length) {
           setLibrary(records.map(mapExerciseLibraryRecord));
           setError(null);
@@ -72,7 +73,11 @@ export function useExerciseMediaLibrary() {
   }, [activeVenue?.id]);
 
   const lookup = useMemo(() => {
-    return new Map(library.map((item) => [item.name.toLowerCase(), item]));
+    return new Map(
+      library
+        .filter((item) => !!item.name)
+        .map((item) => [item.name.toLowerCase(), item])
+    );
   }, [library]);
 
   return {

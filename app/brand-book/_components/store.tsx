@@ -14,7 +14,8 @@ import {
 } from './types';
 import {
     getMetaAccounts, getMetaCampaigns, getMetaAdSets, getMetaAds,
-    getInstagramBusinessAccountId, searchInstagramAccounts, debugMetaConnection
+    getInstagramBusinessAccountId, searchInstagramAccounts, debugMetaConnection,
+    getFacebookPages, getInstagramProfile
 } from './services/metaService';
 import { loginWithFacebook, saveSocialToken, checkUrlForToken, deleteSocialToken } from './services/authService';
 
@@ -413,9 +414,10 @@ interface StoreContextType extends AppState {
     addMetaAdSet: (adSet: MetaAdSet) => void;
     addMetaAd: (ad: MetaAd) => void;
     syncMetaAccount: () => Promise<void>;
+    loginWithFacebook: () => void;
     connectSocialPlatform: (platform: 'facebook' | 'google' | 'instagram') => Promise<void>;
     disconnectSocialPlatform: (platform: 'facebook' | 'google' | 'instagram') => Promise<void>;
-    searchSocialAccounts: (platform: string, query: string) => Promise<any>;
+    searchSocialAccounts: (platform: string, query: string) => Promise<any[]>;
     linkSocialAccount: (platform: string, accountData: any) => void;
     debugMeta: () => Promise<any>;
 
@@ -540,14 +542,18 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         if (data) {
             try {
                 // 1. Fetch Accounts
+                console.log("[Store] Starting Meta Sync for brand:", activeBrandId);
                 const accounts = await getMetaAccounts(activeBrandId);
-                setMetaAccounts(accounts as any); // Fix TS mismatch
+                console.log("[Store] Accounts fetched:", accounts);
+                setMetaAccounts(accounts as any);
 
                 if (accounts.length > 0) {
                     const accountId = accounts[0].id.replace('act_', '');
+                    console.log("[Store] Fetching data for primary account:", accountId);
 
                     // 2. Fetch Campaigns
                     const campaigns = await getMetaCampaigns(accountId, activeBrandId);
+                    console.log("[Store] Campaigns fetched:", campaigns.length);
                     setMetaCampaigns(campaigns);
 
                     // 3. Fetch Ad Sets
@@ -558,7 +564,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
                     const ads = await getMetaAds(accountId, activeBrandId);
                     setMetaAds(ads);
                 } else {
-                    console.log("No ad accounts found for this user.");
+                    console.warn("[Store] No ad accounts found for this user/token.");
                 }
 
                 // CRITICAL FIX: Update connector state so UI shows "Connected"
@@ -567,6 +573,44 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
                     connected: true,
                     lastSyncAt: (data as any)?.updated_at || (data as any)?.created_at || new Date().toISOString()
                 } : c));
+
+                // 2. Sync Instagram Profile to Identity & Social Connections
+                try {
+                    const pagesResult = await getFacebookPages(activeBrandId);
+                    if (pagesResult.success && pagesResult.pages.length > 0) {
+                        const pageWithIG = pagesResult.pages.find((p: any) => p.hasInstagram);
+                        if (pageWithIG) {
+                            const igProfile = await getInstagramProfile(pageWithIG.id, activeBrandId);
+                            if (igProfile?.success && igProfile.profile) {
+                                const profile = igProfile.profile;
+                                // Find the identity for this brand and update it
+                                const identity = identities.find(i => i.brand_id === activeBrandId);
+                                if (identity) {
+                                    // Update identity fields
+                                    const updatedConnections = (identity.social_connections || []).map(sc => {
+                                        if (sc.platform.toLowerCase() === 'instagram') {
+                                            return { ...sc, isConnected: true, handle: `@${profile.username}`, followerCount: String(profile.followersCount || 0) };
+                                        }
+                                        if (sc.platform.toLowerCase() === 'facebook') {
+                                            return { ...sc, isConnected: true };
+                                        }
+                                        return sc;
+                                    });
+                                    updateIdentity({
+                                        ...identity,
+                                        instagram_handle: `@${profile.username}`,
+                                        instagram_bio: profile.biography,
+                                        instagram_website: profile.website,
+                                        instagram_follower_count: String(profile.followersCount || 0),
+                                        social_connections: updatedConnections
+                                    });
+                                }
+                            }
+                        }
+                    }
+                } catch (igErr) {
+                    console.error("[Store] Instagram sync failed:", igErr);
+                }
 
             } catch (e: any) {
                 console.error("Failed to sync Meta data:", e);
@@ -630,7 +674,6 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         if (!activeBrandId) return;
 
         // 1. Clear Service Layer
-        // Since IG and FB share the Meta token saved as 'facebook', we delete 'facebook' for either.
         const platformToDelete = (platform === 'instagram') ? 'facebook' as const : platform;
         await deleteSocialToken(activeBrandId, platformToDelete);
 
@@ -641,6 +684,17 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             setMetaAdSets([]);
             setMetaAds([]);
             setConnectors(prev => prev.map(c => c.id === 'meta' || c.id === 'facebook' ? { ...c, connected: false } : c));
+
+            // Sync with Identity hub so Account Manager shows disconnected
+            const identity = identities.find(i => i.brand_id === activeBrandId);
+            if (identity && identity.social_connections) {
+                const refreshed = identity.social_connections.map(sc =>
+                    (sc.platform.toLowerCase() === 'facebook' || sc.platform.toLowerCase() === 'instagram')
+                        ? { ...sc, isConnected: false }
+                        : sc
+                );
+                updateIdentity({ ...identity, social_connections: refreshed });
+            }
         }
     };
 
@@ -698,7 +752,6 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             }
         };
 
-        handleOAuth();
         handleOAuth();
     }, [activeBrandId]);
 
@@ -1137,7 +1190,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         updateLLMSettings,
         addBrandTemplate, updateBrandTemplate, logActivity, addSocialJob, updateSocialJob,
         addMetaCampaign, addMetaAdSet, addMetaAd,
-        syncMetaAccount, connectSocialPlatform, disconnectSocialPlatform, searchSocialAccounts, linkSocialAccount,
+        syncMetaAccount, loginWithFacebook, connectSocialPlatform, disconnectSocialPlatform, searchSocialAccounts, linkSocialAccount,
         debugMeta,
         users,
         currentUser,

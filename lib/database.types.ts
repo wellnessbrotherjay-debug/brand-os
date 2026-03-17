@@ -8,6 +8,7 @@ export type ExerciseLibraryRow = {
   training_type: string | null
   video_url: string | null
   thumbnail_url: string | null
+  venue_id: string | null
   created_at: string | null
 }
 

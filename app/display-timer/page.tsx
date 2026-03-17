@@ -70,6 +70,14 @@ export default function TimerDisplayPage() {
   const lastPhaseRef = useRef<SessionPhase | null>(null);
   const countdownCallouts = useRef<Set<number>>(new Set());
   const { activeVenue } = useVenueContext();
+  const [globalTimer, setGlobalTimer] = useState({
+    timeLeft: 0,
+    phase: 'prep' as SessionPhase,
+    isActive: false,
+    workTime: 45,
+    restTime: 15,
+    targetEndTime: null as Date | null,
+  });
 
   const brandColors = useMemo(
     () => resolveBrandColors({ activeVenue, setup }),
@@ -150,14 +158,257 @@ export default function TimerDisplayPage() {
       })
       .subscribe();
 
+    // Global timer subscription (READ-ONLY - don't run countdown here)
+    const timerChannel = supabaseClient
+      .channel('global-timer-display')
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'global_timer',
+        filter: 'id=eq.active',
+      }, (payload) => {
+        const timerData = payload.new as any;
+        console.log('🔥 Display timer: Global timer UPDATE received!', {
+          phase: timerData.phase,
+          timeLeft: timerData.time_left,
+          target_end_time: timerData.target_end_time,
+          is_active: timerData.is_active,
+        });
+
+        if (timerData && timerData.target_end_time) {
+          // Calculate time left from target end time - this eliminates lag!
+          const targetEndTime = new Date(timerData.target_end_time).getTime();
+          const now = Date.now();
+          const calculatedTimeLeft = Math.max(0, Math.ceil((targetEndTime - now) / 1000));
+
+          console.log('Display timer: Phase switch to', timerData.phase, 'Time:', calculatedTimeLeft);
+
+          setGlobalTimer({
+            timeLeft: calculatedTimeLeft,
+            phase: timerData.phase || 'work',
+            isActive: true,
+            workTime: timerData.work_time || 45,
+            restTime: timerData.rest_time || 15,
+            targetEndTime: new Date(timerData.target_end_time),
+          });
+        } else if (timerData) {
+          // Fallback to old method if target_end_time not available
+          console.log('Display timer: Using fallback for phase', timerData.phase);
+          setGlobalTimer({
+            timeLeft: timerData.time_left || 45,
+            phase: timerData.phase || 'work',
+            isActive: true,
+            workTime: timerData.work_time || 45,
+            restTime: timerData.rest_time || 15,
+            targetEndTime: null,
+          });
+        }
+      })
+      .subscribe((status) => {
+        console.log('Display timer: Subscription status:', status);
+      });
+
+    // Local countdown that calculates from target time
+    const localInterval = setInterval(() => {
+      setGlobalTimer(prev => {
+        // Always run countdown if we have a valid target end time
+        if (!prev.targetEndTime) return prev;
+
+        // Calculate time left from target end time
+        const targetEndTime = prev.targetEndTime.getTime();
+        const now = Date.now();
+        const diff = targetEndTime - now;
+
+        let calculatedTimeLeft = Math.ceil(diff / 1000);
+
+        // Ensure we show at least 1 second if timer is active and target is in future
+        if (diff > 100 && calculatedTimeLeft <= 0) {
+          calculatedTimeLeft = 1;
+        } else if (diff <= 0) {
+          calculatedTimeLeft = 0;
+        }
+
+        // Only update timeLeft, preserve everything else including phase
+        return {
+          ...prev,
+          timeLeft: calculatedTimeLeft,
+        };
+      });
+    }, 500); // ✅ Increased from 100ms to 500ms to reduce iPad CPU load
+
+    // Fetch initial timer state (READ-ONLY) - do this immediately
+    const fetchTimer = async () => {
+      console.log('Display timer: Fetching initial timer state...');
+      const { data, error } = await supabaseClient
+        .from('global_timer')
+        .select('*')
+        .eq('id', 'active')
+        .single();
+
+      console.log('Display timer: Fetched timer data:', data, 'Error:', error);
+
+      if (data) {
+        let calculatedTimeLeft = 45; // Default to 45 seconds
+        let targetEndTime = null;
+        let phase = data.phase || 'work'; // Default to work phase
+        let isActive = true; // Always force active for display timer
+
+        if (data.target_end_time) {
+          // Use target end time for precise calculation
+          targetEndTime = new Date(data.target_end_time);
+          const now = Date.now();
+          const diff = targetEndTime.getTime() - now;
+
+          // Calculate time left, but ensure it's reasonable
+          if (diff > 0) {
+            calculatedTimeLeft = Math.ceil(diff / 1000);
+            console.log('Display timer: Using target end time:', data.target_end_time, 'Calculated:', calculatedTimeLeft);
+          } else {
+            // Target is in the past, timer might be expired
+            console.log('Display timer: Target end time is in the past, using default');
+            calculatedTimeLeft = data.time_left || 45;
+            // Set a new target end time
+            targetEndTime = new Date(Date.now() + calculatedTimeLeft * 1000);
+            await supabaseClient
+              .from('global_timer')
+              .update({ target_end_time: targetEndTime.toISOString() })
+              .eq('id', 'active');
+          }
+        } else {
+          // No target end time, calculate from time_left
+          calculatedTimeLeft = data.time_left || 45;
+          targetEndTime = new Date(Date.now() + calculatedTimeLeft * 1000);
+
+          // Update the database with target end time for future sync
+          await supabaseClient
+            .from('global_timer')
+            .update({
+              target_end_time: targetEndTime.toISOString(),
+              is_active: true,
+            })
+            .eq('id', 'active');
+          console.log('Display timer: Set target end time for existing timer');
+        }
+
+        // Ensure we never show 00:00 when timer should be active
+        if (calculatedTimeLeft <= 0) {
+          console.log('Display timer: Calculated time <= 0 but timer is active, using default');
+          calculatedTimeLeft = 45;
+          targetEndTime = new Date(Date.now() + 45000);
+          await supabaseClient
+            .from('global_timer')
+            .update({
+              time_left: 45,
+              target_end_time: targetEndTime.toISOString(),
+            })
+            .eq('id', 'active');
+        }
+
+        setGlobalTimer({
+          timeLeft: calculatedTimeLeft,
+          phase: phase,
+          isActive: isActive, // Always true for display timer
+          workTime: data.work_time || 45,
+          restTime: data.rest_time || 15,
+          targetEndTime: targetEndTime,
+        });
+        setTimeLeft(calculatedTimeLeft);
+        console.log('Display timer: Initial sync complete - timeLeft:', calculatedTimeLeft, 'phase:', phase);
+      } else if (!error) {
+        // No timer exists, create one (display-timer can create as backup)
+        console.log('Display timer: No timer found, creating one...');
+        const newTargetEndTime = new Date(Date.now() + 45000); // 45 seconds from now
+        const { data: newData } = await supabaseClient
+          .from('global_timer')
+          .insert({
+            id: 'active',
+            time_left: 45,
+            phase: 'work',
+            is_active: true,
+            work_time: 45,
+            rest_time: 15,
+            target_end_time: newTargetEndTime.toISOString(),
+          })
+          .select()
+          .single();
+
+        if (newData) {
+          setGlobalTimer({
+            timeLeft: 45,
+            phase: 'work',
+            isActive: true,
+            workTime: 45,
+            restTime: 15,
+            targetEndTime: newTargetEndTime,
+          });
+          console.log('Display timer: Created new timer');
+        }
+      } else {
+        console.log('Display timer: Error fetching timer:', error);
+      }
+    };
+
+    // Fetch immediately
+    fetchTimer();
+
+    // Polling fallback - fetch timer every 1 second to ensure we never miss updates
+    const pollInterval = setInterval(async () => {
+      try {
+        const { data } = await supabaseClient
+          .from('global_timer')
+          .select('*')
+          .eq('id', 'active')
+          .single();
+
+        if (data && data.target_end_time) {
+          const targetEndTime = new Date(data.target_end_time);
+          const now = Date.now();
+          const diff = targetEndTime.getTime() - now;
+          let calculatedTimeLeft = Math.ceil(diff / 1000);
+
+          if (diff > 100 && calculatedTimeLeft <= 0) {
+            calculatedTimeLeft = 1;
+          } else if (diff <= 0) {
+            calculatedTimeLeft = 0;
+          }
+
+          console.log('🔄 Display timer: Polling update - phase:', data.phase, 'timeLeft:', calculatedTimeLeft);
+
+          setGlobalTimer({
+            timeLeft: calculatedTimeLeft,
+            phase: data.phase || 'work',
+            isActive: true,
+            workTime: data.work_time || 45,
+            restTime: data.rest_time || 15,
+            targetEndTime: targetEndTime,
+          });
+        }
+      } catch (error) {
+        console.error('Display timer: Polling error:', error);
+      }
+    }, 1000); // Poll every 1 second
+
     return () => {
       if (channel) supabaseClient.removeChannel(channel);
+      if (timerChannel) supabaseClient.removeChannel(timerChannel);
+      clearInterval(localInterval);
+      clearInterval(pollInterval);
     };
   }, []);
 
-  const phase: SessionPhase = session?.phase ?? "prep";
+  // Always use global timer if it has valid data, otherwise fall back to session timer
+  const hasValidGlobalTimer = globalTimer.timeLeft >= 0 && globalTimer.targetEndTime !== null;
+  const phase: SessionPhase = hasValidGlobalTimer ? globalTimer.phase : (session?.phase ?? "prep");
   const phaseColor = PHASE_TONE[phase];
-  const timerText = formatTime(timeLeft);
+  const displayTimeLeft = hasValidGlobalTimer ? globalTimer.timeLeft : timeLeft;
+
+  // Optimized refresh effect
+  useEffect(() => {
+    if (hasValidGlobalTimer && !globalTimer.isActive) {
+      setGlobalTimer(prev => ({ ...prev, isActive: true }));
+    }
+  }, [hasValidGlobalTimer, globalTimer.isActive]);
+  const timerText = formatTime(displayTimeLeft);
   const roundsSummary =
     setup && session
       ? `Round ${session.round} / ${setup.rounds}`
@@ -204,22 +455,32 @@ export default function TimerDisplayPage() {
     }
 
     if (phase === "complete") return;
-    if (timeLeft <= 5 && timeLeft > 0 && !countdownCallouts.current.has(timeLeft)) {
-      countdownCallouts.current.add(timeLeft);
-      speak(timeLeft === 1 ? "One" : `${timeLeft}`);
+    if (displayTimeLeft <= 5 && displayTimeLeft > 0 && !countdownCallouts.current.has(displayTimeLeft)) {
+      countdownCallouts.current.add(displayTimeLeft);
+      speak(displayTimeLeft === 1 ? "One" : `${displayTimeLeft}`);
     }
 
-    if (timeLeft === 0 && (phase === "work" || phase === "rest" || phase === "prep") && !countdownCallouts.current.has(0)) {
+    if (displayTimeLeft === 0 && (phase === "work" || phase === "rest" || phase === "prep") && !countdownCallouts.current.has(0)) {
       countdownCallouts.current.add(0);
       speak("Switch");
     }
-  }, [phase, timeLeft]);
+  }, [phase, displayTimeLeft]);
 
   return (
     <main
       className={`${orbitron.variable} ${orbitron.className} relative flex min-h-screen w-screen items-center justify-center bg-black text-white`}
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#202020,transparent_55%)]" />
+
+      {/* Debug Info - Always visible for troubleshooting */}
+      <div className="absolute top-4 left-4 bg-black/50 text-white p-2 text-xs font-mono rounded z-50">
+        <div>isActive: {globalTimer.isActive.toString()}</div>
+        <div>timeLeft: {globalTimer.timeLeft}</div>
+        <div>phase: {globalTimer.phase}</div>
+        <div>phaseColor: {phaseColor}</div>
+        <div>targetEndTime: {globalTimer.targetEndTime ? globalTimer.targetEndTime.toISOString() : 'null'}</div>
+        <div>displayTimeLeft: {displayTimeLeft}</div>
+      </div>
 
       <div className="relative flex h-full w-full flex-col gap-12 px-6 py-10 lg:px-12 lg:py-12">
         <header className="flex flex-col items-center gap-3 text-center">
@@ -292,7 +553,7 @@ export default function TimerDisplayPage() {
 
             <div className="space-y-2 text-xs uppercase tracking-[0.3em]" style={{ color: hexToRgba(accentBrand, 0.65) }}>
               <p>Active Station: {session?.stationId ? `Station ${session.stationId}` : "TBD"}</p>
-              <p>Next Cue In: {formatDuration(Math.max(0, timeLeft))}</p>
+              <p>Next Cue In: {formatDuration(Math.max(0, displayTimeLeft))}</p>
               <p>{lastUpdated ? `Synced ${lastUpdated}` : "Local mode"}</p>
             </div>
           </aside>

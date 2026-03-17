@@ -4,10 +4,10 @@ import { Database } from '@/lib/database.types';
 
 const GRAPH_API = 'https://graph.facebook.com/v19.0';
 
-// Initialize Supabase client
+// Initialize Supabase client with Service Role Key to bypass RLS
 const supabase = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
 export async function GET(request: NextRequest) {

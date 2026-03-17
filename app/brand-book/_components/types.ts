@@ -427,6 +427,8 @@ export interface BrandIdentity {
 
   social_connections?: SocialConnection[];
   content_mix?: ContentMixItem[];
+  instagram_handle?: string;
+  instagram_follower_count?: string;
   instagram_bio?: string;
   instagram_website?: string;
   instagram_highlights?: Highlight[];

@@ -15,6 +15,7 @@ import {
 import { type ExerciseMedia } from "@/lib/lib/exercise-library";
 import { useExerciseMediaLibrary } from "@/lib/workout-engine/library-hooks";
 import { useVenueContext } from "@/lib/venue-context";
+import CloudflarePlayer from "@/components/CloudflarePlayer";
 
 const GOALS = ["Fat Loss", "Strength", "Endurance"] as const;
 type GoalOption = (typeof GOALS)[number];
@@ -69,6 +70,10 @@ export default function BuilderPage() {
   const [error, setError] = useState<string | null>(null);
   const [showDebug, setShowDebug] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [editingVideoId, setEditingVideoId] = useState<string | null>(null);
+  const [newVideoUrl, setNewVideoUrl] = useState("");
+  const [isUpdatingLibrary, setIsUpdatingLibrary] = useState(false);
+  const [librarySearch, setLibrarySearch] = useState("");
   const {
     library: exerciseLibrary,
     isLoading: isLibraryLoading,
@@ -103,10 +108,15 @@ export default function BuilderPage() {
 
   const libraryExercisesForEquipment = useMemo(() => {
     if (!libraryEquipment) return [];
-    return exerciseLibrary.filter(
+    let filtered = exerciseLibrary.filter(
       (exercise) => exercise.equipment.toLowerCase() === libraryEquipment.toLowerCase()
     );
-  }, [exerciseLibrary, libraryEquipment]);
+    if (librarySearch) {
+      const s = librarySearch.toLowerCase();
+      filtered = filtered.filter(ex => ex.name.toLowerCase().includes(s));
+    }
+    return filtered;
+  }, [exerciseLibrary, libraryEquipment, librarySearch]);
 
   const selectedLibraryExerciseData = useMemo(() => {
     if (!libraryExercise) return null;
@@ -131,9 +141,13 @@ export default function BuilderPage() {
   const getOptionsForEquipment = (equipment: string): ExerciseMedia[] => {
     return exerciseLibrary.filter(
       (exercise) =>
-        exercise.equipment.toLowerCase() === equipment.toLowerCase() &&
-        Boolean(exercise.video?.trim())
-    );
+        exercise.equipment.toLowerCase() === equipment.toLowerCase()
+    ).sort((a, b) => {
+      // Prioritize exercises with videos
+      if (a.video && !b.video) return -1;
+      if (!a.video && b.video) return 1;
+      return a.name.localeCompare(b.name);
+    });
   };
 
   const ensureSelections = (): StationExercise[] | null => {
@@ -187,19 +201,60 @@ export default function BuilderPage() {
 
     if (supabaseClient) {
       try {
-        await supabaseClient
+        const { error: syncError } = await supabaseClient
           .from("workouts")
           .upsert(
-            [{ id: "active", data: payload, updated_at: now.toISOString() }],
+            [
+              {
+                id: "active",
+                name: goal || "Active Workout",
+                data: payload,
+                updated_at: now.toISOString(),
+              },
+            ],
             { onConflict: "id" }
           );
+
+        if (syncError) {
+          console.error("Supabase sync error:", syncError);
+          setError(`Cloud sync failed: ${syncError.message}. Plan saved locally.`);
+        }
       } catch (err) {
         console.error("Failed to sync workout plan", err);
-        setError("Plan saved locally but failed to sync with Supabase.");
+        setError("Plan saved locally but failed to sync due to a connection error.");
       }
     }
 
     setIsSaving(false);
+  };
+  
+  const handleUpdateVideoUrl = async (exercise: ExerciseMedia) => {
+    if (!supabaseClient || isUpdatingLibrary) return;
+    setIsUpdatingLibrary(true);
+    setError(null);
+
+    try {
+      // Find the Supabase record ID if we have it
+      const { error: updateError } = await supabaseClient
+        .from("exercise_library")
+        .update({ video_url: newVideoUrl })
+        .eq("exercise_name", exercise.name);
+
+      if (updateError) throw updateError;
+
+      // Refresh the library by triggering a reload or local update
+      // For now, we'll inform the user and suggest a refresh
+      setSavedAt(new Date().toLocaleString());
+      setEditingVideoId(null);
+      
+      // Proactively update local state to avoid refresh
+      exercise.video = newVideoUrl;
+    } catch (err) {
+      console.error("Failed to update video URL", err);
+      setError("Failed to update video URL in Supabase.");
+    } finally {
+      setIsUpdatingLibrary(false);
+    }
   };
 
   const handleExerciseChange = (stationId: number, name: string) => {
@@ -283,8 +338,7 @@ export default function BuilderPage() {
                 <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Exercise Library</p>
                 <h3 className="text-2xl font-semibold text-white">Equipment & Videos</h3>
                 <p className="text-sm text-slate-300">
-                  Explore every exercise we have stored in Supabase. Use this when planning new
-                  equipment or uploading additional media.
+                  Explore every exercise. Use the 🎥 icon to find exercises with videos.
                 </p>
                 {isLibraryLoading ? (
                   <p className="text-xs uppercase tracking-[0.35em] text-slate-500 mt-2">
@@ -292,7 +346,19 @@ export default function BuilderPage() {
                   </p>
                 ) : null}
               </div>
-              <div className="flex flex-col gap-3 md:flex-row">
+              <div className="flex flex-col gap-3 md:flex-row items-end">
+                <div className="w-full md:w-48">
+                  <label className="text-xs uppercase tracking-[0.3em] text-slate-400">
+                    Search
+                  </label>
+                  <input
+                    type="text"
+                    value={librarySearch}
+                    onChange={(e) => setLibrarySearch(e.target.value)}
+                    placeholder="Search name..."
+                    className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white focus:border-sky-400 focus:outline-none"
+                  />
+                </div>
                 <div>
                   <label className="text-xs uppercase tracking-[0.3em] text-slate-400">
                     Equipment
@@ -311,7 +377,7 @@ export default function BuilderPage() {
                 </div>
                 <div>
                   <label className="text-xs uppercase tracking-[0.3em] text-slate-400">
-                    Exercise
+                    Exercise ({libraryExercisesForEquipment.length})
                   </label>
                   <select
                     value={libraryExercise ?? ""}
@@ -320,7 +386,7 @@ export default function BuilderPage() {
                   >
                     {libraryExercisesForEquipment.map((exercise) => (
                       <option key={exercise.name} value={exercise.name}>
-                        {exercise.name}
+                        {exercise.video ? "🎥 " : "⚠️ "}{exercise.name}
                       </option>
                     ))}
                   </select>
@@ -330,16 +396,77 @@ export default function BuilderPage() {
             {selectedLibraryExerciseData && (
               <div className="grid gap-6 md:grid-cols-[2fr_1fr]">
                 <div className="rounded-xl border border-white/10 bg-black/40 p-4 text-sm text-slate-200">
-                  <p>
-                    <span className="text-slate-400">Video URL:</span>{" "}
-                    <a
-                      className="text-sky-300 underline"
-                      href={selectedLibraryExerciseData.video}
-                      target="_blank"
-                      rel="noreferrer"
+                  <div className="mb-4">
+                    {selectedLibraryExerciseData.video && (
+                      <div 
+                        className="relative w-full rounded-xl border border-white/10 overflow-hidden bg-black aspect-video"
+                        style={{ boxShadow: `0 0 30px ${hexToRgba(accentBrand, 0.15)}` }}
+                      >
+                        <CloudflarePlayer
+                          videoId={selectedLibraryExerciseData.video}
+                          autoPlay={true}
+                          controls={true}
+                          className="w-full h-full"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="mb-3 flex items-center gap-3">
+                    <span 
+                      className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                        selectedLibraryExerciseData.video 
+                          ? "bg-green-500/20 text-green-400 border border-green-500/30" 
+                          : "bg-red-500/20 text-red-400 border border-red-500/30"
+                      }`}
                     >
-                      {selectedLibraryExerciseData.video}
-                    </a>
+                      {selectedLibraryExerciseData.video ? "🎥 Video Ready" : "⚠️ Missing Video"}
+                    </span>
+                    <span className="text-xs text-slate-400 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
+                      {selectedLibraryExerciseData.equipment}
+                    </span>
+                  </div>
+                  <p className="flex items-center gap-2">
+                    <span className="text-slate-400">Video ID:</span>{" "}
+                    {editingVideoId === selectedLibraryExerciseData.name ? (
+                      <div className="flex items-center gap-2 flex-grow">
+                        <input
+                          type="text"
+                          value={newVideoUrl}
+                          onChange={(e) => setNewVideoUrl(e.target.value)}
+                          className="flex-grow rounded border border-white/20 bg-black/40 px-2 py-1 text-xs text-white"
+                          placeholder="Cloudflare Video ID"
+                        />
+                        <button
+                          onClick={() => handleUpdateVideoUrl(selectedLibraryExerciseData)}
+                          disabled={isUpdatingLibrary}
+                          className="rounded bg-sky-600 px-2 py-1 text-[10px] uppercase font-bold text-white hover:bg-sky-500"
+                        >
+                          {isUpdatingLibrary ? "Saving..." : "Save"}
+                        </button>
+                        <button
+                          onClick={() => setEditingVideoId(null)}
+                          className="text-[10px] uppercase font-bold text-slate-400 hover:text-white"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <span className="text-sky-300 font-mono text-xs">
+                          {selectedLibraryExerciseData.video || "No Video Assigned"}
+                        </span>
+                        <button
+                          onClick={() => {
+                            setEditingVideoId(selectedLibraryExerciseData.name);
+                            setNewVideoUrl(selectedLibraryExerciseData.video || "");
+                          }}
+                          className="ml-2 text-[10px] uppercase font-bold text-sky-400 hover:text-sky-300 transition-colors"
+                        >
+                          Edit
+                        </button>
+                      </>
+                    )}
                   </p>
                   {selectedLibraryExerciseData.muscles && (
                     <p className="mt-2">
@@ -502,7 +629,7 @@ export default function BuilderPage() {
                     >
                       {options.map((exercise) => (
                         <option key={exercise.name} value={exercise.name} className="bg-black">
-                          {exercise.name}
+                          {exercise.video ? "🎥 " : ""}{exercise.name}
                         </option>
                       ))}
                     </select>

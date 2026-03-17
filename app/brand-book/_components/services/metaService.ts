@@ -31,7 +31,7 @@ const getAccessToken = async (brandId: string) => {
         });
 
         const json = await res.json();
-
+        console.log('[MetaService] Token fetch response:', json);
         // Ensure we get the latest token if multiple exist (though we try to keep it unique)
         // The persist API 'select' returns an array.
         if (json.data && Array.isArray(json.data) && json.data.length > 0) {
@@ -167,7 +167,7 @@ export const getMetaAccounts = async (brandId: string) => {
     const token = await getAccessToken(brandId);
     if (!token) return [];
 
-    console.log("[MetaService] Fetching Ad Accounts...");
+    console.log(`[MetaService] Fetching Ad Accounts for brand ${brandId} with token ${token?.substring(0, 5)}...`);
 
     // Strategy 1: Direct Ad Accounts (Assigned to User)
     let allAccounts: any[] = [];
@@ -175,6 +175,7 @@ export const getMetaAccounts = async (brandId: string) => {
     try {
         const res = await fetch(`${GRAPH_API}/me/adaccounts?fields=name,account_id,currency,timezone_name,account_status&limit=50&access_token=${token}`);
         const data = await res.json();
+        console.log('[MetaService] Ad accounts response:', data);
 
         if (data.error) {
             console.error("[MetaService] Direct fetch error:", data.error);
@@ -227,9 +228,16 @@ export const getMetaCampaigns = async (accountId: string, brandId: string) => {
     const token = await getAccessToken(brandId);
     if (!token) return [];
 
+    console.log(`[MetaService] Fetching campaigns for account: ${accountId}`);
     const res = await fetch(`${GRAPH_API}/${accountId}/campaigns?fields=id,name,objective,status,special_ad_categories&access_token=${token}`);
     const data = await res.json();
-    if (data.error) throw new Error(data.error.message);
+
+    if (data.error) {
+        console.error("[MetaService] Campaign fetch error:", data.error);
+        throw new Error(data.error.message);
+    }
+
+    console.log(`[MetaService] Raw campaigns found: ${data.data?.length || 0}`);
 
     // Fetch insights for each to get spend/results (batching would be better but keeping simple)
     const enriched = await Promise.all(data.data.map(async (cmp: any) => {
@@ -286,8 +294,10 @@ export const getMetaAds = async (accountId: string, brandId: string) => {
     const token = await getAccessToken(brandId);
     if (!token) return [];
 
+    console.log(`[MetaService] Fetching ads for account ${accountId} with token ${token?.substring(0, 5)}...`);
     const res = await fetch(`${GRAPH_API}/${accountId}/ads?fields=id,adset_id,name,status,creative&access_token=${token}`);
     const data = await res.json();
+    console.log('[MetaService] Ads response:', data);
     if (data.error) throw new Error(data.error.message);
 
     const enriched = await Promise.all(data.data.map(async (ad: any) => {

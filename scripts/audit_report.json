@@ -1,0 +1,3908 @@
+{
+  "valid": [
+    {
+      "exercise_name": "Burpees",
+      "video_url": "39b64433fd60d29565f1a1a76be0782e",
+      "required_equipment": "bodyweight",
+      "cfData": {
+        "id": "39b64433fd60d29565f1a1a76be0782e",
+        "name": "Box jump burpee.MP4",
+        "filename": "Box jump burpee.MP4",
+        "duration": 8.9,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/39b64433fd60d29565f1a1a76be0782e/watch"
+      }
+    },
+    {
+      "exercise_name": "Plank Hold",
+      "video_url": "1e105403221b702075e13d89414809ae",
+      "required_equipment": "bodyweight",
+      "cfData": {
+        "id": "1e105403221b702075e13d89414809ae",
+        "name": "Box plank.MP4",
+        "filename": "Box plank.MP4",
+        "duration": 4.3,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/1e105403221b702075e13d89414809ae/watch"
+      }
+    },
+    {
+      "exercise_name": "Mountain Climbers",
+      "video_url": "01231002ed532bdaaaf28d4fe000d270",
+      "required_equipment": "bodyweight",
+      "cfData": {
+        "id": "01231002ed532bdaaaf28d4fe000d270",
+        "name": "TRX mountain climbers.MP4",
+        "filename": "TRX mountain climbers.MP4",
+        "duration": 4.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/01231002ed532bdaaaf28d4fe000d270/watch"
+      }
+    },
+    {
+      "exercise_name": "Dumbbell Thrusters",
+      "video_url": "5cfa6aecc8089781efd94c56d2beb5ab",
+      "required_equipment": "dumbbells",
+      "cfData": {
+        "id": "5cfa6aecc8089781efd94c56d2beb5ab",
+        "name": "Barbell front squat back lunge .MP4",
+        "filename": "Barbell front squat back lunge .MP4",
+        "duration": 12,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/5cfa6aecc8089781efd94c56d2beb5ab/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Power Squat Clean",
+      "video_url": "efd2e4ea627e6659e9848a51ea8e6762",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "efd2e4ea627e6659e9848a51ea8e6762",
+        "name": "Barbell power squat clean.MP4",
+        "filename": "Barbell power squat clean.MP4",
+        "duration": 8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/efd2e4ea627e6659e9848a51ea8e6762/watch"
+      }
+    },
+    {
+      "exercise_name": "0107",
+      "video_url": "b85db180d8cb003e98d5abbacc4bbb5a",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "b85db180d8cb003e98d5abbacc4bbb5a",
+        "name": "0107.mov",
+        "filename": "0107.mov",
+        "duration": 17.4,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/b85db180d8cb003e98d5abbacc4bbb5a/watch"
+      }
+    },
+    {
+      "exercise_name": "Copy CA1DB70A CD69 4A44 AB56 F201BFEB2B64",
+      "video_url": "c631ca337af80ca4544d184879c36c5a",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "c631ca337af80ca4544d184879c36c5a",
+        "name": "copy_CA1DB70A-CD69-4A44-AB56-F201BFEB2B64.MOV",
+        "filename": "copy_CA1DB70A-CD69-4A44-AB56-F201BFEB2B64.MOV",
+        "duration": 17.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/c631ca337af80ca4544d184879c36c5a/watch"
+      }
+    },
+    {
+      "exercise_name": "1590 Raw",
+      "video_url": "cea8e05486e40fd74f7f1d5574d37c7b",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "cea8e05486e40fd74f7f1d5574d37c7b",
+        "name": "1590_raw.MP4",
+        "filename": "1590_raw.MP4",
+        "duration": 184,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/cea8e05486e40fd74f7f1d5574d37c7b/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Deadlift Plyo Jump",
+      "video_url": "5f547fa37147777b16708dfe1f9f71cc",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "5f547fa37147777b16708dfe1f9f71cc",
+        "name": "DB deadlift plyo jump.MP4",
+        "filename": "DB deadlift plyo jump.MP4",
+        "duration": 5.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/5f547fa37147777b16708dfe1f9f71cc/watch"
+      }
+    },
+    {
+      "exercise_name": "Bear Sand Bag Toe Taps ",
+      "video_url": "1ebf5ff2769834aa5731db38269776af",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "1ebf5ff2769834aa5731db38269776af",
+        "name": "Bear sand bag toe taps .MP4",
+        "filename": "Bear sand bag toe taps .MP4",
+        "duration": 5.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/1ebf5ff2769834aa5731db38269776af/watch"
+      }
+    },
+    {
+      "exercise_name": "Reverse Grip Deadlift Into Row ",
+      "video_url": "6586fd790fec609fb2277c33258e3e9b",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "6586fd790fec609fb2277c33258e3e9b",
+        "name": "Reverse grip Deadlift into row .MP4",
+        "filename": "Reverse grip Deadlift into row .MP4",
+        "duration": 12,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/6586fd790fec609fb2277c33258e3e9b/watch"
+      }
+    },
+    {
+      "exercise_name": "Kneeling Barbell Clean",
+      "video_url": "d048c005e3f9f65e4ec37838aeb1052c",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "d048c005e3f9f65e4ec37838aeb1052c",
+        "name": "Kneeling barbell clean.MP4",
+        "filename": "Kneeling barbell clean.MP4",
+        "duration": 5.3,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/d048c005e3f9f65e4ec37838aeb1052c/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Pike Push Up",
+      "video_url": "4e4a7c5172fdcb95958f7f16031cb22d",
+      "required_equipment": "Box",
+      "cfData": {
+        "id": "4e4a7c5172fdcb95958f7f16031cb22d",
+        "name": "Box pike push-up.MP4",
+        "filename": "Box pike push-up.MP4",
+        "duration": 6.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/4e4a7c5172fdcb95958f7f16031cb22d/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Turkish Get Up",
+      "video_url": "4eb2adcb0a88ab150052678bb2a8e76b",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "4eb2adcb0a88ab150052678bb2a8e76b",
+        "name": "DB turkish get up.MP4",
+        "filename": "DB turkish get up.MP4",
+        "duration": 9.3,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/4eb2adcb0a88ab150052678bb2a8e76b/watch"
+      }
+    },
+    {
+      "exercise_name": "Kneeling Barbell Front Raise",
+      "video_url": "452b820e8c4e3fca47df6a77560a2cc3",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "452b820e8c4e3fca47df6a77560a2cc3",
+        "name": "Kneeling barbell front raise.MP4",
+        "filename": "Kneeling barbell front raise.MP4",
+        "duration": 5.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/452b820e8c4e3fca47df6a77560a2cc3/watch"
+      }
+    },
+    {
+      "exercise_name": "TRX Squat Jumps ",
+      "video_url": "c498b24a9f9d8943ea548e3120e98132",
+      "required_equipment": "TRX",
+      "cfData": {
+        "id": "c498b24a9f9d8943ea548e3120e98132",
+        "name": "TRX squat jumps .MP4",
+        "filename": "TRX squat jumps .MP4",
+        "duration": 5.3,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/c498b24a9f9d8943ea548e3120e98132/watch"
+      }
+    },
+    {
+      "exercise_name": "Goblet Squats",
+      "video_url": "393e8e99e2e35c80290c4eead184c642",
+      "required_equipment": "dumbbells",
+      "cfData": {
+        "id": "393e8e99e2e35c80290c4eead184c642",
+        "name": "squat pulse .MP4",
+        "filename": "squat pulse .MP4",
+        "duration": 2.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/393e8e99e2e35c80290c4eead184c642/watch"
+      }
+    },
+    {
+      "exercise_name": "Ski Erg Reverse X Pulls",
+      "video_url": "dbd7e2001e7e9b8af88766e9f10ac341",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "dbd7e2001e7e9b8af88766e9f10ac341",
+        "name": "Ski erg reverse X pulls.MP4",
+        "filename": "Ski erg reverse X pulls.MP4",
+        "duration": 8.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/dbd7e2001e7e9b8af88766e9f10ac341/watch"
+      }
+    },
+    {
+      "exercise_name": "Lateral Box Jumps",
+      "video_url": "1041c6f4aef795986fcda25fc3814ee5",
+      "required_equipment": "Box",
+      "cfData": {
+        "id": "1041c6f4aef795986fcda25fc3814ee5",
+        "name": "Lateral box jumps.MP4",
+        "filename": "Lateral box jumps.MP4",
+        "duration": 4.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/1041c6f4aef795986fcda25fc3814ee5/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Kneeling Front And Side Swings",
+      "video_url": "9e2b5954c564ce0c27a453b91e5544d1",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "9e2b5954c564ce0c27a453b91e5544d1",
+        "name": "DB kneeling front and side swings.MP4",
+        "filename": "DB kneeling front and side swings.MP4",
+        "duration": 6.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/9e2b5954c564ce0c27a453b91e5544d1/watch"
+      }
+    },
+    {
+      "exercise_name": "IMG 8658",
+      "video_url": "722704b201f60ff6bcf81edf19266474",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "722704b201f60ff6bcf81edf19266474",
+        "name": "IMG_8658.mov",
+        "filename": "IMG_8658.mov",
+        "duration": 11.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/722704b201f60ff6bcf81edf19266474/watch"
+      }
+    },
+    {
+      "exercise_name": "Kneeling DB Plyo Clean And Press",
+      "video_url": "1cba8ee7e2e05574aa829d9eb6d9a105",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "1cba8ee7e2e05574aa829d9eb6d9a105",
+        "name": "Kneeling DB plyo clean and press.MP4",
+        "filename": "Kneeling DB plyo clean and press.MP4",
+        "duration": 9.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/1cba8ee7e2e05574aa829d9eb6d9a105/watch"
+      }
+    },
+    {
+      "exercise_name": "ALT Superman Hold",
+      "video_url": "08ebf0c2d5b2b924ab7c2466e0e55027",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "08ebf0c2d5b2b924ab7c2466e0e55027",
+        "name": "ALT superman hold.MP4",
+        "filename": "ALT superman hold.MP4",
+        "duration": 7.4,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/08ebf0c2d5b2b924ab7c2466e0e55027/watch"
+      }
+    },
+    {
+      "exercise_name": "Babell Power Snatch Back Lunge ",
+      "video_url": "6ccfb5c3a86260d427cd836d02eba160",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "6ccfb5c3a86260d427cd836d02eba160",
+        "name": "Babell power snatch back lunge .MP4",
+        "filename": "Babell power snatch back lunge .MP4",
+        "duration": 8.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/6ccfb5c3a86260d427cd836d02eba160/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Row Reverse Grip",
+      "video_url": "a262d8c95def7f0546adf8ba42dee50b",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "a262d8c95def7f0546adf8ba42dee50b",
+        "name": "Barbell row reverse grip.MP4",
+        "filename": "Barbell row reverse grip.MP4",
+        "duration": 5.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/a262d8c95def7f0546adf8ba42dee50b/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Calve Jumps",
+      "video_url": "c4f17c437d8dfbd67e868cba2a641073",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "c4f17c437d8dfbd67e868cba2a641073",
+        "name": "DB calve jumps.MP4",
+        "filename": "DB calve jumps.MP4",
+        "duration": 3.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/c4f17c437d8dfbd67e868cba2a641073/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Lateral Lunge Around The World",
+      "video_url": "5ef22c38aa68551fe8f8c8191e799025",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "5ef22c38aa68551fe8f8c8191e799025",
+        "name": "Plate lateral lunge around the world.MP4",
+        "filename": "Plate lateral lunge around the world.MP4",
+        "duration": 8.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/5ef22c38aa68551fe8f8c8191e799025/watch"
+      }
+    },
+    {
+      "exercise_name": "Single Leg Hanging Knee Tuck Hold",
+      "video_url": "11f6f1d34c3852d24141df931cee2e93",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "11f6f1d34c3852d24141df931cee2e93",
+        "name": "Single leg hanging knee tuck hold.MP4",
+        "filename": "Single leg hanging knee tuck hold.MP4",
+        "duration": 4.5,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/11f6f1d34c3852d24141df931cee2e93/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Bulgerian",
+      "video_url": "197e4ec4395f54179748de1baf7515d1",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "197e4ec4395f54179748de1baf7515d1",
+        "name": "Plate bulgerian.MP4",
+        "filename": "Plate bulgerian.MP4",
+        "duration": 8.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/197e4ec4395f54179748de1baf7515d1/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Straight Leg Deadlift ",
+      "video_url": "66d51a93d2d2926b313179a00e6ca5c6",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "66d51a93d2d2926b313179a00e6ca5c6",
+        "name": "DB straight leg deadlift .MP4",
+        "filename": "DB straight leg deadlift .MP4",
+        "duration": 7.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/66d51a93d2d2926b313179a00e6ca5c6/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Swing Alt Back Lunges",
+      "video_url": "4a0d4dd0fa4a6e77febc4fa3b0235191",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "4a0d4dd0fa4a6e77febc4fa3b0235191",
+        "name": "Plate swing alt back lunges.MP4",
+        "filename": "Plate swing alt back lunges.MP4",
+        "duration": 8.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/4a0d4dd0fa4a6e77febc4fa3b0235191/watch"
+      }
+    },
+    {
+      "exercise_name": "BB Bicep Curls ",
+      "video_url": "bbf2025833da9ec44427ac2490dea23d",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "bbf2025833da9ec44427ac2490dea23d",
+        "name": "BB bicep curls .MP4",
+        "filename": "BB bicep curls .MP4",
+        "duration": 5.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/bbf2025833da9ec44427ac2490dea23d/watch"
+      }
+    },
+    {
+      "exercise_name": "TRX Lateral Lunge ",
+      "video_url": "8da94504b9d2aee26c9e4bf9d582a602",
+      "required_equipment": "TRX",
+      "cfData": {
+        "id": "8da94504b9d2aee26c9e4bf9d582a602",
+        "name": "TRX lateral lunge .MP4",
+        "filename": "TRX lateral lunge .MP4",
+        "duration": 5.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/8da94504b9d2aee26c9e4bf9d582a602/watch"
+      }
+    },
+    {
+      "exercise_name": "Ski Erge Reverse Rear Delt Pull Down ",
+      "video_url": "4a7761e9e0449a3abe4d1b7ccae549fd",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "4a7761e9e0449a3abe4d1b7ccae549fd",
+        "name": "Ski erge reverse rear delt pull down .MP4",
+        "filename": "Ski erge reverse rear delt pull down .MP4",
+        "duration": 7.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/4a7761e9e0449a3abe4d1b7ccae549fd/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Toe Taps",
+      "video_url": "149ee47f496db59d298fe3555215eb55",
+      "required_equipment": "Box",
+      "cfData": {
+        "id": "149ee47f496db59d298fe3555215eb55",
+        "name": "Box toe taps.MP4",
+        "filename": "Box toe taps.MP4",
+        "duration": 4.3,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/149ee47f496db59d298fe3555215eb55/watch"
+      }
+    },
+    {
+      "exercise_name": "Bosu Alt Superman",
+      "video_url": "943e70d291485cab88bd122f26dc8fd7",
+      "required_equipment": "BOSU",
+      "cfData": {
+        "id": "943e70d291485cab88bd122f26dc8fd7",
+        "name": "Bosu alt superman.MP4",
+        "filename": "Bosu alt superman.MP4",
+        "duration": 7.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/943e70d291485cab88bd122f26dc8fd7/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell ALT FWD Lunges ",
+      "video_url": "92367e71e7024e96e0386785e218b7ad",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "92367e71e7024e96e0386785e218b7ad",
+        "name": "Barbell ALT FWD lunges .MP4",
+        "filename": "Barbell ALT FWD lunges .MP4",
+        "duration": 13.4,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/92367e71e7024e96e0386785e218b7ad/watch"
+      }
+    },
+    {
+      "exercise_name": "Alt Reverse Lat Pulls",
+      "video_url": "5822825ab5578431167e945669c11f16",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "5822825ab5578431167e945669c11f16",
+        "name": "Alt reverse lat pulls.MP4",
+        "filename": "Alt reverse lat pulls.MP4",
+        "duration": 7.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/5822825ab5578431167e945669c11f16/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Swing Back Lunge",
+      "video_url": "e134ff5e4bce1c09d870c92580915daf",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "e134ff5e4bce1c09d870c92580915daf",
+        "name": "Plate swing back lunge.MP4",
+        "filename": "Plate swing back lunge.MP4",
+        "duration": 5.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/e134ff5e4bce1c09d870c92580915daf/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Front Raise Alt Back Lunge ",
+      "video_url": "610863c213b32d6102102bf19f921773",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "610863c213b32d6102102bf19f921773",
+        "name": "barbell front raise alt back lunge .MP4",
+        "filename": "barbell front raise alt back lunge .MP4",
+        "duration": 8.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/610863c213b32d6102102bf19f921773/watch"
+      }
+    },
+    {
+      "exercise_name": "Wall Plank To Elbow",
+      "video_url": "d0c04e5dc4d0018042ba666abd8dd153",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "d0c04e5dc4d0018042ba666abd8dd153",
+        "name": "Wall plank to elbow.MP4",
+        "filename": "Wall plank to elbow.MP4",
+        "duration": 6.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/d0c04e5dc4d0018042ba666abd8dd153/watch"
+      }
+    },
+    {
+      "exercise_name": "TRX Atomic Push Up",
+      "video_url": "901871e6f93854d073ac551806b21d23",
+      "required_equipment": "TRX",
+      "cfData": {
+        "id": "901871e6f93854d073ac551806b21d23",
+        "name": "TRX atomic push up.MP4",
+        "filename": "TRX atomic push up.MP4",
+        "duration": 10.5,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/901871e6f93854d073ac551806b21d23/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Seated Lateral Raise",
+      "video_url": "3d52415ada0c6b36d2700ac9ec22b001",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "3d52415ada0c6b36d2700ac9ec22b001",
+        "name": "DB seated lateral raise.MP4",
+        "filename": "DB seated lateral raise.MP4",
+        "duration": 7.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/3d52415ada0c6b36d2700ac9ec22b001/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Lateral Hold W: Jump",
+      "video_url": "fd70c88816a310e848953f976a62455c",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "fd70c88816a310e848953f976a62455c",
+        "name": "Plate lateral hold w: jump.MP4",
+        "filename": "Plate lateral hold w: jump.MP4",
+        "duration": 3.5,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/fd70c88816a310e848953f976a62455c/watch"
+      }
+    },
+    {
+      "exercise_name": "Single Leg Ski Erg",
+      "video_url": "6de7616ecc72f962e57cb7011d78b1a5",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "6de7616ecc72f962e57cb7011d78b1a5",
+        "name": "Single leg ski erg.MP4",
+        "filename": "Single leg ski erg.MP4",
+        "duration": 12,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/6de7616ecc72f962e57cb7011d78b1a5/watch"
+      }
+    },
+    {
+      "exercise_name": "Kneeling Barbell Snatch",
+      "video_url": "198528c64fe3094a05c14033a2db8c11",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "198528c64fe3094a05c14033a2db8c11",
+        "name": "Kneeling barbell snatch.MP4",
+        "filename": "Kneeling barbell snatch.MP4",
+        "duration": 7.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/198528c64fe3094a05c14033a2db8c11/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Pushup Alt Knee Tucks ",
+      "video_url": "80fbe1080eccbe410bed9862cc50bd5c",
+      "required_equipment": "Box",
+      "cfData": {
+        "id": "80fbe1080eccbe410bed9862cc50bd5c",
+        "name": "Box pushup alt knee tucks .MP4",
+        "filename": "Box pushup alt knee tucks .MP4",
+        "duration": 7.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/80fbe1080eccbe410bed9862cc50bd5c/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Snatch",
+      "video_url": "c16dd9e2f6f06606fb1dd6abb7d3b595",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "c16dd9e2f6f06606fb1dd6abb7d3b595",
+        "name": "Barbell snatch.MP4",
+        "filename": "Barbell snatch.MP4",
+        "duration": 11,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/c16dd9e2f6f06606fb1dd6abb7d3b595/watch"
+      }
+    },
+    {
+      "exercise_name": "Kneeling Lean Barbell Front Raise",
+      "video_url": "3fc724a30b162bfc5d249d50285eedcb",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "3fc724a30b162bfc5d249d50285eedcb",
+        "name": "Kneeling lean barbell front raise.MP4",
+        "filename": "Kneeling lean barbell front raise.MP4",
+        "duration": 10,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/3fc724a30b162bfc5d249d50285eedcb/watch"
+      }
+    },
+    {
+      "exercise_name": "Alt Kneeling DB Plyo Curls ",
+      "video_url": "57c284d0e4d72e8867a1e3faf97bc99d",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "57c284d0e4d72e8867a1e3faf97bc99d",
+        "name": "Alt kneeling DB plyo curls .MP4",
+        "filename": "Alt kneeling DB plyo curls .MP4",
+        "duration": 5.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/57c284d0e4d72e8867a1e3faf97bc99d/watch"
+      }
+    },
+    {
+      "exercise_name": "Ski Erge Lunge Power Pulls ",
+      "video_url": "db53be213251e6585a2b9e25802dfb27",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "db53be213251e6585a2b9e25802dfb27",
+        "name": "Ski erge lunge power pulls .MP4",
+        "filename": "Ski erge lunge power pulls .MP4",
+        "duration": 5.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/db53be213251e6585a2b9e25802dfb27/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Seated Fwd Press",
+      "video_url": "aae6543ecb72612479f823132b257d0e",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "aae6543ecb72612479f823132b257d0e",
+        "name": "DB seated fwd press.MP4",
+        "filename": "DB seated fwd press.MP4",
+        "duration": 3.9,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/aae6543ecb72612479f823132b257d0e/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Seated Shoulder Press",
+      "video_url": "d19dc1071dc195fef53e5cbbfa50bcdd",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "d19dc1071dc195fef53e5cbbfa50bcdd",
+        "name": "DB seated shoulder press.MP4",
+        "filename": "DB seated shoulder press.MP4",
+        "duration": 4.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/d19dc1071dc195fef53e5cbbfa50bcdd/watch"
+      }
+    },
+    {
+      "exercise_name": "Seated Plate Press",
+      "video_url": "e2b5b78127c1a61f37a9d5505d620288",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "e2b5b78127c1a61f37a9d5505d620288",
+        "name": "Seated plate press.MP4",
+        "filename": "Seated plate press.MP4",
+        "duration": 8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/e2b5b78127c1a61f37a9d5505d620288/watch"
+      }
+    },
+    {
+      "exercise_name": "Band Push Up",
+      "video_url": "9488334b53f3deabc4c6f3983bfab665",
+      "required_equipment": "Band",
+      "cfData": {
+        "id": "9488334b53f3deabc4c6f3983bfab665",
+        "name": "Band push-up.MP4",
+        "filename": "Band push-up.MP4",
+        "duration": 7.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/9488334b53f3deabc4c6f3983bfab665/watch"
+      }
+    },
+    {
+      "exercise_name": "TRX Sand Bag Pistol Squat",
+      "video_url": "26dc1d8fac6e7fabaa3adb4099eeb522",
+      "required_equipment": "TRX",
+      "cfData": {
+        "id": "26dc1d8fac6e7fabaa3adb4099eeb522",
+        "name": "TRX sand bag pistol squat.MP4",
+        "filename": "TRX sand bag pistol squat.MP4",
+        "duration": 7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/26dc1d8fac6e7fabaa3adb4099eeb522/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Kick Through",
+      "video_url": "7981b8ef29134efc1623f97ad05744b1",
+      "required_equipment": "Box",
+      "cfData": {
+        "id": "7981b8ef29134efc1623f97ad05744b1",
+        "name": "Box kick through.MP4",
+        "filename": "Box kick through.MP4",
+        "duration": 9.5,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/7981b8ef29134efc1623f97ad05744b1/watch"
+      }
+    },
+    {
+      "exercise_name": "Renegade Row",
+      "video_url": "a336b2b1c4814814b94b438fa13e6fbb",
+      "required_equipment": "dumbbells",
+      "cfData": {
+        "id": "a336b2b1c4814814b94b438fa13e6fbb",
+        "name": "Renegade row.MP4",
+        "filename": "Renegade row.MP4",
+        "duration": 8.5,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/a336b2b1c4814814b94b438fa13e6fbb/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Front Squat Back Lunge",
+      "video_url": "5cfa6aecc8089781efd94c56d2beb5ab",
+      "required_equipment": "barbell",
+      "cfData": {
+        "id": "5cfa6aecc8089781efd94c56d2beb5ab",
+        "name": "Barbell front squat back lunge .MP4",
+        "filename": "Barbell front squat back lunge .MP4",
+        "duration": 12,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/5cfa6aecc8089781efd94c56d2beb5ab/watch"
+      }
+    },
+    {
+      "exercise_name": "Band Seated Lat Pull Down",
+      "video_url": "1fe74d766ddeb0d3ea20567a9cb6774c",
+      "required_equipment": "band",
+      "cfData": {
+        "id": "1fe74d766ddeb0d3ea20567a9cb6774c",
+        "name": "Band seated lat pull down.MP4",
+        "filename": "Band seated lat pull down.MP4",
+        "duration": 6.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/1fe74d766ddeb0d3ea20567a9cb6774c/watch"
+      }
+    },
+    {
+      "exercise_name": "Alt Hammer Curls",
+      "video_url": "097b10217c8c57bdb91e8c31b4d32d4a",
+      "required_equipment": "dumbbells",
+      "cfData": {
+        "id": "097b10217c8c57bdb91e8c31b4d32d4a",
+        "name": "Alt hammer curls .MP4",
+        "filename": "Alt hammer curls .MP4",
+        "duration": 5.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/097b10217c8c57bdb91e8c31b4d32d4a/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Squat Woodchops",
+      "video_url": "2d7d3685ff233b9444648b93b47acde5",
+      "required_equipment": "dumbbells",
+      "cfData": {
+        "id": "2d7d3685ff233b9444648b93b47acde5",
+        "name": "DB squat woodchops .MP4",
+        "filename": "DB squat woodchops .MP4",
+        "duration": 12.9,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/2d7d3685ff233b9444648b93b47acde5/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Shoulder Press",
+      "video_url": "7c81f232660f65b0bf1c178cdf9930c6",
+      "required_equipment": "barbell",
+      "cfData": {
+        "id": "7c81f232660f65b0bf1c178cdf9930c6",
+        "name": "Barbell back squat into press.MP4",
+        "filename": "Barbell back squat into press.MP4",
+        "duration": 10.5,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/7c81f232660f65b0bf1c178cdf9930c6/watch"
+      }
+    },
+    {
+      "exercise_name": "Band Bench Press",
+      "video_url": "a74140b4d985cafcf5580f303d03573c",
+      "required_equipment": "bench",
+      "cfData": {
+        "id": "a74140b4d985cafcf5580f303d03573c",
+        "name": "Band bench press .MP4",
+        "filename": "Band bench press .MP4",
+        "duration": 7.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/a74140b4d985cafcf5580f303d03573c/watch"
+      }
+    },
+    {
+      "exercise_name": "Band Single Arm Tricep Extension",
+      "video_url": "26bc9721ecd789c317aa77c49c153928",
+      "required_equipment": "band",
+      "cfData": {
+        "id": "26bc9721ecd789c317aa77c49c153928",
+        "name": "Band Single arm tricep ext.MP4",
+        "filename": "Band Single arm tricep ext.MP4",
+        "duration": 6.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/26bc9721ecd789c317aa77c49c153928/watch"
+      }
+    },
+    {
+      "exercise_name": "Walking Lunge",
+      "video_url": "62196c80aea29ebc01338f46e0a6f7d7",
+      "required_equipment": "dumbbells",
+      "cfData": {
+        "id": "62196c80aea29ebc01338f46e0a6f7d7",
+        "name": "Band single leg lunge .MP4",
+        "filename": "Band single leg lunge .MP4",
+        "duration": 6.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/62196c80aea29ebc01338f46e0a6f7d7/watch"
+      }
+    },
+    {
+      "exercise_name": "Slow Wide Arm Push Up",
+      "video_url": "91b086c1777d6188657ee418d741dc17",
+      "required_equipment": "bodyweight",
+      "cfData": {
+        "id": "91b086c1777d6188657ee418d741dc17",
+        "name": "Wide arm push-up.MP4",
+        "filename": "Wide arm push-up.MP4",
+        "duration": 7.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/91b086c1777d6188657ee418d741dc17/watch"
+      }
+    },
+    {
+      "exercise_name": "BOSU Knee Tuck",
+      "video_url": "70d36030120846640b3912ba23b97a3f",
+      "required_equipment": "bosu",
+      "cfData": {
+        "id": "70d36030120846640b3912ba23b97a3f",
+        "name": "BOSU knee tuck.MP4",
+        "filename": "BOSU knee tuck.MP4",
+        "duration": 3.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/70d36030120846640b3912ba23b97a3f/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Step Up",
+      "video_url": "344daa5da4c57504bda42a7a054ebda2",
+      "required_equipment": "box",
+      "cfData": {
+        "id": "344daa5da4c57504bda42a7a054ebda2",
+        "name": "Plate step up.MP4",
+        "filename": "Plate step up.MP4",
+        "duration": 11,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/344daa5da4c57504bda42a7a054ebda2/watch"
+      }
+    },
+    {
+      "exercise_name": "Incline Press",
+      "video_url": "1ddc9bf1c89b660004b7a6253f28bf89",
+      "required_equipment": "bench",
+      "cfData": {
+        "id": "1ddc9bf1c89b660004b7a6253f28bf89",
+        "name": "Box incline push-up.MP4",
+        "filename": "Box incline push-up.MP4",
+        "duration": 8.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/1ddc9bf1c89b660004b7a6253f28bf89/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Alt Front Raise",
+      "video_url": "859411a9da2ee472cf5785acb51dc3a2",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "859411a9da2ee472cf5785acb51dc3a2",
+        "name": "DB alt front raise.MP4",
+        "filename": "DB alt front raise.MP4",
+        "duration": 10,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/859411a9da2ee472cf5785acb51dc3a2/watch"
+      }
+    },
+    {
+      "exercise_name": "Staggerd Push Up",
+      "video_url": "eb3a7f34f8c308d70daf89ecd9ddc332",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "eb3a7f34f8c308d70daf89ecd9ddc332",
+        "name": "Staggerd push-up.MP4",
+        "filename": "Staggerd push-up.MP4",
+        "duration": 6.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/eb3a7f34f8c308d70daf89ecd9ddc332/watch"
+      }
+    },
+    {
+      "exercise_name": "Bosu Plank To Elbow",
+      "video_url": "5e608328519f49b2c77617e01168dba3",
+      "required_equipment": "BOSU",
+      "cfData": {
+        "id": "5e608328519f49b2c77617e01168dba3",
+        "name": "Bosu plank to elbow.MP4",
+        "filename": "Bosu plank to elbow.MP4",
+        "duration": 8.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/5e608328519f49b2c77617e01168dba3/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Back Lunge Rotation",
+      "video_url": "7c068a28c470653eb1573e40040feb84",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "7c068a28c470653eb1573e40040feb84",
+        "name": "Plate back lunge rotation.MP4",
+        "filename": "Plate back lunge rotation.MP4",
+        "duration": 10,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/7c068a28c470653eb1573e40040feb84/watch"
+      }
+    },
+    {
+      "exercise_name": "Ski Erg X Pulls",
+      "video_url": "4b1c31dfe340e5767c52c7c20dad1b95",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "4b1c31dfe340e5767c52c7c20dad1b95",
+        "name": "Ski erg X pulls.MP4",
+        "filename": "Ski erg X pulls.MP4",
+        "duration": 8.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/4b1c31dfe340e5767c52c7c20dad1b95/watch"
+      }
+    },
+    {
+      "exercise_name": "Kipping Pull Up TTB",
+      "video_url": "bab4d92b8a24bdec7a818c7254f3c3f5",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "bab4d92b8a24bdec7a818c7254f3c3f5",
+        "name": "Kipping pull-up TTB.MP4",
+        "filename": "Kipping pull-up TTB.MP4",
+        "duration": 9.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/bab4d92b8a24bdec7a818c7254f3c3f5/watch"
+      }
+    },
+    {
+      "exercise_name": "Reverse Slow Push Up",
+      "video_url": "aad1776556f5572078d1f3f6b5bd5809",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "aad1776556f5572078d1f3f6b5bd5809",
+        "name": "Reverse slow push-up.MP4",
+        "filename": "Reverse slow push-up.MP4",
+        "duration": 8.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/aad1776556f5572078d1f3f6b5bd5809/watch"
+      }
+    },
+    {
+      "exercise_name": "TRX TTB",
+      "video_url": "c28d10e06b5ba372bcdff0f8ff13307d",
+      "required_equipment": "TRX",
+      "cfData": {
+        "id": "c28d10e06b5ba372bcdff0f8ff13307d",
+        "name": "TRX TTB.MP4",
+        "filename": "TRX TTB.MP4",
+        "duration": 7.5,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/c28d10e06b5ba372bcdff0f8ff13307d/watch"
+      }
+    },
+    {
+      "exercise_name": "Band Squat Alt Side Raise",
+      "video_url": "ded075afc5c19ee535dad0f17b5e7b60",
+      "required_equipment": "Band",
+      "cfData": {
+        "id": "ded075afc5c19ee535dad0f17b5e7b60",
+        "name": "Band squat alt side raise.MP4",
+        "filename": "Band squat alt side raise.MP4",
+        "duration": 10,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/ded075afc5c19ee535dad0f17b5e7b60/watch"
+      }
+    },
+    {
+      "exercise_name": "BB Front > Back Press",
+      "video_url": "3268a8c846e23ee7085c677ab5d91697",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "3268a8c846e23ee7085c677ab5d91697",
+        "name": "BB front > back press.MP4",
+        "filename": "BB front > back press.MP4",
+        "duration": 10.5,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/3268a8c846e23ee7085c677ab5d91697/watch"
+      }
+    },
+    {
+      "exercise_name": "DB ALT Squat Woodchops",
+      "video_url": "de66644a8b2df0c2fa294a1d1f1b6b9d",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "de66644a8b2df0c2fa294a1d1f1b6b9d",
+        "name": "DB ALT squat woodchops.MP4",
+        "filename": "DB ALT squat woodchops.MP4",
+        "duration": 8.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/de66644a8b2df0c2fa294a1d1f1b6b9d/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Lateral Lunge W: Press",
+      "video_url": "a138f0cae3fe61cec96bcfcf21531f64",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "a138f0cae3fe61cec96bcfcf21531f64",
+        "name": "DB lateral lunge w: press.MP4",
+        "filename": "DB lateral lunge w: press.MP4",
+        "duration": 9.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/a138f0cae3fe61cec96bcfcf21531f64/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Overhead Lunge Pulse ",
+      "video_url": "486f0cefe474a4b314235ee934d13174",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "486f0cefe474a4b314235ee934d13174",
+        "name": "Barbell overhead lunge pulse .MP4",
+        "filename": "Barbell overhead lunge pulse .MP4",
+        "duration": 6.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/486f0cefe474a4b314235ee934d13174/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Over Squat Into Back Lunge ",
+      "video_url": "95a68475b0baa7b1f3d3ecce2d8db477",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "95a68475b0baa7b1f3d3ecce2d8db477",
+        "name": "Barbell over squat into back lunge .MP4",
+        "filename": "Barbell over squat into back lunge .MP4",
+        "duration": 7.9,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/95a68475b0baa7b1f3d3ecce2d8db477/watch"
+      }
+    },
+    {
+      "exercise_name": "Knee To Elbow ALT Sit Ups ",
+      "video_url": "072fb84ebb4253ce9cceed902bb61d0e",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "072fb84ebb4253ce9cceed902bb61d0e",
+        "name": "Knee to elbow ALT sit-ups .MP4",
+        "filename": "Knee to elbow ALT sit-ups .MP4",
+        "duration": 10.5,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/072fb84ebb4253ce9cceed902bb61d0e/watch"
+      }
+    },
+    {
+      "exercise_name": "Slow Push Up",
+      "video_url": "bf3f1b97a9a73ce9349abb723e14f898",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "bf3f1b97a9a73ce9349abb723e14f898",
+        "name": "Slow push-up.MP4",
+        "filename": "Slow push-up.MP4",
+        "duration": 11,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/bf3f1b97a9a73ce9349abb723e14f898/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Jump Burpee",
+      "video_url": "39b64433fd60d29565f1a1a76be0782e",
+      "required_equipment": "box",
+      "cfData": {
+        "id": "39b64433fd60d29565f1a1a76be0782e",
+        "name": "Box jump burpee.MP4",
+        "filename": "Box jump burpee.MP4",
+        "duration": 8.9,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/39b64433fd60d29565f1a1a76be0782e/watch"
+      }
+    },
+    {
+      "exercise_name": "Bench Press Hold",
+      "video_url": "b9659815ec7e2634ee92b88f23d54504",
+      "required_equipment": "bench",
+      "cfData": {
+        "id": "b9659815ec7e2634ee92b88f23d54504",
+        "name": "DB narrow press.MP4",
+        "filename": "DB narrow press.MP4",
+        "duration": 7.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/b9659815ec7e2634ee92b88f23d54504/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Single Arm Front Raise",
+      "video_url": "3a3c0f3ddeffb53ffcdc3d44a3585266",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "3a3c0f3ddeffb53ffcdc3d44a3585266",
+        "name": "DB single arm front raise.MP4",
+        "filename": "DB single arm front raise.MP4",
+        "duration": 9.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/3a3c0f3ddeffb53ffcdc3d44a3585266/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Front Raise Jacks ",
+      "video_url": "6a872e71341ecffabc7fe1eef718bac7",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "6a872e71341ecffabc7fe1eef718bac7",
+        "name": "Plate front raise jacks .MP4",
+        "filename": "Plate front raise jacks .MP4",
+        "duration": 4.3,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/6a872e71341ecffabc7fe1eef718bac7/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Lateral Lunge",
+      "video_url": "7331091226d6c40c5470b99d74eff48c",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "7331091226d6c40c5470b99d74eff48c",
+        "name": "Plate lateral lunge.MP4",
+        "filename": "Plate lateral lunge.MP4",
+        "duration": 9.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/7331091226d6c40c5470b99d74eff48c/watch"
+      }
+    },
+    {
+      "exercise_name": "BB Squat Jump",
+      "video_url": "66e5d0bd6f7e1b17d134e0e998499cd5",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "66e5d0bd6f7e1b17d134e0e998499cd5",
+        "name": "BB squat jump.MP4",
+        "filename": "BB squat jump.MP4",
+        "duration": 4.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/66e5d0bd6f7e1b17d134e0e998499cd5/watch"
+      }
+    },
+    {
+      "exercise_name": "Sand Bag Sit Up Throw ",
+      "video_url": "db819be8ae0611e8311740d101892f51",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "db819be8ae0611e8311740d101892f51",
+        "name": "Sand bag sit up throw .MP4",
+        "filename": "Sand bag sit up throw .MP4",
+        "duration": 7.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/db819be8ae0611e8311740d101892f51/watch"
+      }
+    },
+    {
+      "exercise_name": "Strict Pull Up  TTB",
+      "video_url": "7d8b32458b6a39a21e598029111b5103",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "7d8b32458b6a39a21e598029111b5103",
+        "name": "Strict pull up- TTB.MP4",
+        "filename": "Strict pull up- TTB.MP4",
+        "duration": 9.5,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/7d8b32458b6a39a21e598029111b5103/watch"
+      }
+    },
+    {
+      "exercise_name": "Bosu Foam Roller Cross Body Climbers",
+      "video_url": "25f84d14b199ae6c5ba2497392607e65",
+      "required_equipment": "BOSU",
+      "cfData": {
+        "id": "25f84d14b199ae6c5ba2497392607e65",
+        "name": "Bosu foam roller cross body climbers.MP4",
+        "filename": "Bosu foam roller cross body climbers.MP4",
+        "duration": 3.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/25f84d14b199ae6c5ba2497392607e65/watch"
+      }
+    },
+    {
+      "exercise_name": "Squat Hold",
+      "video_url": "7835f6d747b71a4b8027d8d091131cde",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "7835f6d747b71a4b8027d8d091131cde",
+        "name": "squat hold.MP4",
+        "filename": "squat hold.MP4",
+        "duration": 2.4,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/7835f6d747b71a4b8027d8d091131cde/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Reverse Grip Front Raise",
+      "video_url": "cb84c8659bf708fc3c0168a99ef664ff",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "cb84c8659bf708fc3c0168a99ef664ff",
+        "name": "Barbell reverse grip front raise.MP4",
+        "filename": "Barbell reverse grip front raise.MP4",
+        "duration": 8.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/cb84c8659bf708fc3c0168a99ef664ff/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Lunge Pulse ",
+      "video_url": "9c89c8167e9ec4b49c53a7715205ef23",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "9c89c8167e9ec4b49c53a7715205ef23",
+        "name": "Barbell lunge pulse .MP4",
+        "filename": "Barbell lunge pulse .MP4",
+        "duration": 5.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/9c89c8167e9ec4b49c53a7715205ef23/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Kick Back Hold W: Jumps",
+      "video_url": "1808ce74640d1465c586e21314646d79",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "1808ce74640d1465c586e21314646d79",
+        "name": "DB kick back hold w: jumps.MP4",
+        "filename": "DB kick back hold w: jumps.MP4",
+        "duration": 2.9,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/1808ce74640d1465c586e21314646d79/watch"
+      }
+    },
+    {
+      "exercise_name": "Arnold Curl",
+      "video_url": "f9feb2c50f149af1f12400e08e53d370",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "f9feb2c50f149af1f12400e08e53d370",
+        "name": "Arnold curl.MP4",
+        "filename": "Arnold curl.MP4",
+        "duration": 3.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/f9feb2c50f149af1f12400e08e53d370/watch"
+      }
+    },
+    {
+      "exercise_name": "Speed Alt Curls ",
+      "video_url": "7143a05b5c4c6aa727695a9646e9a8ca",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "7143a05b5c4c6aa727695a9646e9a8ca",
+        "name": "Speed alt curls .MP4",
+        "filename": "Speed alt curls .MP4",
+        "duration": 1.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/7143a05b5c4c6aa727695a9646e9a8ca/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Alt Back Lunge ",
+      "video_url": "76c417981de5e2e206134b5ac08c6212",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "76c417981de5e2e206134b5ac08c6212",
+        "name": "Barbell alt back lunge .MP4",
+        "filename": "Barbell alt back lunge .MP4",
+        "duration": 9.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/76c417981de5e2e206134b5ac08c6212/watch"
+      }
+    },
+    {
+      "exercise_name": "Kneeling Lunge Clean Thruster",
+      "video_url": "0c67aaf26e016b3ace543005a9337a08",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "0c67aaf26e016b3ace543005a9337a08",
+        "name": "Kneeling lunge clean thruster.MP4",
+        "filename": "Kneeling lunge clean thruster.MP4",
+        "duration": 11.5,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/0c67aaf26e016b3ace543005a9337a08/watch"
+      }
+    },
+    {
+      "exercise_name": "Band Bent Ofer Tricep Ext ",
+      "video_url": "81e55b39fa65f8aa6fe87cf31b66262a",
+      "required_equipment": "Band",
+      "cfData": {
+        "id": "81e55b39fa65f8aa6fe87cf31b66262a",
+        "name": "Band bent ofer tricep ext .MP4",
+        "filename": "Band bent ofer tricep ext .MP4",
+        "duration": 6.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/81e55b39fa65f8aa6fe87cf31b66262a/watch"
+      }
+    },
+    {
+      "exercise_name": "Bosu Burpee Mountain Climber Jump",
+      "video_url": "12710d6040d82f564f88ad56946eae89",
+      "required_equipment": "BOSU",
+      "cfData": {
+        "id": "12710d6040d82f564f88ad56946eae89",
+        "name": "Bosu burpee mountain climber jump.MP4",
+        "filename": "Bosu burpee mountain climber jump.MP4",
+        "duration": 8.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/12710d6040d82f564f88ad56946eae89/watch"
+      }
+    },
+    {
+      "exercise_name": "Side Plank Hip Drops",
+      "video_url": "f643bf5fa2e817c32cf8b5660b75358a",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "f643bf5fa2e817c32cf8b5660b75358a",
+        "name": "Side plank hip drops.MP4",
+        "filename": "Side plank hip drops.MP4",
+        "duration": 8.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/f643bf5fa2e817c32cf8b5660b75358a/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Slow Snatch ",
+      "video_url": "4ccb0f3febd2b70824402c630fb5d1b7",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "4ccb0f3febd2b70824402c630fb5d1b7",
+        "name": "Barbell slow snatch .MP4",
+        "filename": "Barbell slow snatch .MP4",
+        "duration": 18.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/4ccb0f3febd2b70824402c630fb5d1b7/watch"
+      }
+    },
+    {
+      "exercise_name": "Sand Bag Fast Feet",
+      "video_url": "5c76bbb5840cde993482d47f8932954f",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "5c76bbb5840cde993482d47f8932954f",
+        "name": "Sand bag fast feet.MP4",
+        "filename": "Sand bag fast feet.MP4",
+        "duration": 2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/5c76bbb5840cde993482d47f8932954f/watch"
+      }
+    },
+    {
+      "exercise_name": "Bosu Russian Twist Toe Touches",
+      "video_url": "b01e0a617aaf89b633fc58192f3d996b",
+      "required_equipment": "BOSU",
+      "cfData": {
+        "id": "b01e0a617aaf89b633fc58192f3d996b",
+        "name": "Bosu russian twist toe touches.MP4",
+        "filename": "Bosu russian twist toe touches.MP4",
+        "duration": 5.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/b01e0a617aaf89b633fc58192f3d996b/watch"
+      }
+    },
+    {
+      "exercise_name": "Hanging Knee To Chest",
+      "video_url": "cd99d68418c6e4cad8759806fa045a87",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "cd99d68418c6e4cad8759806fa045a87",
+        "name": "Hanging knee to chest.MP4",
+        "filename": "Hanging knee to chest.MP4",
+        "duration": 2.5,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/cd99d68418c6e4cad8759806fa045a87/watch"
+      }
+    },
+    {
+      "exercise_name": "BB Bench Press",
+      "video_url": "74080347133e04b044c2ea42d0e22fc2",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "74080347133e04b044c2ea42d0e22fc2",
+        "name": "BB bench press.MP4",
+        "filename": "BB bench press.MP4",
+        "duration": 6.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/74080347133e04b044c2ea42d0e22fc2/watch"
+      }
+    },
+    {
+      "exercise_name": "Band Squat Jumps",
+      "video_url": "aa47d034b770f903709e9326b10ab6da",
+      "required_equipment": "Band",
+      "cfData": {
+        "id": "aa47d034b770f903709e9326b10ab6da",
+        "name": "band squat jumps.MP4",
+        "filename": "band squat jumps.MP4",
+        "duration": 2.5,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/aa47d034b770f903709e9326b10ab6da/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Swing Squats",
+      "video_url": "83ab7d2c2a07fbc1d15a49678cb98775",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "83ab7d2c2a07fbc1d15a49678cb98775",
+        "name": "Plate swing squats.MP4",
+        "filename": "Plate swing squats.MP4",
+        "duration": 7.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/83ab7d2c2a07fbc1d15a49678cb98775/watch"
+      }
+    },
+    {
+      "exercise_name": "Box 1:2 Burpee",
+      "video_url": "a06fcba19f249b810b799380086da989",
+      "required_equipment": "Box",
+      "cfData": {
+        "id": "a06fcba19f249b810b799380086da989",
+        "name": "Box 1:2 burpee.MP4",
+        "filename": "Box 1:2 burpee.MP4",
+        "duration": 7.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/a06fcba19f249b810b799380086da989/watch"
+      }
+    },
+    {
+      "exercise_name": "Speed Zotman Curls ",
+      "video_url": "cfda8627bdfe209fb0a46c82a95af53c",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "cfda8627bdfe209fb0a46c82a95af53c",
+        "name": "Speed Zotman curls .MP4",
+        "filename": "Speed Zotman curls .MP4",
+        "duration": 2.3,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/cfda8627bdfe209fb0a46c82a95af53c/watch"
+      }
+    },
+    {
+      "exercise_name": "ALT Jumping Lunge Into Knee Tuck",
+      "video_url": "1bafc6be0d75396ca057db03991ec0b0",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "1bafc6be0d75396ca057db03991ec0b0",
+        "name": "ALT jumping lunge into knee tuck.MP4",
+        "filename": "ALT jumping lunge into knee tuck.MP4",
+        "duration": 8.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/1bafc6be0d75396ca057db03991ec0b0/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Lateral W: Jump",
+      "video_url": "76139f8ad2a2aced13de2a671cb3dd51",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "76139f8ad2a2aced13de2a671cb3dd51",
+        "name": "DB lateral w: jump.MP4",
+        "filename": "DB lateral w: jump.MP4",
+        "duration": 2.9,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/76139f8ad2a2aced13de2a671cb3dd51/watch"
+      }
+    },
+    {
+      "exercise_name": "BOX Pike Shoulder Taps",
+      "video_url": "581ea19495a4a7bcd8a091c0018d0159",
+      "required_equipment": "Box",
+      "cfData": {
+        "id": "581ea19495a4a7bcd8a091c0018d0159",
+        "name": "BOX pike shoulder taps.MP4",
+        "filename": "BOX pike shoulder taps.MP4",
+        "duration": 4.3,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/581ea19495a4a7bcd8a091c0018d0159/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Kneeling Around The World ",
+      "video_url": "fc4667ad8f0c56fc4fbe9b6443d9b1f4",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "fc4667ad8f0c56fc4fbe9b6443d9b1f4",
+        "name": "Plate kneeling around the world .MP4",
+        "filename": "Plate kneeling around the world .MP4",
+        "duration": 6.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/fc4667ad8f0c56fc4fbe9b6443d9b1f4/watch"
+      }
+    },
+    {
+      "exercise_name": "Ski Erg Reverse Tricep Ext",
+      "video_url": "d703611047104fb5447b35605d46e564",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "d703611047104fb5447b35605d46e564",
+        "name": "Ski erg reverse tricep ext.MP4",
+        "filename": "Ski erg reverse tricep ext.MP4",
+        "duration": 8.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/d703611047104fb5447b35605d46e564/watch"
+      }
+    },
+    {
+      "exercise_name": "Wide Arm Push Up",
+      "video_url": "91b086c1777d6188657ee418d741dc17",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "91b086c1777d6188657ee418d741dc17",
+        "name": "Wide arm push-up.MP4",
+        "filename": "Wide arm push-up.MP4",
+        "duration": 7.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/91b086c1777d6188657ee418d741dc17/watch"
+      }
+    },
+    {
+      "exercise_name": "Speed Curls ",
+      "video_url": "6d3e8876457f9940df4649e951f14b71",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "6d3e8876457f9940df4649e951f14b71",
+        "name": "Speed curls .MP4",
+        "filename": "Speed curls .MP4",
+        "duration": 4.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/6d3e8876457f9940df4649e951f14b71/watch"
+      }
+    },
+    {
+      "exercise_name": "Wall Sprawl",
+      "video_url": "8fd1e6d73350ad34af82e67c4f62febd",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "8fd1e6d73350ad34af82e67c4f62febd",
+        "name": "Wall sprawl.MP4",
+        "filename": "Wall sprawl.MP4",
+        "duration": 6.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/8fd1e6d73350ad34af82e67c4f62febd/watch"
+      }
+    },
+    {
+      "exercise_name": "TRX Mountain Climbers",
+      "video_url": "01231002ed532bdaaaf28d4fe000d270",
+      "required_equipment": "TRX",
+      "cfData": {
+        "id": "01231002ed532bdaaaf28d4fe000d270",
+        "name": "TRX mountain climbers.MP4",
+        "filename": "TRX mountain climbers.MP4",
+        "duration": 4.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/01231002ed532bdaaaf28d4fe000d270/watch"
+      }
+    },
+    {
+      "exercise_name": "Squat Pulse ",
+      "video_url": "393e8e99e2e35c80290c4eead184c642",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "393e8e99e2e35c80290c4eead184c642",
+        "name": "squat pulse .MP4",
+        "filename": "squat pulse .MP4",
+        "duration": 2.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/393e8e99e2e35c80290c4eead184c642/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Plank",
+      "video_url": "1e105403221b702075e13d89414809ae",
+      "required_equipment": "Box",
+      "cfData": {
+        "id": "1e105403221b702075e13d89414809ae",
+        "name": "Box plank.MP4",
+        "filename": "Box plank.MP4",
+        "duration": 4.3,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/1e105403221b702075e13d89414809ae/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Incline Push Up",
+      "video_url": "458cb0f67ecaf3aaa5a3a265b184c6ba",
+      "required_equipment": "Box",
+      "cfData": {
+        "id": "458cb0f67ecaf3aaa5a3a265b184c6ba",
+        "name": "Box incline push-up.MP4",
+        "filename": "Box incline push-up.MP4",
+        "duration": 8.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/458cb0f67ecaf3aaa5a3a265b184c6ba/watch"
+      }
+    },
+    {
+      "exercise_name": "Renegade Row P:U",
+      "video_url": "8dfc1528b8a2030ae55f9f021be60258",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "8dfc1528b8a2030ae55f9f021be60258",
+        "name": "Renegade row P:U.MP4",
+        "filename": "Renegade row P:U.MP4",
+        "duration": 10,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/8dfc1528b8a2030ae55f9f021be60258/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Kneeling Fwd Press",
+      "video_url": "bb9cee66992594008e96cda067bdb855",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "bb9cee66992594008e96cda067bdb855",
+        "name": "Plate kneeling fwd press.MP4",
+        "filename": "Plate kneeling fwd press.MP4",
+        "duration": 6.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/bb9cee66992594008e96cda067bdb855/watch"
+      }
+    },
+    {
+      "exercise_name": "L Hold",
+      "video_url": "535f29abaa86467208156a7d3f7cb070",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "535f29abaa86467208156a7d3f7cb070",
+        "name": "L hold.MP4",
+        "filename": "L hold.MP4",
+        "duration": 6.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/535f29abaa86467208156a7d3f7cb070/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Kneeling Alt Arm Press",
+      "video_url": "edb34dd98213868e95d5c250ada48b8f",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "edb34dd98213868e95d5c250ada48b8f",
+        "name": "DB kneeling alt arm press.MP4.MP4",
+        "filename": "DB kneeling alt arm press.MP4.MP4",
+        "duration": 8.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/edb34dd98213868e95d5c250ada48b8f/watch"
+      }
+    },
+    {
+      "exercise_name": "Band Tricep Ext",
+      "video_url": "e9d8b573756faf9fc64a7321473d0e0f",
+      "required_equipment": "Band",
+      "cfData": {
+        "id": "e9d8b573756faf9fc64a7321473d0e0f",
+        "name": "Band tricep ext.MP4",
+        "filename": "Band tricep ext.MP4",
+        "duration": 6.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/e9d8b573756faf9fc64a7321473d0e0f/watch"
+      }
+    },
+    {
+      "exercise_name": "TRX DB Burpee Push Up",
+      "video_url": "8ff0c92b9ac4edf5c7a3a73843636feb",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "8ff0c92b9ac4edf5c7a3a73843636feb",
+        "name": "TRX DB burpee push-up.MP4",
+        "filename": "TRX DB burpee push-up.MP4",
+        "duration": 8.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/8ff0c92b9ac4edf5c7a3a73843636feb/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Row To Deadlift ",
+      "video_url": "f1d2a32e85883a8156af9dd172870c10",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "f1d2a32e85883a8156af9dd172870c10",
+        "name": "DB row to deadlift .MP4",
+        "filename": "DB row to deadlift .MP4",
+        "duration": 12.5,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/f1d2a32e85883a8156af9dd172870c10/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Overhead Single Leg Lunge ",
+      "video_url": "1a41bdaf55ecdc963799944224ab2732",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "1a41bdaf55ecdc963799944224ab2732",
+        "name": "Barbell overhead single leg lunge .MP4",
+        "filename": "Barbell overhead single leg lunge .MP4",
+        "duration": 6.3,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/1a41bdaf55ecdc963799944224ab2732/watch"
+      }
+    },
+    {
+      "exercise_name": "BB Alt Lunge Jumps ",
+      "video_url": "aca78754e0bf451d188332307dc3262b",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "aca78754e0bf451d188332307dc3262b",
+        "name": "BB alt lunge jumps .MP4",
+        "filename": "BB alt lunge jumps .MP4",
+        "duration": 4.3,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/aca78754e0bf451d188332307dc3262b/watch"
+      }
+    },
+    {
+      "exercise_name": "TRX V Ups",
+      "video_url": "0b5b079947123343fa4ab156b8d4246c",
+      "required_equipment": "TRX",
+      "cfData": {
+        "id": "0b5b079947123343fa4ab156b8d4246c",
+        "name": "TRX v-ups.MP4",
+        "filename": "TRX v-ups.MP4",
+        "duration": 6.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/0b5b079947123343fa4ab156b8d4246c/watch"
+      }
+    },
+    {
+      "exercise_name": "Ski Erg Alt Speed Pulls ",
+      "video_url": "beacfe956da495c10eb155ce4ac37424",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "beacfe956da495c10eb155ce4ac37424",
+        "name": "Ski erg alt speed pulls .MP4",
+        "filename": "Ski erg alt speed pulls .MP4",
+        "duration": 2.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/beacfe956da495c10eb155ce4ac37424/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Curtsy ",
+      "video_url": "55e21c203a967ace39c99d395a6fb018",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "55e21c203a967ace39c99d395a6fb018",
+        "name": "DB Curtsy .MP4",
+        "filename": "DB Curtsy .MP4",
+        "duration": 11.5,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/55e21c203a967ace39c99d395a6fb018/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Double Chest Press ",
+      "video_url": "f4ad868763b9a54edc557833b8f3ce6d",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "f4ad868763b9a54edc557833b8f3ce6d",
+        "name": "Plate double chest press .MP4",
+        "filename": "Plate double chest press .MP4",
+        "duration": 7.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/f4ad868763b9a54edc557833b8f3ce6d/watch"
+      }
+    },
+    {
+      "exercise_name": "Ski Erg Alt",
+      "video_url": "68bd48230a0d7cabbf1ce5ac15bb06ed",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "68bd48230a0d7cabbf1ce5ac15bb06ed",
+        "name": "Ski erg alt.MP4",
+        "filename": "Ski erg alt.MP4",
+        "duration": 7.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/68bd48230a0d7cabbf1ce5ac15bb06ed/watch"
+      }
+    },
+    {
+      "exercise_name": "Lateral Raise ",
+      "video_url": "de6ad71f0f3a72f55201c4aae06aa07f",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "de6ad71f0f3a72f55201c4aae06aa07f",
+        "name": "lateral raise .MP4",
+        "filename": "lateral raise .MP4",
+        "duration": 7.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/de6ad71f0f3a72f55201c4aae06aa07f/watch"
+      }
+    },
+    {
+      "exercise_name": "Squat Jumps",
+      "video_url": "7a85db349fa87d3fa31c0e51b9f80eec",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "7a85db349fa87d3fa31c0e51b9f80eec",
+        "name": "Squat jumps.MP4",
+        "filename": "Squat jumps.MP4",
+        "duration": 4.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/7a85db349fa87d3fa31c0e51b9f80eec/watch"
+      }
+    },
+    {
+      "exercise_name": "Pull Up",
+      "video_url": "e36b6df7e2beb589aa26a542b9a82cad",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "e36b6df7e2beb589aa26a542b9a82cad",
+        "name": "Pull up.MP4",
+        "filename": "Pull up.MP4",
+        "duration": 8.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/e36b6df7e2beb589aa26a542b9a82cad/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Power Clean",
+      "video_url": "0dc2b29dedb8deb35acf83614771a0d9",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "0dc2b29dedb8deb35acf83614771a0d9",
+        "name": "DB power clean.MP4",
+        "filename": "DB power clean.MP4",
+        "duration": 10,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/0dc2b29dedb8deb35acf83614771a0d9/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Front Squat",
+      "video_url": "321cc693769ab6a59f90b9b0b04629d2",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "321cc693769ab6a59f90b9b0b04629d2",
+        "name": "DB front squat.MP4",
+        "filename": "DB front squat.MP4",
+        "duration": 7.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/321cc693769ab6a59f90b9b0b04629d2/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Power Clean",
+      "video_url": "a2fe7681242974bddf28d0ec2575bbb4",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "a2fe7681242974bddf28d0ec2575bbb4",
+        "name": "Barbell power clean.MP4",
+        "filename": "Barbell power clean.MP4",
+        "duration": 9.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/a2fe7681242974bddf28d0ec2575bbb4/watch"
+      }
+    },
+    {
+      "exercise_name": "Band Bicep Curls ",
+      "video_url": "c73ece17520c841a2edb608111f179e9",
+      "required_equipment": "Band",
+      "cfData": {
+        "id": "c73ece17520c841a2edb608111f179e9",
+        "name": "Band bicep curls .MP4",
+        "filename": "Band bicep curls .MP4",
+        "duration": 8.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/c73ece17520c841a2edb608111f179e9/watch"
+      }
+    },
+    {
+      "exercise_name": "LUNGE SKI ERG",
+      "video_url": "d61898f93203f7f087cf092c4ed29997",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "d61898f93203f7f087cf092c4ed29997",
+        "name": "LUNGE SKI ERG.MP4",
+        "filename": "LUNGE SKI ERG.MP4",
+        "duration": 4.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/d61898f93203f7f087cf092c4ed29997/watch"
+      }
+    },
+    {
+      "exercise_name": "Ski Erg Tricep",
+      "video_url": "4a82f12e905a7891594d0b0b68005033",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "4a82f12e905a7891594d0b0b68005033",
+        "name": "Ski erg tricep.MP4",
+        "filename": "Ski erg tricep.MP4",
+        "duration": 5.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/4a82f12e905a7891594d0b0b68005033/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Back Squat Into Press",
+      "video_url": "7c81f232660f65b0bf1c178cdf9930c6",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "7c81f232660f65b0bf1c178cdf9930c6",
+        "name": "Barbell back squat into press.MP4",
+        "filename": "Barbell back squat into press.MP4",
+        "duration": 10.5,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/7c81f232660f65b0bf1c178cdf9930c6/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Kneeling Lateral Raise",
+      "video_url": "02b6d39d73fcf3c845364e440b5529c8",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "02b6d39d73fcf3c845364e440b5529c8",
+        "name": "DB kneeling lateral raise.MP4",
+        "filename": "DB kneeling lateral raise.MP4",
+        "duration": 5.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/02b6d39d73fcf3c845364e440b5529c8/watch"
+      }
+    },
+    {
+      "exercise_name": "Band Single Arm Tricep Ext",
+      "video_url": "26bc9721ecd789c317aa77c49c153928",
+      "required_equipment": "Band",
+      "cfData": {
+        "id": "26bc9721ecd789c317aa77c49c153928",
+        "name": "Band Single arm tricep ext.MP4",
+        "filename": "Band Single arm tricep ext.MP4",
+        "duration": 6.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/26bc9721ecd789c317aa77c49c153928/watch"
+      }
+    },
+    {
+      "exercise_name": "Sand Bag Single Leg Hip Thrust",
+      "video_url": "1428eee643deedb3f8ce9069e613591c",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "1428eee643deedb3f8ce9069e613591c",
+        "name": "Sand bag single leg hip thrust.MP4",
+        "filename": "Sand bag single leg hip thrust.MP4",
+        "duration": 8.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/1428eee643deedb3f8ce9069e613591c/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Kneeling Alt Lateral Raise ",
+      "video_url": "69abcae50db6485aa3e0f99a7db7b457",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "69abcae50db6485aa3e0f99a7db7b457",
+        "name": "DB kneeling alt lateral raise .MP4",
+        "filename": "DB kneeling alt lateral raise .MP4",
+        "duration": 8.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/69abcae50db6485aa3e0f99a7db7b457/watch"
+      }
+    },
+    {
+      "exercise_name": "HS Hold",
+      "video_url": "3f9acf8b078c6c15aca2f908222c99b9",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "3f9acf8b078c6c15aca2f908222c99b9",
+        "name": "HS hold.MP4",
+        "filename": "HS hold.MP4",
+        "duration": 12.4,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/3f9acf8b078c6c15aca2f908222c99b9/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Fly",
+      "video_url": "0ce1e5c16a8a452d0b9ff54f49d447a2",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "0ce1e5c16a8a452d0b9ff54f49d447a2",
+        "name": "DB fly.MP4",
+        "filename": "DB fly.MP4",
+        "duration": 7.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/0ce1e5c16a8a452d0b9ff54f49d447a2/watch"
+      }
+    },
+    {
+      "exercise_name": "Ski Erg ",
+      "video_url": "2aa68b2e50bb34ea2868806b1b69d7dd",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "2aa68b2e50bb34ea2868806b1b69d7dd",
+        "name": "Ski erg .MP4",
+        "filename": "Ski erg .MP4",
+        "duration": 6.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/2aa68b2e50bb34ea2868806b1b69d7dd/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Kneeling Lateral Raise W: Front Fly",
+      "video_url": "97d059a425d8a922524023a66b407b96",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "97d059a425d8a922524023a66b407b96",
+        "name": "DB kneeling lateral raise w: front fly.MP4",
+        "filename": "DB kneeling lateral raise w: front fly.MP4",
+        "duration": 9.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/97d059a425d8a922524023a66b407b96/watch"
+      }
+    },
+    {
+      "exercise_name": "Band Sumo Squat",
+      "video_url": "bab78868e8ebbd8c05583d9c63fbfc24",
+      "required_equipment": "Band",
+      "cfData": {
+        "id": "bab78868e8ebbd8c05583d9c63fbfc24",
+        "name": "Band sumo squat.MP4",
+        "filename": "Band sumo squat.MP4",
+        "duration": 5.9,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/bab78868e8ebbd8c05583d9c63fbfc24/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Windmil",
+      "video_url": "6807482272a7e152e2f22bad4f599032",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "6807482272a7e152e2f22bad4f599032",
+        "name": "DB windmil.MP4",
+        "filename": "DB windmil.MP4",
+        "duration": 5.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/6807482272a7e152e2f22bad4f599032/watch"
+      }
+    },
+    {
+      "exercise_name": "Ski Erg Crunch",
+      "video_url": "82d4b870f16c6376f7b2092b819b2f38",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "82d4b870f16c6376f7b2092b819b2f38",
+        "name": "Ski erg crunch.MP4",
+        "filename": "Ski erg crunch.MP4",
+        "duration": 7.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/82d4b870f16c6376f7b2092b819b2f38/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Deadlift",
+      "video_url": "00ce18c86d7d0052ece52f230f021c8a",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "00ce18c86d7d0052ece52f230f021c8a",
+        "name": "DB deadlift.MP4",
+        "filename": "DB deadlift.MP4",
+        "duration": 5.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/00ce18c86d7d0052ece52f230f021c8a/watch"
+      }
+    },
+    {
+      "exercise_name": "DB 1 Arm Sit Up ",
+      "video_url": "f4c9524e95fc4ff41f8019bf3e3152df",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "f4c9524e95fc4ff41f8019bf3e3152df",
+        "name": "DB 1 arm sit up .MP4",
+        "filename": "DB 1 arm sit up .MP4",
+        "duration": 4.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/f4c9524e95fc4ff41f8019bf3e3152df/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Kneeling Single Arm Lateral Raise ",
+      "video_url": "505b6b2c9466f3d095921ee97abf5c92",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "505b6b2c9466f3d095921ee97abf5c92",
+        "name": "DB kneeling single arm lateral raise .MP4",
+        "filename": "DB kneeling single arm lateral raise .MP4",
+        "duration": 8.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/505b6b2c9466f3d095921ee97abf5c92/watch"
+      }
+    },
+    {
+      "exercise_name": "Kneeling Doube Plate Shoulder Press",
+      "video_url": "08ef93ddc267d79d0180117aa73db9fc",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "08ef93ddc267d79d0180117aa73db9fc",
+        "name": "Kneeling doube plate shoulder press.MP4",
+        "filename": "Kneeling doube plate shoulder press.MP4",
+        "duration": 7.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/08ef93ddc267d79d0180117aa73db9fc/watch"
+      }
+    },
+    {
+      "exercise_name": "Shoulder Press",
+      "video_url": "8158c5789adab0b20ee7492384013cd1",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "8158c5789adab0b20ee7492384013cd1",
+        "name": "Shoulder press.MP4",
+        "filename": "Shoulder press.MP4",
+        "duration": 9.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/8158c5789adab0b20ee7492384013cd1/watch"
+      }
+    },
+    {
+      "exercise_name": "Db Kneeling Single Arm Kick Back ",
+      "video_url": "baaba5ea2f45c22c80cb8ca36a33c82a",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "baaba5ea2f45c22c80cb8ca36a33c82a",
+        "name": "Db kneeling single arm kick back .MP4",
+        "filename": "Db kneeling single arm kick back .MP4",
+        "duration": 5.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/baaba5ea2f45c22c80cb8ca36a33c82a/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Sumo",
+      "video_url": "5ed2807fbe81d23744e8ba44d646284f",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "5ed2807fbe81d23744e8ba44d646284f",
+        "name": "DB sumo.MP4",
+        "filename": "DB sumo.MP4",
+        "duration": 5.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/5ed2807fbe81d23744e8ba44d646284f/watch"
+      }
+    },
+    {
+      "exercise_name": "Box ALT DB Front>Side Raise",
+      "video_url": "04dbf9e2485c78b5ce107c001aa06288",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "04dbf9e2485c78b5ce107c001aa06288",
+        "name": "Box ALT DB front>side raise.MP4",
+        "filename": "Box ALT DB front>side raise.MP4",
+        "duration": 9.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/04dbf9e2485c78b5ce107c001aa06288/watch"
+      }
+    },
+    {
+      "exercise_name": "Band Punches",
+      "video_url": "4fab94b5a4e0878feacad2befb21de3e",
+      "required_equipment": "Band",
+      "cfData": {
+        "id": "4fab94b5a4e0878feacad2befb21de3e",
+        "name": "Band punches.MP4",
+        "filename": "Band punches.MP4",
+        "duration": 3.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/4fab94b5a4e0878feacad2befb21de3e/watch"
+      }
+    },
+    {
+      "exercise_name": "Kneeling Plate Double Lateral Raise",
+      "video_url": "aa8f2d994f0f4dcd9b3f16ea3533eb8b",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "aa8f2d994f0f4dcd9b3f16ea3533eb8b",
+        "name": "Kneeling plate double lateral raise.MP4",
+        "filename": "Kneeling plate double lateral raise.MP4",
+        "duration": 6.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/aa8f2d994f0f4dcd9b3f16ea3533eb8b/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Decline Push Ups",
+      "video_url": "0306b6cb9cad74629a994846b97a8966",
+      "required_equipment": "Box",
+      "cfData": {
+        "id": "0306b6cb9cad74629a994846b97a8966",
+        "name": "Box decline push-ups.MP4",
+        "filename": "Box decline push-ups.MP4",
+        "duration": 8.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/0306b6cb9cad74629a994846b97a8966/watch"
+      }
+    },
+    {
+      "exercise_name": "Box DB Front > Side Raise",
+      "video_url": "ec4ff49b1da4cbbc629e063edc585b69",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "ec4ff49b1da4cbbc629e063edc585b69",
+        "name": "Box DB front > side raise.MP4",
+        "filename": "Box DB front > side raise.MP4",
+        "duration": 9.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/ec4ff49b1da4cbbc629e063edc585b69/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Body Weight Front Raise > Side Raise",
+      "video_url": "d4849665744b6fe87a805abac869c063",
+      "required_equipment": "Box",
+      "cfData": {
+        "id": "d4849665744b6fe87a805abac869c063",
+        "name": "Box body weight front raise > side raise.MP4",
+        "filename": "Box body weight front raise > side raise.MP4",
+        "duration": 8.5,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/d4849665744b6fe87a805abac869c063/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Single Arm Chest Press",
+      "video_url": "ddea1a39ca83b1f994e2488de3eae845",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "ddea1a39ca83b1f994e2488de3eae845",
+        "name": "DB single arm chest press.MP4",
+        "filename": "DB single arm chest press.MP4",
+        "duration": 6.3,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/ddea1a39ca83b1f994e2488de3eae845/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Woodchop",
+      "video_url": "72c46bcc3f2d58b94188e5a59cc07329",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "72c46bcc3f2d58b94188e5a59cc07329",
+        "name": "Plate woodchop.MP4",
+        "filename": "Plate woodchop.MP4",
+        "duration": 6.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/72c46bcc3f2d58b94188e5a59cc07329/watch"
+      }
+    },
+    {
+      "exercise_name": "Band Single Leg Lunge ",
+      "video_url": "62196c80aea29ebc01338f46e0a6f7d7",
+      "required_equipment": "Band",
+      "cfData": {
+        "id": "62196c80aea29ebc01338f46e0a6f7d7",
+        "name": "Band single leg lunge .MP4",
+        "filename": "Band single leg lunge .MP4",
+        "duration": 6.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/62196c80aea29ebc01338f46e0a6f7d7/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Kneelimng Tricep Kick Back",
+      "video_url": "d6b3894b125184e90a0a3b2bafb1a1ab",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "d6b3894b125184e90a0a3b2bafb1a1ab",
+        "name": "DB kneelimng tricep kick back.MP4",
+        "filename": "DB kneelimng tricep kick back.MP4",
+        "duration": 8.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/d6b3894b125184e90a0a3b2bafb1a1ab/watch"
+      }
+    },
+    {
+      "exercise_name": "SKi Erg Lunge",
+      "video_url": "ed69ac1dfd5f3239fdf949c59836c3d1",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "ed69ac1dfd5f3239fdf949c59836c3d1",
+        "name": "SKi erg lunge.MP4",
+        "filename": "SKi erg lunge.MP4",
+        "duration": 5.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/ed69ac1dfd5f3239fdf949c59836c3d1/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Alt Chest Press",
+      "video_url": "6d61f0e440392cf0aee03f2f72b218ad",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "6d61f0e440392cf0aee03f2f72b218ad",
+        "name": "DB alt chest press.MP4",
+        "filename": "DB alt chest press.MP4",
+        "duration": 7.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/6d61f0e440392cf0aee03f2f72b218ad/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Kneeling Narrow Shoulder Press ",
+      "video_url": "9e7bacd2fb546d5966715a65fe32e86e",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "9e7bacd2fb546d5966715a65fe32e86e",
+        "name": "DB kneeling narrow shoulder press .MP4",
+        "filename": "DB kneeling narrow shoulder press .MP4",
+        "duration": 7.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/9e7bacd2fb546d5966715a65fe32e86e/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Kneeling Single Arm Press",
+      "video_url": "c50710bc58e0dd7cfc3847b045690123",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "c50710bc58e0dd7cfc3847b045690123",
+        "name": "DB kneeling single arm press.MP4",
+        "filename": "DB kneeling single arm press.MP4",
+        "duration": 8.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/c50710bc58e0dd7cfc3847b045690123/watch"
+      }
+    },
+    {
+      "exercise_name": "BB Thruster",
+      "video_url": "22449aa6104e2daa265a83865537b366",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "22449aa6104e2daa265a83865537b366",
+        "name": "BB thruster.mov",
+        "filename": "BB thruster.mov",
+        "duration": 11,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/22449aa6104e2daa265a83865537b366/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Alt Sit Ups ",
+      "video_url": "498a5b98391023d3c0beee6e17240f4b",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "498a5b98391023d3c0beee6e17240f4b",
+        "name": "DB alt sit ups .MP4",
+        "filename": "DB alt sit ups .MP4",
+        "duration": 8.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/498a5b98391023d3c0beee6e17240f4b/watch"
+      }
+    },
+    {
+      "exercise_name": "Seated Sand Bag Knee Tuck",
+      "video_url": "fd2be569e1b6a5509b5bb7053256ad12",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "fd2be569e1b6a5509b5bb7053256ad12",
+        "name": "Seated sand bag knee tuck.MP4",
+        "filename": "Seated sand bag knee tuck.MP4",
+        "duration": 3.3,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/fd2be569e1b6a5509b5bb7053256ad12/watch"
+      }
+    },
+    {
+      "exercise_name": "Band Thrusters",
+      "video_url": "d75e157f64c98fe73751cfc1e4ddba8d",
+      "required_equipment": "Band",
+      "cfData": {
+        "id": "d75e157f64c98fe73751cfc1e4ddba8d",
+        "name": "Band thrusters.MP4",
+        "filename": "Band thrusters.MP4",
+        "duration": 7.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/d75e157f64c98fe73751cfc1e4ddba8d/watch"
+      }
+    },
+    {
+      "exercise_name": "L Hold Flutters",
+      "video_url": "f35d51eebfccd9abafd6caf8cac9db39",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "f35d51eebfccd9abafd6caf8cac9db39",
+        "name": "L-hold flutters.MP4",
+        "filename": "L-hold flutters.MP4",
+        "duration": 1.9,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/f35d51eebfccd9abafd6caf8cac9db39/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Lying Down Single Arm Tricep Press ",
+      "video_url": "685b264fd7a2ebb1e63663d4674bd17a",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "685b264fd7a2ebb1e63663d4674bd17a",
+        "name": "DB lying down single arm tricep press .MP4",
+        "filename": "DB lying down single arm tricep press .MP4",
+        "duration": 7.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/685b264fd7a2ebb1e63663d4674bd17a/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Spiderman",
+      "video_url": "99aea8080ba3cf9999f7628b748ec6aa",
+      "required_equipment": "Box",
+      "cfData": {
+        "id": "99aea8080ba3cf9999f7628b748ec6aa",
+        "name": "Box spiderman.MP4",
+        "filename": "Box spiderman.MP4",
+        "duration": 3.5,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/99aea8080ba3cf9999f7628b748ec6aa/watch"
+      }
+    },
+    {
+      "exercise_name": "HOLLOW ROCKS",
+      "video_url": "51f3e83a1e5e04b4276f44562838ffe0",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "51f3e83a1e5e04b4276f44562838ffe0",
+        "name": "HOLLOW ROCKS.MP4",
+        "filename": "HOLLOW ROCKS.MP4",
+        "duration": 9.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/51f3e83a1e5e04b4276f44562838ffe0/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Sand Bag Superman ",
+      "video_url": "665f235395a5ee7bc4c6e50bc6a5acaf",
+      "required_equipment": "Box",
+      "cfData": {
+        "id": "665f235395a5ee7bc4c6e50bc6a5acaf",
+        "name": "Box sand bag superman .MP4",
+        "filename": "Box sand bag superman .MP4",
+        "duration": 5.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/665f235395a5ee7bc4c6e50bc6a5acaf/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Plank Rotations",
+      "video_url": "ab8d86b1ef944078d7478ee16beb3658",
+      "required_equipment": "Box",
+      "cfData": {
+        "id": "ab8d86b1ef944078d7478ee16beb3658",
+        "name": "Box plank rotations.MP4",
+        "filename": "Box plank rotations.MP4",
+        "duration": 5.9,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/ab8d86b1ef944078d7478ee16beb3658/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Deadbiug Tricep Ext",
+      "video_url": "7b86e795ff2a1a57078b7c0c3ffe15d4",
+      "required_equipment": "Dumbbells",
+      "cfData": {
+        "id": "7b86e795ff2a1a57078b7c0c3ffe15d4",
+        "name": "DB deadbiug tricep ext.MP4",
+        "filename": "DB deadbiug tricep ext.MP4",
+        "duration": 8.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/7b86e795ff2a1a57078b7c0c3ffe15d4/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Inline Push Up > Leg Up",
+      "video_url": "545443a470d7e76b374e7ef1ad7b14c7",
+      "required_equipment": "Box",
+      "cfData": {
+        "id": "545443a470d7e76b374e7ef1ad7b14c7",
+        "name": "Box inline push-up > leg up.MP4",
+        "filename": "Box inline push-up > leg up.MP4",
+        "duration": 6.4,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/545443a470d7e76b374e7ef1ad7b14c7/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Body Weight Alt Front Raise > Side Raise",
+      "video_url": "a83ac2b5b98ff6f8d9e1a0833f5a5085",
+      "required_equipment": "Box",
+      "cfData": {
+        "id": "a83ac2b5b98ff6f8d9e1a0833f5a5085",
+        "name": "Box body weight alt front raise > side raise.MP4.MP4",
+        "filename": "Box body weight alt front raise > side raise.MP4.MP4",
+        "duration": 5.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/a83ac2b5b98ff6f8d9e1a0833f5a5085/watch"
+      }
+    },
+    {
+      "exercise_name": "Bicep Curl",
+      "video_url": "6e1ec2846105e217746cdcd77efd59b7",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "6e1ec2846105e217746cdcd77efd59b7",
+        "name": "bicep curl.mp4",
+        "filename": "bicep curl.mp4",
+        "duration": 2.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/6e1ec2846105e217746cdcd77efd59b7/watch"
+      }
+    },
+    {
+      "exercise_name": "Band Squat Side Raise",
+      "video_url": "fab621d485dca3dd6b521b815bbfdf11",
+      "required_equipment": "Band",
+      "cfData": {
+        "id": "fab621d485dca3dd6b521b815bbfdf11",
+        "name": "Band squat side raise.MP4",
+        "filename": "Band squat side raise.MP4",
+        "duration": 6.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/fab621d485dca3dd6b521b815bbfdf11/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Front Raise > Side Raise",
+      "video_url": "cd3e6e5da7beb61682ef023e7d8363ef",
+      "required_equipment": "Box",
+      "cfData": {
+        "id": "cd3e6e5da7beb61682ef023e7d8363ef",
+        "name": "Box front raise > side raise.MP4",
+        "filename": "Box front raise > side raise.MP4",
+        "duration": 8.6,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/cd3e6e5da7beb61682ef023e7d8363ef/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Single Leg Fwd Lunge ",
+      "video_url": "c45cb9d24be4d3152512cfb48108131e",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "c45cb9d24be4d3152512cfb48108131e",
+        "name": "Barbell single leg fwd lunge .MP4",
+        "filename": "Barbell single leg fwd lunge .MP4",
+        "duration": 5.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/c45cb9d24be4d3152512cfb48108131e/watch"
+      }
+    },
+    {
+      "exercise_name": "Push Up Knee Tucks ",
+      "video_url": "6bbd0b0ceb0f78d33e64db47d4b09db8",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "6bbd0b0ceb0f78d33e64db47d4b09db8",
+        "name": "Push-up knee tucks .MP4",
+        "filename": "Push-up knee tucks .MP4",
+        "duration": 8.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/6bbd0b0ceb0f78d33e64db47d4b09db8/watch"
+      }
+    },
+    {
+      "exercise_name": "Hammer Curls",
+      "video_url": "bf91f661b13d28a096c23dc49d14d6fa",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "bf91f661b13d28a096c23dc49d14d6fa",
+        "name": "Hammer curls.MP4",
+        "filename": "Hammer curls.MP4",
+        "duration": 3.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/bf91f661b13d28a096c23dc49d14d6fa/watch"
+      }
+    },
+    {
+      "exercise_name": "Band Slow Pull Up",
+      "video_url": "9da334c3f4131eb30a741b2c3ae7a864",
+      "required_equipment": "Band",
+      "cfData": {
+        "id": "9da334c3f4131eb30a741b2c3ae7a864",
+        "name": "Band slow pull up.MP4",
+        "filename": "Band slow pull up.MP4",
+        "duration": 12.4,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/9da334c3f4131eb30a741b2c3ae7a864/watch"
+      }
+    },
+    {
+      "exercise_name": "Treadmill Run",
+      "video_url": "beacfe956da495c10eb155ce4ac37424",
+      "required_equipment": "treadmill",
+      "cfData": {
+        "id": "beacfe956da495c10eb155ce4ac37424",
+        "name": "Ski erg alt speed pulls .MP4",
+        "filename": "Ski erg alt speed pulls .MP4",
+        "duration": 2.1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/beacfe956da495c10eb155ce4ac37424/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Overhead Squat Into ALT Lunges ",
+      "video_url": "b2d06134a726c1965763e04e7ece7011",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "b2d06134a726c1965763e04e7ece7011",
+        "name": "Barbell overhead squat into ALT lunges .MP4",
+        "filename": "Barbell overhead squat into ALT lunges .MP4",
+        "duration": 9.7,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/b2d06134a726c1965763e04e7ece7011/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Dips",
+      "video_url": "31d651edff870a146ef82736655e42af",
+      "required_equipment": "Box",
+      "cfData": {
+        "id": "31d651edff870a146ef82736655e42af",
+        "name": "Box dips.MP4",
+        "filename": "Box dips.MP4",
+        "duration": 5.2,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/31d651edff870a146ef82736655e42af/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Bent Over Row ",
+      "video_url": "a145e1a060e782cbf154f412d4431b5d",
+      "required_equipment": "Barbell",
+      "cfData": {
+        "id": "a145e1a060e782cbf154f412d4431b5d",
+        "name": "Barbell bent over row .MP4",
+        "filename": "Barbell bent over row .MP4",
+        "duration": 4,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/a145e1a060e782cbf154f412d4431b5d/watch"
+      }
+    },
+    {
+      "exercise_name": "Bear Sand Bag Hold ",
+      "video_url": "a899a2b29833643967073be6d4dad951",
+      "required_equipment": "Bodyweight",
+      "cfData": {
+        "id": "a899a2b29833643967073be6d4dad951",
+        "name": "Bear sand bag hold .MP4",
+        "filename": "Bear sand bag hold .MP4",
+        "duration": 2.8,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/a899a2b29833643967073be6d4dad951/watch"
+      }
+    }
+  ],
+  "missingLink": [],
+  "brokenLink": [],
+  "invalidDuration": [
+    {
+      "exercise_name": "DB Tricep Press W:Jump",
+      "video_url": "396448afad80995f1d87b934b6df4765",
+      "required_equipment": "Dumbbells",
+      "idUsed": "396448afad80995f1d87b934b6df4765",
+      "cfData": {
+        "id": "396448afad80995f1d87b934b6df4765",
+        "name": "DB tricep press w:jump.MP4",
+        "filename": "DB tricep press w:jump.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/396448afad80995f1d87b934b6df4765/watch"
+      }
+    },
+    {
+      "exercise_name": "Push Up Pull Up",
+      "video_url": "a2186d8142f976e003c8fbec67c7ec38",
+      "required_equipment": "Bodyweight",
+      "idUsed": "a2186d8142f976e003c8fbec67c7ec38",
+      "cfData": {
+        "id": "a2186d8142f976e003c8fbec67c7ec38",
+        "name": "Push-up pull-up.MP4",
+        "filename": "Push-up pull-up.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/a2186d8142f976e003c8fbec67c7ec38/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Squat Woodchop",
+      "video_url": "5fa03e9efed6a4b26336800462543912",
+      "required_equipment": "Bodyweight",
+      "idUsed": "5fa03e9efed6a4b26336800462543912",
+      "cfData": {
+        "id": "5fa03e9efed6a4b26336800462543912",
+        "name": "Plate squat woodchop.MP4",
+        "filename": "Plate squat woodchop.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/5fa03e9efed6a4b26336800462543912/watch"
+      }
+    },
+    {
+      "exercise_name": "Knee To Elbow Sit Ups ",
+      "video_url": "58f966d3e57603f5e1730a00be86e5e2",
+      "required_equipment": "Bodyweight",
+      "idUsed": "58f966d3e57603f5e1730a00be86e5e2",
+      "cfData": {
+        "id": "58f966d3e57603f5e1730a00be86e5e2",
+        "name": "Knee to elbow sit-ups .MP4",
+        "filename": "Knee to elbow sit-ups .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/58f966d3e57603f5e1730a00be86e5e2/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Squat Bicep Curls W:Jump",
+      "video_url": "f2c81b826187aad1498ba4bc2726e88a",
+      "required_equipment": "Dumbbells",
+      "idUsed": "f2c81b826187aad1498ba4bc2726e88a",
+      "cfData": {
+        "id": "f2c81b826187aad1498ba4bc2726e88a",
+        "name": "DB squat bicep curls w:jump.MP4",
+        "filename": "DB squat bicep curls w:jump.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/f2c81b826187aad1498ba4bc2726e88a/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Squat ALT Wood Chopper",
+      "video_url": "f2ab9f561b673ef3c7a98e22a4aefdf6",
+      "required_equipment": "Bodyweight",
+      "idUsed": "f2ab9f561b673ef3c7a98e22a4aefdf6",
+      "cfData": {
+        "id": "f2ab9f561b673ef3c7a98e22a4aefdf6",
+        "name": "Plate squat ALT wood chopper.MP4",
+        "filename": "Plate squat ALT wood chopper.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/f2ab9f561b673ef3c7a98e22a4aefdf6/watch"
+      }
+    },
+    {
+      "exercise_name": "Bosu Sit Up Get It",
+      "video_url": "70cbf408d152453b7eb531133b57edb8",
+      "required_equipment": "BOSU",
+      "idUsed": "70cbf408d152453b7eb531133b57edb8",
+      "cfData": {
+        "id": "70cbf408d152453b7eb531133b57edb8",
+        "name": "Bosu sit up get it.MP4",
+        "filename": "Bosu sit up get it.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/70cbf408d152453b7eb531133b57edb8/watch"
+      }
+    },
+    {
+      "exercise_name": "HS Shoulder Taps",
+      "video_url": "4a4a43aa13282ca02aaa8d515eab2dce",
+      "required_equipment": "Bodyweight",
+      "idUsed": "4a4a43aa13282ca02aaa8d515eab2dce",
+      "cfData": {
+        "id": "4a4a43aa13282ca02aaa8d515eab2dce",
+        "name": "HS shoulder taps.MP4",
+        "filename": "HS shoulder taps.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/4a4a43aa13282ca02aaa8d515eab2dce/watch"
+      }
+    },
+    {
+      "exercise_name": "Sandbag Wall Sit > High Knee ",
+      "video_url": "c4388a9f1e95092a827f147e0859db02",
+      "required_equipment": "Dumbbells",
+      "idUsed": "c4388a9f1e95092a827f147e0859db02",
+      "cfData": {
+        "id": "c4388a9f1e95092a827f147e0859db02",
+        "name": "Sandbag wall sit > high knee .MP4",
+        "filename": "Sandbag wall sit > high knee .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/c4388a9f1e95092a827f147e0859db02/watch"
+      }
+    },
+    {
+      "exercise_name": "Bear Kick Through",
+      "video_url": "434cb738b5f7c22ab41d33affcb5f3f8",
+      "required_equipment": "Bodyweight",
+      "idUsed": "434cb738b5f7c22ab41d33affcb5f3f8",
+      "cfData": {
+        "id": "434cb738b5f7c22ab41d33affcb5f3f8",
+        "name": "Bear kick through.MP4",
+        "filename": "Bear kick through.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/434cb738b5f7c22ab41d33affcb5f3f8/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Squat Round The World",
+      "video_url": "fd0385dd3f5c2d3e38d33f8641e742b4",
+      "required_equipment": "Bodyweight",
+      "idUsed": "fd0385dd3f5c2d3e38d33f8641e742b4",
+      "cfData": {
+        "id": "fd0385dd3f5c2d3e38d33f8641e742b4",
+        "name": "Plate squat round the world.MP4",
+        "filename": "Plate squat round the world.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/fd0385dd3f5c2d3e38d33f8641e742b4/watch"
+      }
+    },
+    {
+      "exercise_name": "TTB",
+      "video_url": "c85477b403c1c3410aff8c1fd86b661a",
+      "required_equipment": "Bodyweight",
+      "idUsed": "c85477b403c1c3410aff8c1fd86b661a",
+      "cfData": {
+        "id": "c85477b403c1c3410aff8c1fd86b661a",
+        "name": "TTB.MP4",
+        "filename": "TTB.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/c85477b403c1c3410aff8c1fd86b661a/watch"
+      }
+    },
+    {
+      "exercise_name": "Wide Arm Pull Up",
+      "video_url": "18349f8208304fb2c334fd7743e49180",
+      "required_equipment": "Bodyweight",
+      "idUsed": "18349f8208304fb2c334fd7743e49180",
+      "cfData": {
+        "id": "18349f8208304fb2c334fd7743e49180",
+        "name": "Wide arm pull-up.MP4",
+        "filename": "Wide arm pull-up.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/18349f8208304fb2c334fd7743e49180/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Dealift Squat Jump",
+      "video_url": "db8635ee6003ae27a03311b12d6856b2",
+      "required_equipment": "Dumbbells",
+      "idUsed": "db8635ee6003ae27a03311b12d6856b2",
+      "cfData": {
+        "id": "db8635ee6003ae27a03311b12d6856b2",
+        "name": "DB dealift squat jump.MP4",
+        "filename": "DB dealift squat jump.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/db8635ee6003ae27a03311b12d6856b2/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Rever Grip Front Raise",
+      "video_url": "21f4f1ce436914682623fee7b09981e2",
+      "required_equipment": "Dumbbells",
+      "idUsed": "21f4f1ce436914682623fee7b09981e2",
+      "cfData": {
+        "id": "21f4f1ce436914682623fee7b09981e2",
+        "name": "DB rever grip front raise.MP4",
+        "filename": "DB rever grip front raise.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/21f4f1ce436914682623fee7b09981e2/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Good Morning ",
+      "video_url": "7a3f8297cbb4290666e50cb3cc552121",
+      "required_equipment": "Bodyweight",
+      "idUsed": "7a3f8297cbb4290666e50cb3cc552121",
+      "cfData": {
+        "id": "7a3f8297cbb4290666e50cb3cc552121",
+        "name": "Plate good morning .MP4",
+        "filename": "Plate good morning .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/7a3f8297cbb4290666e50cb3cc552121/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Macerena Taps",
+      "video_url": "a6ab876a131e9c6c4af267a48bf698cc",
+      "required_equipment": "Box",
+      "idUsed": "a6ab876a131e9c6c4af267a48bf698cc",
+      "cfData": {
+        "id": "a6ab876a131e9c6c4af267a48bf698cc",
+        "name": "Box macerena taps.MP4",
+        "filename": "Box macerena taps.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/a6ab876a131e9c6c4af267a48bf698cc/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Alt Back Lunge Rotations",
+      "video_url": "fd0e4585b8eeff33f1314f2d85c540d2",
+      "required_equipment": "Bodyweight",
+      "idUsed": "fd0e4585b8eeff33f1314f2d85c540d2",
+      "cfData": {
+        "id": "fd0e4585b8eeff33f1314f2d85c540d2",
+        "name": "Plate alt back lunge rotations.MP4",
+        "filename": "Plate alt back lunge rotations.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/fd0e4585b8eeff33f1314f2d85c540d2/watch"
+      }
+    },
+    {
+      "exercise_name": "TRX Pistol Squat",
+      "video_url": "01a7c5107038e9b319c82e6aa74427f9",
+      "required_equipment": "TRX",
+      "idUsed": "01a7c5107038e9b319c82e6aa74427f9",
+      "cfData": {
+        "id": "01a7c5107038e9b319c82e6aa74427f9",
+        "name": "TRX pistol squat.MP4",
+        "filename": "TRX pistol squat.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/01a7c5107038e9b319c82e6aa74427f9/watch"
+      }
+    },
+    {
+      "exercise_name": "Pull Up Alt Oblique Crunches ",
+      "video_url": "92c7509a11877a9ffbb5f3474c5addc6",
+      "required_equipment": "Bodyweight",
+      "idUsed": "92c7509a11877a9ffbb5f3474c5addc6",
+      "cfData": {
+        "id": "92c7509a11877a9ffbb5f3474c5addc6",
+        "name": "Pull-up alt oblique crunches .MP4",
+        "filename": "Pull-up alt oblique crunches .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/92c7509a11877a9ffbb5f3474c5addc6/watch"
+      }
+    },
+    {
+      "exercise_name": "BOX Jump W: Squat",
+      "video_url": "df500d8f6229eae7276da7b8cc2b8646",
+      "required_equipment": "Box",
+      "idUsed": "df500d8f6229eae7276da7b8cc2b8646",
+      "cfData": {
+        "id": "df500d8f6229eae7276da7b8cc2b8646",
+        "name": "BOX jump w: squat.MP4",
+        "filename": "BOX jump w: squat.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/df500d8f6229eae7276da7b8cc2b8646/watch"
+      }
+    },
+    {
+      "exercise_name": "Single Hand + Leg Deadlift",
+      "video_url": "f1636ac4e1414c7fff13e2b71476e403",
+      "required_equipment": "Bodyweight",
+      "idUsed": "f1636ac4e1414c7fff13e2b71476e403",
+      "cfData": {
+        "id": "f1636ac4e1414c7fff13e2b71476e403",
+        "name": "Single hand + leg deadlift.MP4",
+        "filename": "Single hand + leg deadlift.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/f1636ac4e1414c7fff13e2b71476e403/watch"
+      }
+    },
+    {
+      "exercise_name": "Sand Bag Alt Squat Jumps",
+      "video_url": "a06a656716500b44389625e815c069e7",
+      "required_equipment": "Bodyweight",
+      "idUsed": "a06a656716500b44389625e815c069e7",
+      "cfData": {
+        "id": "a06a656716500b44389625e815c069e7",
+        "name": "Sand bag alt squat jumps.MP4",
+        "filename": "Sand bag alt squat jumps.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/a06a656716500b44389625e815c069e7/watch"
+      }
+    },
+    {
+      "exercise_name": "SKI Erg Bicep Curls ",
+      "video_url": "7d01a116b8e4856980bb72c420d4ae5f",
+      "required_equipment": "Bodyweight",
+      "idUsed": "7d01a116b8e4856980bb72c420d4ae5f",
+      "cfData": {
+        "id": "7d01a116b8e4856980bb72c420d4ae5f",
+        "name": "SKI erg bicep curls .MP4",
+        "filename": "SKI erg bicep curls .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/7d01a116b8e4856980bb72c420d4ae5f/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Kneeling Straight Arm Around The World",
+      "video_url": "3e7eac1a0c0294518eb0af566cbb70fc",
+      "required_equipment": "Bodyweight",
+      "idUsed": "3e7eac1a0c0294518eb0af566cbb70fc",
+      "cfData": {
+        "id": "3e7eac1a0c0294518eb0af566cbb70fc",
+        "name": "Plate kneeling straight arm around the world.MP4",
+        "filename": "Plate kneeling straight arm around the world.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/3e7eac1a0c0294518eb0af566cbb70fc/watch"
+      }
+    },
+    {
+      "exercise_name": "Kneeling Lunge Barbell Clean",
+      "video_url": "aae4c92fdf39dd052f1777d6880d3f05",
+      "required_equipment": "Barbell",
+      "idUsed": "aae4c92fdf39dd052f1777d6880d3f05",
+      "cfData": {
+        "id": "aae4c92fdf39dd052f1777d6880d3f05",
+        "name": "Kneeling lunge barbell clean.MP4",
+        "filename": "Kneeling lunge barbell clean.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/aae4c92fdf39dd052f1777d6880d3f05/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Tricep Kickback",
+      "video_url": "e944b2545ef05c042fed961f1498a42a",
+      "required_equipment": "dumbbells",
+      "idUsed": "e944b2545ef05c042fed961f1498a42a",
+      "cfData": {
+        "id": "e944b2545ef05c042fed961f1498a42a",
+        "name": "DB tricep kick back.MP4",
+        "filename": "DB tricep kick back.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/e944b2545ef05c042fed961f1498a42a/watch"
+      }
+    },
+    {
+      "exercise_name": "Barbell Sit Up",
+      "video_url": "4859c67dc4710fb03a1af2edbcb9cc19",
+      "required_equipment": "barbell",
+      "idUsed": "4859c67dc4710fb03a1af2edbcb9cc19",
+      "cfData": {
+        "id": "4859c67dc4710fb03a1af2edbcb9cc19",
+        "name": "BB sit up.MP4",
+        "filename": "BB sit up.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/4859c67dc4710fb03a1af2edbcb9cc19/watch"
+      }
+    },
+    {
+      "exercise_name": "Push-Up",
+      "video_url": "d5c65024d08f9ce3359b56f849568ca4",
+      "required_equipment": "bodyweight",
+      "idUsed": "d5c65024d08f9ce3359b56f849568ca4",
+      "cfData": {
+        "id": "d5c65024d08f9ce3359b56f849568ca4",
+        "name": "Push-up shoulder taps.MP4",
+        "filename": "Push-up shoulder taps.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/d5c65024d08f9ce3359b56f849568ca4/watch"
+      }
+    },
+    {
+      "exercise_name": "TRX Row",
+      "video_url": "aa7dfaf3372a957d77648fba6ff62134",
+      "required_equipment": "trx",
+      "idUsed": "aa7dfaf3372a957d77648fba6ff62134",
+      "cfData": {
+        "id": "aa7dfaf3372a957d77648fba6ff62134",
+        "name": "TRX bicep curls.MP4",
+        "filename": "TRX bicep curls.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/aa7dfaf3372a957d77648fba6ff62134/watch"
+      }
+    },
+    {
+      "exercise_name": "TRX Pike",
+      "video_url": "f01b3c34e40bcb2d43593c2444890d2f",
+      "required_equipment": "trx",
+      "idUsed": "f01b3c34e40bcb2d43593c2444890d2f",
+      "cfData": {
+        "id": "f01b3c34e40bcb2d43593c2444890d2f",
+        "name": "TRX pike.MP4",
+        "filename": "TRX pike.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/f01b3c34e40bcb2d43593c2444890d2f/watch"
+      }
+    },
+    {
+      "exercise_name": "BOSU Side Plank Hip Drops",
+      "video_url": "359dd10e2c026f1ace1b51e7f78241d3",
+      "required_equipment": "bosu",
+      "idUsed": "359dd10e2c026f1ace1b51e7f78241d3",
+      "cfData": {
+        "id": "359dd10e2c026f1ace1b51e7f78241d3",
+        "name": "Bosu side plank rotations.MP4",
+        "filename": "Bosu side plank rotations.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/359dd10e2c026f1ace1b51e7f78241d3/watch"
+      }
+    },
+    {
+      "exercise_name": "Bosu Russian Twists",
+      "video_url": "409b08eb19cfe8f5e14dea393300ea6e",
+      "required_equipment": "bosu",
+      "idUsed": "409b08eb19cfe8f5e14dea393300ea6e",
+      "cfData": {
+        "id": "409b08eb19cfe8f5e14dea393300ea6e",
+        "name": "Bosu foam russian twists.MP4",
+        "filename": "Bosu foam russian twists.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/409b08eb19cfe8f5e14dea393300ea6e/watch"
+      }
+    },
+    {
+      "exercise_name": "BB Wide Push Up",
+      "video_url": "3a5c09b7afd77af1f937d99fff0c8baa",
+      "required_equipment": "Barbell",
+      "idUsed": "3a5c09b7afd77af1f937d99fff0c8baa",
+      "cfData": {
+        "id": "3a5c09b7afd77af1f937d99fff0c8baa",
+        "name": "BB wide push-up.MP4",
+        "filename": "BB wide push-up.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/3a5c09b7afd77af1f937d99fff0c8baa/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Lateral Raise Jump",
+      "video_url": "5e8f2338645e282558374f4df95b8eaf",
+      "required_equipment": "Bodyweight",
+      "idUsed": "5e8f2338645e282558374f4df95b8eaf",
+      "cfData": {
+        "id": "5e8f2338645e282558374f4df95b8eaf",
+        "name": "Plate lateral raise jump.MP4",
+        "filename": "Plate lateral raise jump.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/5e8f2338645e282558374f4df95b8eaf/watch"
+      }
+    },
+    {
+      "exercise_name": "Kneeling Cean And Press",
+      "video_url": "514bbe16683e1792fa3591dcaa775a93",
+      "required_equipment": "Bodyweight",
+      "idUsed": "514bbe16683e1792fa3591dcaa775a93",
+      "cfData": {
+        "id": "514bbe16683e1792fa3591dcaa775a93",
+        "name": "Kneeling cean and press.MP4",
+        "filename": "Kneeling cean and press.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/514bbe16683e1792fa3591dcaa775a93/watch"
+      }
+    },
+    {
+      "exercise_name": "Squat Hold Calve Raises",
+      "video_url": "e3b1be3d27e5cb826138a6274eed7892",
+      "required_equipment": "Bodyweight",
+      "idUsed": "e3b1be3d27e5cb826138a6274eed7892",
+      "cfData": {
+        "id": "e3b1be3d27e5cb826138a6274eed7892",
+        "name": "Squat hold calve raises.MP4",
+        "filename": "Squat hold calve raises.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/e3b1be3d27e5cb826138a6274eed7892/watch"
+      }
+    },
+    {
+      "exercise_name": "Pu",
+      "video_url": "4220f1c4553623a9c4c06a6a42d1d49a",
+      "required_equipment": "Bodyweight",
+      "idUsed": "4220f1c4553623a9c4c06a6a42d1d49a",
+      "cfData": {
+        "id": "4220f1c4553623a9c4c06a6a42d1d49a",
+        "name": "Pu.MP4",
+        "filename": "Pu.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/4220f1c4553623a9c4c06a6a42d1d49a/watch"
+      }
+    },
+    {
+      "exercise_name": "BOX Plank DB Pull Thru",
+      "video_url": "afc71bb983566acb6d9c3fdc5a6d9dd7",
+      "required_equipment": "Dumbbells",
+      "idUsed": "afc71bb983566acb6d9c3fdc5a6d9dd7",
+      "cfData": {
+        "id": "afc71bb983566acb6d9c3fdc5a6d9dd7",
+        "name": "BOX plank DB pull thru.MP4",
+        "filename": "BOX plank DB pull thru.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/afc71bb983566acb6d9c3fdc5a6d9dd7/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Sumo Hold ",
+      "video_url": "c69336b073753c39018071d4daa63e0f",
+      "required_equipment": "Bodyweight",
+      "idUsed": "c69336b073753c39018071d4daa63e0f",
+      "cfData": {
+        "id": "c69336b073753c39018071d4daa63e0f",
+        "name": "Plate sumo hold .MP4",
+        "filename": "Plate sumo hold .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/c69336b073753c39018071d4daa63e0f/watch"
+      }
+    },
+    {
+      "exercise_name": "Bosu Burpee Jump",
+      "video_url": "b8667089f47599a9a138278ef925a435",
+      "required_equipment": "BOSU",
+      "idUsed": "b8667089f47599a9a138278ef925a435",
+      "cfData": {
+        "id": "b8667089f47599a9a138278ef925a435",
+        "name": "Bosu burpee jump.MP4",
+        "filename": "Bosu burpee jump.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/b8667089f47599a9a138278ef925a435/watch"
+      }
+    },
+    {
+      "exercise_name": "Bike Sprint",
+      "video_url": "40d007c2241fcaae14b47a1c6cabd20c",
+      "required_equipment": "bike",
+      "idUsed": "40d007c2241fcaae14b47a1c6cabd20c",
+      "cfData": {
+        "id": "40d007c2241fcaae14b47a1c6cabd20c",
+        "name": "SKI erg power pulls.MP4",
+        "filename": "SKI erg power pulls.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/40d007c2241fcaae14b47a1c6cabd20c/watch"
+      }
+    },
+    {
+      "exercise_name": "Knee To Elbow   Kickthrough",
+      "video_url": "1a7bcba3e9a56704551db28f6cfa41f3",
+      "required_equipment": "Bodyweight",
+      "idUsed": "1a7bcba3e9a56704551db28f6cfa41f3",
+      "cfData": {
+        "id": "1a7bcba3e9a56704551db28f6cfa41f3",
+        "name": "Knee to elbow - kickthrough.MP4",
+        "filename": "Knee to elbow - kickthrough.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/1a7bcba3e9a56704551db28f6cfa41f3/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Plank Single Arm Rows",
+      "video_url": "ac7c0b930d5d400eacbca5370351008a",
+      "required_equipment": "Box",
+      "idUsed": "ac7c0b930d5d400eacbca5370351008a",
+      "cfData": {
+        "id": "ac7c0b930d5d400eacbca5370351008a",
+        "name": "Box plank single arm rows.MP4",
+        "filename": "Box plank single arm rows.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/ac7c0b930d5d400eacbca5370351008a/watch"
+      }
+    },
+    {
+      "exercise_name": "Ski Erg Close Grip Power Pulls ",
+      "video_url": "e79097ca07591ce4a8d613a62806d87a",
+      "required_equipment": "Bodyweight",
+      "idUsed": "e79097ca07591ce4a8d613a62806d87a",
+      "cfData": {
+        "id": "e79097ca07591ce4a8d613a62806d87a",
+        "name": "Ski erg close grip power pulls .MP4",
+        "filename": "Ski erg close grip power pulls .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/e79097ca07591ce4a8d613a62806d87a/watch"
+      }
+    },
+    {
+      "exercise_name": "Ski Erg Power Crunch",
+      "video_url": "db6415e7d1202d8d8281d4b3f06e3447",
+      "required_equipment": "Bodyweight",
+      "idUsed": "db6415e7d1202d8d8281d4b3f06e3447",
+      "cfData": {
+        "id": "db6415e7d1202d8d8281d4b3f06e3447",
+        "name": "Ski erg power crunch.MP4",
+        "filename": "Ski erg power crunch.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/db6415e7d1202d8d8281d4b3f06e3447/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Back Lunge Swings ",
+      "video_url": "aaa5e3deafad5a3bd01268dc47e71a3f",
+      "required_equipment": "Bodyweight",
+      "idUsed": "aaa5e3deafad5a3bd01268dc47e71a3f",
+      "cfData": {
+        "id": "aaa5e3deafad5a3bd01268dc47e71a3f",
+        "name": "Plate back lunge swings .MP4",
+        "filename": "Plate back lunge swings .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/aaa5e3deafad5a3bd01268dc47e71a3f/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Front > Side Raise",
+      "video_url": "aca79c49cbc49a0109bccadbf5a624a7",
+      "required_equipment": "Dumbbells",
+      "idUsed": "aca79c49cbc49a0109bccadbf5a624a7",
+      "cfData": {
+        "id": "aca79c49cbc49a0109bccadbf5a624a7",
+        "name": "DB front > side raise.MP4",
+        "filename": "DB front > side raise.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/aca79c49cbc49a0109bccadbf5a624a7/watch"
+      }
+    },
+    {
+      "exercise_name": "Kneeling Barbell Thrusters ",
+      "video_url": "c438b8842a0b13417683e60de15fb4f9",
+      "required_equipment": "Barbell",
+      "idUsed": "c438b8842a0b13417683e60de15fb4f9",
+      "cfData": {
+        "id": "c438b8842a0b13417683e60de15fb4f9",
+        "name": "Kneeling barbell thrusters .MP4",
+        "filename": "Kneeling barbell thrusters .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/c438b8842a0b13417683e60de15fb4f9/watch"
+      }
+    },
+    {
+      "exercise_name": "BB Single Arm Turkish Sit Up",
+      "video_url": "2d188218e69ce1f5985950b481140ad2",
+      "required_equipment": "Barbell",
+      "idUsed": "2d188218e69ce1f5985950b481140ad2",
+      "cfData": {
+        "id": "2d188218e69ce1f5985950b481140ad2",
+        "name": "BB single arm turkish sit up.MP4",
+        "filename": "BB single arm turkish sit up.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/2d188218e69ce1f5985950b481140ad2/watch"
+      }
+    },
+    {
+      "exercise_name": "Sandbag Single Leg Pistol Squat ",
+      "video_url": "5b63f686899705b374853db284634c30",
+      "required_equipment": "Dumbbells",
+      "idUsed": "5b63f686899705b374853db284634c30",
+      "cfData": {
+        "id": "5b63f686899705b374853db284634c30",
+        "name": "Sandbag single leg pistol squat .MP4",
+        "filename": "Sandbag single leg pistol squat .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/5b63f686899705b374853db284634c30/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Double Tricep Ext ",
+      "video_url": "141936206840f14bdd34f6f61d509ddf",
+      "required_equipment": "Dumbbells",
+      "idUsed": "141936206840f14bdd34f6f61d509ddf",
+      "cfData": {
+        "id": "141936206840f14bdd34f6f61d509ddf",
+        "name": "DB double tricep ext .MP4",
+        "filename": "DB double tricep ext .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/141936206840f14bdd34f6f61d509ddf/watch"
+      }
+    },
+    {
+      "exercise_name": "TRX Tricep Ext",
+      "video_url": "b3a3b54ef3908a6b5dcb2adfaf2decb8",
+      "required_equipment": "TRX",
+      "idUsed": "b3a3b54ef3908a6b5dcb2adfaf2decb8",
+      "cfData": {
+        "id": "b3a3b54ef3908a6b5dcb2adfaf2decb8",
+        "name": "TRX tricep ext.MP4",
+        "filename": "TRX tricep ext.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/b3a3b54ef3908a6b5dcb2adfaf2decb8/watch"
+      }
+    },
+    {
+      "exercise_name": "Reverse Push Up",
+      "video_url": "c31f9b6109345dabca7b1a8c89ebb94d",
+      "required_equipment": "Bodyweight",
+      "idUsed": "c31f9b6109345dabca7b1a8c89ebb94d",
+      "cfData": {
+        "id": "c31f9b6109345dabca7b1a8c89ebb94d",
+        "name": "Reverse push-up.MP4",
+        "filename": "Reverse push-up.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/c31f9b6109345dabca7b1a8c89ebb94d/watch"
+      }
+    },
+    {
+      "exercise_name": "Kneeling Double DB Plyo Cleans",
+      "video_url": "de3898bd0dbae2ebb63a149da8b80c5d",
+      "required_equipment": "Dumbbells",
+      "idUsed": "de3898bd0dbae2ebb63a149da8b80c5d",
+      "cfData": {
+        "id": "de3898bd0dbae2ebb63a149da8b80c5d",
+        "name": "Kneeling double DB plyo cleans.MP4",
+        "filename": "Kneeling double DB plyo cleans.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/de3898bd0dbae2ebb63a149da8b80c5d/watch"
+      }
+    },
+    {
+      "exercise_name": "Ski Erg Explosive Lunge Pulls",
+      "video_url": "00992209535f7c95414b6a718da28a03",
+      "required_equipment": "Bodyweight",
+      "idUsed": "00992209535f7c95414b6a718da28a03",
+      "cfData": {
+        "id": "00992209535f7c95414b6a718da28a03",
+        "name": "Ski erg explosive lunge pulls.MP4",
+        "filename": "Ski erg explosive lunge pulls.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/00992209535f7c95414b6a718da28a03/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Sit Ups ",
+      "video_url": "d430e3d6b16dcad71ac5f79cd98786bb",
+      "required_equipment": "Bodyweight",
+      "idUsed": "d430e3d6b16dcad71ac5f79cd98786bb",
+      "cfData": {
+        "id": "d430e3d6b16dcad71ac5f79cd98786bb",
+        "name": "Plate sit ups .MP4",
+        "filename": "Plate sit ups .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/d430e3d6b16dcad71ac5f79cd98786bb/watch"
+      }
+    },
+    {
+      "exercise_name": "TRX Oblique Crunches",
+      "video_url": "2c6f0c208700c0f92bf3b13e206bc76a",
+      "required_equipment": "TRX",
+      "idUsed": "2c6f0c208700c0f92bf3b13e206bc76a",
+      "cfData": {
+        "id": "2c6f0c208700c0f92bf3b13e206bc76a",
+        "name": "TRX oblique crunches.MP4",
+        "filename": "TRX oblique crunches.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/2c6f0c208700c0f92bf3b13e206bc76a/watch"
+      }
+    },
+    {
+      "exercise_name": "L R Chin Ups ",
+      "video_url": "67b8a0d911937309e2b5ab0b547aa2ce",
+      "required_equipment": "Bodyweight",
+      "idUsed": "67b8a0d911937309e2b5ab0b547aa2ce",
+      "cfData": {
+        "id": "67b8a0d911937309e2b5ab0b547aa2ce",
+        "name": "L-R chin ups .MP4",
+        "filename": "L-R chin ups .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/67b8a0d911937309e2b5ab0b547aa2ce/watch"
+      }
+    },
+    {
+      "exercise_name": "BB 1 Leg RDL",
+      "video_url": "281958491a0f6678d3b1dde495aa3a84",
+      "required_equipment": "Barbell",
+      "idUsed": "281958491a0f6678d3b1dde495aa3a84",
+      "cfData": {
+        "id": "281958491a0f6678d3b1dde495aa3a84",
+        "name": "BB 1 leg RDL.MP4",
+        "filename": "BB 1 leg RDL.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/281958491a0f6678d3b1dde495aa3a84/watch"
+      }
+    },
+    {
+      "exercise_name": "Box DB Renegrade Rows",
+      "video_url": "fa41ed17fd210850175b8b687274b299",
+      "required_equipment": "Dumbbells",
+      "idUsed": "fa41ed17fd210850175b8b687274b299",
+      "cfData": {
+        "id": "fa41ed17fd210850175b8b687274b299",
+        "name": "Box DB renegrade rows.MP4",
+        "filename": "Box DB renegrade rows.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/fa41ed17fd210850175b8b687274b299/watch"
+      }
+    },
+    {
+      "exercise_name": "Deadlift Into Squat Clean",
+      "video_url": "3b4b536a97c785b971d67097e2b78edd",
+      "required_equipment": "Bodyweight",
+      "idUsed": "3b4b536a97c785b971d67097e2b78edd",
+      "cfData": {
+        "id": "3b4b536a97c785b971d67097e2b78edd",
+        "name": "Deadlift into squat clean.MP4",
+        "filename": "Deadlift into squat clean.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/3b4b536a97c785b971d67097e2b78edd/watch"
+      }
+    },
+    {
+      "exercise_name": "Ski Erge Squat Tricep Pull Downs ",
+      "video_url": "f177bf10c816a29236c64ee0aae4163c",
+      "required_equipment": "Bodyweight",
+      "idUsed": "f177bf10c816a29236c64ee0aae4163c",
+      "cfData": {
+        "id": "f177bf10c816a29236c64ee0aae4163c",
+        "name": "Ski erge squat tricep pull downs .MP4",
+        "filename": "Ski erge squat tricep pull downs .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/f177bf10c816a29236c64ee0aae4163c/watch"
+      }
+    },
+    {
+      "exercise_name": "Sand Bag Wall Sit Front Hold >High Knee",
+      "video_url": "32566dc07571e93645059fcff4fa391c",
+      "required_equipment": "Bodyweight",
+      "idUsed": "32566dc07571e93645059fcff4fa391c",
+      "cfData": {
+        "id": "32566dc07571e93645059fcff4fa391c",
+        "name": "Sand bag wall sit front hold >high knee.MP4",
+        "filename": "Sand bag wall sit front hold >high knee.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/32566dc07571e93645059fcff4fa391c/watch"
+      }
+    },
+    {
+      "exercise_name": "Hanging ALT Knee To Chest",
+      "video_url": "0c31a6cd7cda81f6f06e4cd3dbb5466d",
+      "required_equipment": "Bodyweight",
+      "idUsed": "0c31a6cd7cda81f6f06e4cd3dbb5466d",
+      "cfData": {
+        "id": "0c31a6cd7cda81f6f06e4cd3dbb5466d",
+        "name": "Hanging ALT knee to chest.MP4",
+        "filename": "Hanging ALT knee to chest.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/0c31a6cd7cda81f6f06e4cd3dbb5466d/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Deadlift Into Front Squat ",
+      "video_url": "8b1e3d20c1cddd7e7e6e2e3c3e2b1b89",
+      "required_equipment": "Bodyweight",
+      "idUsed": "8b1e3d20c1cddd7e7e6e2e3c3e2b1b89",
+      "cfData": {
+        "id": "8b1e3d20c1cddd7e7e6e2e3c3e2b1b89",
+        "name": "Plate deadlift into front squat .MP4",
+        "filename": "Plate deadlift into front squat .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/8b1e3d20c1cddd7e7e6e2e3c3e2b1b89/watch"
+      }
+    },
+    {
+      "exercise_name": "Push Up Tp Hollow Rocks ",
+      "video_url": "8a208683ca28555ef40365fdaeeba8c8",
+      "required_equipment": "Bodyweight",
+      "idUsed": "8a208683ca28555ef40365fdaeeba8c8",
+      "cfData": {
+        "id": "8a208683ca28555ef40365fdaeeba8c8",
+        "name": "Push-up tp hollow rocks .MP4",
+        "filename": "Push-up tp hollow rocks .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/8a208683ca28555ef40365fdaeeba8c8/watch"
+      }
+    },
+    {
+      "exercise_name": "Ski Erge Lunge Tricep Pull Down : Reverse Grip",
+      "video_url": "bc32fbc3005593569baab5a6428137e7",
+      "required_equipment": "Bodyweight",
+      "idUsed": "bc32fbc3005593569baab5a6428137e7",
+      "cfData": {
+        "id": "bc32fbc3005593569baab5a6428137e7",
+        "name": "Ski erge lunge tricep pull down : reverse grip.MP4",
+        "filename": "Ski erge lunge tricep pull down : reverse grip.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/bc32fbc3005593569baab5a6428137e7/watch"
+      }
+    },
+    {
+      "exercise_name": "Push Up Donkey Kicks ",
+      "video_url": "207a0e1a016910954622267bce23bd34",
+      "required_equipment": "Bodyweight",
+      "idUsed": "207a0e1a016910954622267bce23bd34",
+      "cfData": {
+        "id": "207a0e1a016910954622267bce23bd34",
+        "name": "Push-up donkey kicks .MP4",
+        "filename": "Push-up donkey kicks .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/207a0e1a016910954622267bce23bd34/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Squat Lateral Raise",
+      "video_url": "e72718f977f2bdd86ff2b443c34d5689",
+      "required_equipment": "Bodyweight",
+      "idUsed": "e72718f977f2bdd86ff2b443c34d5689",
+      "cfData": {
+        "id": "e72718f977f2bdd86ff2b443c34d5689",
+        "name": "Plate squat lateral raise.MP4",
+        "filename": "Plate squat lateral raise.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/e72718f977f2bdd86ff2b443c34d5689/watch"
+      }
+    },
+    {
+      "exercise_name": "Sandbag Single Leg RDL Into Squat",
+      "video_url": "1bb80dd2fc6965310f5fbb21e059a5cc",
+      "required_equipment": "Dumbbells",
+      "idUsed": "1bb80dd2fc6965310f5fbb21e059a5cc",
+      "cfData": {
+        "id": "1bb80dd2fc6965310f5fbb21e059a5cc",
+        "name": "Sandbag single leg RDL into squat.MP4",
+        "filename": "Sandbag single leg RDL into squat.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/1bb80dd2fc6965310f5fbb21e059a5cc/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate ALT Back Lunge Swingds",
+      "video_url": "d91546f1284f87f72c870f280f3c10ce",
+      "required_equipment": "Bodyweight",
+      "idUsed": "d91546f1284f87f72c870f280f3c10ce",
+      "cfData": {
+        "id": "d91546f1284f87f72c870f280f3c10ce",
+        "name": "Plate ALT back lunge swingds.MP4",
+        "filename": "Plate ALT back lunge swingds.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/d91546f1284f87f72c870f280f3c10ce/watch"
+      }
+    },
+    {
+      "exercise_name": "Wall Walk",
+      "video_url": "f41d3bba4ed1fa38b36a4420a2119b15",
+      "required_equipment": "Bodyweight",
+      "idUsed": "f41d3bba4ed1fa38b36a4420a2119b15",
+      "cfData": {
+        "id": "f41d3bba4ed1fa38b36a4420a2119b15",
+        "name": "Wall walk.MP4",
+        "filename": "Wall walk.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/f41d3bba4ed1fa38b36a4420a2119b15/watch"
+      }
+    },
+    {
+      "exercise_name": "Typwriter Pull Ups",
+      "video_url": "38ba1e00e5b5040eea990af1da13167d",
+      "required_equipment": "Bodyweight",
+      "idUsed": "38ba1e00e5b5040eea990af1da13167d",
+      "cfData": {
+        "id": "38ba1e00e5b5040eea990af1da13167d",
+        "name": "Typwriter pull-ups.MP4",
+        "filename": "Typwriter pull-ups.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/38ba1e00e5b5040eea990af1da13167d/watch"
+      }
+    },
+    {
+      "exercise_name": "Diamond Push Up",
+      "video_url": "091d1ab03aa1f179960c3ae23132a23f",
+      "required_equipment": "Bodyweight",
+      "idUsed": "091d1ab03aa1f179960c3ae23132a23f",
+      "cfData": {
+        "id": "091d1ab03aa1f179960c3ae23132a23f",
+        "name": "Diamond push-up.MP4",
+        "filename": "Diamond push-up.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/091d1ab03aa1f179960c3ae23132a23f/watch"
+      }
+    },
+    {
+      "exercise_name": "Bosu DB Single Arm Sit Up",
+      "video_url": "f720a8b25f87b6734551037272ae521f",
+      "required_equipment": "Dumbbells",
+      "idUsed": "f720a8b25f87b6734551037272ae521f",
+      "cfData": {
+        "id": "f720a8b25f87b6734551037272ae521f",
+        "name": "Bosu DB single arm sit up.MP4",
+        "filename": "Bosu DB single arm sit up.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/f720a8b25f87b6734551037272ae521f/watch"
+      }
+    },
+    {
+      "exercise_name": "",
+      "video_url": "b535c6c4623781f81d2d59c64d10734b",
+      "required_equipment": "Bodyweight",
+      "idUsed": "b535c6c4623781f81d2d59c64d10734b",
+      "cfData": {
+        "id": "b535c6c4623781f81d2d59c64d10734b",
+        "name": ".DS_Store",
+        "filename": ".DS_Store",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/b535c6c4623781f81d2d59c64d10734b/watch"
+      }
+    },
+    {
+      "exercise_name": "Bear Alt DB Rows",
+      "video_url": "002fa932e2d05c918bb55c0e75c7a966",
+      "required_equipment": "Dumbbells",
+      "idUsed": "002fa932e2d05c918bb55c0e75c7a966",
+      "cfData": {
+        "id": "002fa932e2d05c918bb55c0e75c7a966",
+        "name": "Bear alt DB rows.MP4",
+        "filename": "Bear alt DB rows.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/002fa932e2d05c918bb55c0e75c7a966/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Curl Combo   Bicep, Hammer, Reverse ",
+      "video_url": "3e291bd5c920ef9df49473a7034db097",
+      "required_equipment": "Dumbbells",
+      "idUsed": "3e291bd5c920ef9df49473a7034db097",
+      "cfData": {
+        "id": "3e291bd5c920ef9df49473a7034db097",
+        "name": "DB curl combo - bicep, hammer, reverse .MP4",
+        "filename": "DB curl combo - bicep, hammer, reverse .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/3e291bd5c920ef9df49473a7034db097/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Squat Lateral Raise Jumps",
+      "video_url": "e084cbc1370ec3989b09227f03868e4c",
+      "required_equipment": "Bodyweight",
+      "idUsed": "e084cbc1370ec3989b09227f03868e4c",
+      "cfData": {
+        "id": "e084cbc1370ec3989b09227f03868e4c",
+        "name": "Plate squat lateral raise jumps.MP4",
+        "filename": "Plate squat lateral raise jumps.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/e084cbc1370ec3989b09227f03868e4c/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Ext V Hold",
+      "video_url": "8c04036752c50609b2f32a9011915dd5",
+      "required_equipment": "Dumbbells",
+      "idUsed": "8c04036752c50609b2f32a9011915dd5",
+      "cfData": {
+        "id": "8c04036752c50609b2f32a9011915dd5",
+        "name": "DB ext V hold.MP4",
+        "filename": "DB ext V hold.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/8c04036752c50609b2f32a9011915dd5/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Overhead Tricep Extension",
+      "video_url": "1746d5918fa70e93210c102301fd2a05",
+      "required_equipment": "Dumbbells",
+      "idUsed": "1746d5918fa70e93210c102301fd2a05",
+      "cfData": {
+        "id": "1746d5918fa70e93210c102301fd2a05",
+        "name": "DB overhead tricep extension.MP4",
+        "filename": "DB overhead tricep extension.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/1746d5918fa70e93210c102301fd2a05/watch"
+      }
+    },
+    {
+      "exercise_name": "DB TRX Burpee",
+      "video_url": "80fc88377d9d3eec15909c57919f0afe",
+      "required_equipment": "Dumbbells",
+      "idUsed": "80fc88377d9d3eec15909c57919f0afe",
+      "cfData": {
+        "id": "80fc88377d9d3eec15909c57919f0afe",
+        "name": "DB TRX burpee.MP4",
+        "filename": "DB TRX burpee.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/80fc88377d9d3eec15909c57919f0afe/watch"
+      }
+    },
+    {
+      "exercise_name": "Ski Erge Woodchop",
+      "video_url": "3ea6e575f52ed736ed27d188c2b6a393",
+      "required_equipment": "Bodyweight",
+      "idUsed": "3ea6e575f52ed736ed27d188c2b6a393",
+      "cfData": {
+        "id": "3ea6e575f52ed736ed27d188c2b6a393",
+        "name": "Ski erge woodchop.MP4",
+        "filename": "Ski erge woodchop.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/3ea6e575f52ed736ed27d188c2b6a393/watch"
+      }
+    },
+    {
+      "exercise_name": "Push Up Knee Taps ",
+      "video_url": "3d240e35718bc34b52b1c9aed777d5ed",
+      "required_equipment": "Bodyweight",
+      "idUsed": "3d240e35718bc34b52b1c9aed777d5ed",
+      "cfData": {
+        "id": "3d240e35718bc34b52b1c9aed777d5ed",
+        "name": "Push-up knee taps .MP4",
+        "filename": "Push-up knee taps .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/3d240e35718bc34b52b1c9aed777d5ed/watch"
+      }
+    },
+    {
+      "exercise_name": "Kneeling Barbell Sit Back Thrusters ",
+      "video_url": "dce67ebadee5126b3acce24b74bb6be6",
+      "required_equipment": "Barbell",
+      "idUsed": "dce67ebadee5126b3acce24b74bb6be6",
+      "cfData": {
+        "id": "dce67ebadee5126b3acce24b74bb6be6",
+        "name": "Kneeling barbell sit back thrusters .MP4",
+        "filename": "Kneeling barbell sit back thrusters .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/dce67ebadee5126b3acce24b74bb6be6/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Alt Lunge Around The World ",
+      "video_url": "9c211e6c075f205576d6bb48142b6f41",
+      "required_equipment": "Bodyweight",
+      "idUsed": "9c211e6c075f205576d6bb48142b6f41",
+      "cfData": {
+        "id": "9c211e6c075f205576d6bb48142b6f41",
+        "name": "Plate alt lunge around the world .MP4",
+        "filename": "Plate alt lunge around the world .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/9c211e6c075f205576d6bb48142b6f41/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Deadlift W: Jump",
+      "video_url": "71f70fa4e2d969e3195f2a6c2c830d25",
+      "required_equipment": "Dumbbells",
+      "idUsed": "71f70fa4e2d969e3195f2a6c2c830d25",
+      "cfData": {
+        "id": "71f70fa4e2d969e3195f2a6c2c830d25",
+        "name": "DB deadlift w: jump.MP4",
+        "filename": "DB deadlift w: jump.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/71f70fa4e2d969e3195f2a6c2c830d25/watch"
+      }
+    },
+    {
+      "exercise_name": "DB 1:2 Wipers",
+      "video_url": "7da8bee563e9a2d85ca8796f59f267d1",
+      "required_equipment": "Dumbbells",
+      "idUsed": "7da8bee563e9a2d85ca8796f59f267d1",
+      "cfData": {
+        "id": "7da8bee563e9a2d85ca8796f59f267d1",
+        "name": "DB 1:2 wipers.MP4",
+        "filename": "DB 1:2 wipers.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/7da8bee563e9a2d85ca8796f59f267d1/watch"
+      }
+    },
+    {
+      "exercise_name": "Bear Push Up Into Jumping Knee Tuck",
+      "video_url": "ce2a8ecf8a9830453f9fc4e4646a8e58",
+      "required_equipment": "Bodyweight",
+      "idUsed": "ce2a8ecf8a9830453f9fc4e4646a8e58",
+      "cfData": {
+        "id": "ce2a8ecf8a9830453f9fc4e4646a8e58",
+        "name": "Bear push-up into jumping knee tuck.MP4",
+        "filename": "Bear push-up into jumping knee tuck.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/ce2a8ecf8a9830453f9fc4e4646a8e58/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Squat Overhead Swing",
+      "video_url": "2feedc28466dc478df1248bbb0a729d1",
+      "required_equipment": "Bodyweight",
+      "idUsed": "2feedc28466dc478df1248bbb0a729d1",
+      "cfData": {
+        "id": "2feedc28466dc478df1248bbb0a729d1",
+        "name": "Plate squat overhead swing.MP4",
+        "filename": "Plate squat overhead swing.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/2feedc28466dc478df1248bbb0a729d1/watch"
+      }
+    },
+    {
+      "exercise_name": "Kneeling Plyo Zotman Curls ",
+      "video_url": "67f3a62a46bccb5765a450dab4c93f06",
+      "required_equipment": "Bodyweight",
+      "idUsed": "67f3a62a46bccb5765a450dab4c93f06",
+      "cfData": {
+        "id": "67f3a62a46bccb5765a450dab4c93f06",
+        "name": "Kneeling plyo zotman curls .MP4",
+        "filename": "Kneeling plyo zotman curls .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/67f3a62a46bccb5765a450dab4c93f06/watch"
+      }
+    },
+    {
+      "exercise_name": "V Up",
+      "video_url": "fbc2b6216ee162f81a97be6786f3f9cc",
+      "required_equipment": "Bodyweight",
+      "idUsed": "fbc2b6216ee162f81a97be6786f3f9cc",
+      "cfData": {
+        "id": "fbc2b6216ee162f81a97be6786f3f9cc",
+        "name": "V-Up.MP4",
+        "filename": "V-Up.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/fbc2b6216ee162f81a97be6786f3f9cc/watch"
+      }
+    },
+    {
+      "exercise_name": "Push Up Shoulder Taps",
+      "video_url": "58dd41e3d3b142296352f9b7aefc3c52",
+      "required_equipment": "Bodyweight",
+      "idUsed": "58dd41e3d3b142296352f9b7aefc3c52",
+      "cfData": {
+        "id": "58dd41e3d3b142296352f9b7aefc3c52",
+        "name": "Push-up shoulder taps.MP4",
+        "filename": "Push-up shoulder taps.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/58dd41e3d3b142296352f9b7aefc3c52/watch"
+      }
+    },
+    {
+      "exercise_name": "Plate Russian Twists",
+      "video_url": "23b7319c49b5895f1b0f7e86d62b6d87",
+      "required_equipment": "Bodyweight",
+      "idUsed": "23b7319c49b5895f1b0f7e86d62b6d87",
+      "cfData": {
+        "id": "23b7319c49b5895f1b0f7e86d62b6d87",
+        "name": "Plate russian twists.MP4",
+        "filename": "Plate russian twists.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/23b7319c49b5895f1b0f7e86d62b6d87/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Sand Bag Alt Pistol Squat",
+      "video_url": "e89d6dbb469d482bb148985696401d01",
+      "required_equipment": "Box",
+      "idUsed": "e89d6dbb469d482bb148985696401d01",
+      "cfData": {
+        "id": "e89d6dbb469d482bb148985696401d01",
+        "name": "box Sand bag alt pistol squat.MP4",
+        "filename": "box Sand bag alt pistol squat.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/e89d6dbb469d482bb148985696401d01/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Seated Rear Fly",
+      "video_url": "172f2085cf0432eb92718a4dd62e0867",
+      "required_equipment": "Dumbbells",
+      "idUsed": "172f2085cf0432eb92718a4dd62e0867",
+      "cfData": {
+        "id": "172f2085cf0432eb92718a4dd62e0867",
+        "name": "DB seated rear fly.MP4",
+        "filename": "DB seated rear fly.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/172f2085cf0432eb92718a4dd62e0867/watch"
+      }
+    },
+    {
+      "exercise_name": "Kneeling DB Pushbacks",
+      "video_url": "ae2450a3284019a59e13c176e47266ad",
+      "required_equipment": "Dumbbells",
+      "idUsed": "ae2450a3284019a59e13c176e47266ad",
+      "cfData": {
+        "id": "ae2450a3284019a59e13c176e47266ad",
+        "name": "Kneeling DB pushbacks.MP4",
+        "filename": "Kneeling DB pushbacks.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/ae2450a3284019a59e13c176e47266ad/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Ald Fwd Back Lunge ",
+      "video_url": "d82c233bf39d7aa616bdfced7bf736af",
+      "required_equipment": "Dumbbells",
+      "idUsed": "d82c233bf39d7aa616bdfced7bf736af",
+      "cfData": {
+        "id": "d82c233bf39d7aa616bdfced7bf736af",
+        "name": "DB ald fwd back lunge .MP4",
+        "filename": "DB ald fwd back lunge .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/d82c233bf39d7aa616bdfced7bf736af/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Fwd Back Lunge",
+      "video_url": "3bb66350dd16fe24ad58b975d9c6a59a",
+      "required_equipment": "Dumbbells",
+      "idUsed": "3bb66350dd16fe24ad58b975d9c6a59a",
+      "cfData": {
+        "id": "3bb66350dd16fe24ad58b975d9c6a59a",
+        "name": "DB fwd back lunge.MP4",
+        "filename": "DB fwd back lunge.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/3bb66350dd16fe24ad58b975d9c6a59a/watch"
+      }
+    },
+    {
+      "exercise_name": "Box Seated Sandbag Knee Tucks",
+      "video_url": "0f4381a871cdb92cae33c96a5d55499e",
+      "required_equipment": "Dumbbells",
+      "idUsed": "0f4381a871cdb92cae33c96a5d55499e",
+      "cfData": {
+        "id": "0f4381a871cdb92cae33c96a5d55499e",
+        "name": "Box seated sandbag knee tucks.MP4",
+        "filename": "Box seated sandbag knee tucks.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/0f4381a871cdb92cae33c96a5d55499e/watch"
+      }
+    },
+    {
+      "exercise_name": "Push Up Jack Into Jumping Jack ",
+      "video_url": "f0b0d437b531ac122fa63111faf4c5af",
+      "required_equipment": "Bodyweight",
+      "idUsed": "f0b0d437b531ac122fa63111faf4c5af",
+      "cfData": {
+        "id": "f0b0d437b531ac122fa63111faf4c5af",
+        "name": "Push-up jack into jumping jack .MP4",
+        "filename": "Push-up jack into jumping jack .MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/f0b0d437b531ac122fa63111faf4c5af/watch"
+      }
+    },
+    {
+      "exercise_name": "TRX Bicep Curls",
+      "video_url": "0f26f50ec9cebd252b2b10b992e36a57",
+      "required_equipment": "TRX",
+      "idUsed": "0f26f50ec9cebd252b2b10b992e36a57",
+      "cfData": {
+        "id": "0f26f50ec9cebd252b2b10b992e36a57",
+        "name": "TRX bicep curls.MP4",
+        "filename": "TRX bicep curls.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/0f26f50ec9cebd252b2b10b992e36a57/watch"
+      }
+    },
+    {
+      "exercise_name": "SKI Erg Power Pulls",
+      "video_url": "f59741a2397237dc8dcc08a02170b540",
+      "required_equipment": "Bodyweight",
+      "idUsed": "f59741a2397237dc8dcc08a02170b540",
+      "cfData": {
+        "id": "f59741a2397237dc8dcc08a02170b540",
+        "name": "SKI erg power pulls.MP4",
+        "filename": "SKI erg power pulls.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/f59741a2397237dc8dcc08a02170b540/watch"
+      }
+    },
+    {
+      "exercise_name": "DB Tricep Kick Back",
+      "video_url": "c22addf03458c90c798fc8401eeb79d3",
+      "required_equipment": "Dumbbells",
+      "idUsed": "c22addf03458c90c798fc8401eeb79d3",
+      "cfData": {
+        "id": "c22addf03458c90c798fc8401eeb79d3",
+        "name": "DB tricep kick back.MP4",
+        "filename": "DB tricep kick back.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/c22addf03458c90c798fc8401eeb79d3/watch"
+      }
+    },
+    {
+      "exercise_name": "BB Sit Up",
+      "video_url": "16df277cc3ba4875ef63ea324ab86005",
+      "required_equipment": "Barbell",
+      "idUsed": "16df277cc3ba4875ef63ea324ab86005",
+      "cfData": {
+        "id": "16df277cc3ba4875ef63ea324ab86005",
+        "name": "BB sit up.MP4",
+        "filename": "BB sit up.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/16df277cc3ba4875ef63ea324ab86005/watch"
+      }
+    },
+    {
+      "exercise_name": "Bosu Side Plank Rotations",
+      "video_url": "7065da8a57376fdef8bb919e0a3e2f3b",
+      "required_equipment": "BOSU",
+      "idUsed": "7065da8a57376fdef8bb919e0a3e2f3b",
+      "cfData": {
+        "id": "7065da8a57376fdef8bb919e0a3e2f3b",
+        "name": "Bosu side plank rotations.MP4",
+        "filename": "Bosu side plank rotations.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/7065da8a57376fdef8bb919e0a3e2f3b/watch"
+      }
+    },
+    {
+      "exercise_name": "Bosu Foam Russian Twists",
+      "video_url": "41673c2af32300183e5a6320e8e7d896",
+      "required_equipment": "BOSU",
+      "idUsed": "41673c2af32300183e5a6320e8e7d896",
+      "cfData": {
+        "id": "41673c2af32300183e5a6320e8e7d896",
+        "name": "Bosu foam russian twists.MP4",
+        "filename": "Bosu foam russian twists.MP4",
+        "duration": -1,
+        "preview": "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/41673c2af32300183e5a6320e8e7d896/watch"
+      }
+    }
+  ]
+}

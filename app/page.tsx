@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import { createClient } from "@supabase/supabase-js";
 import {
   storage,
   VENUES_UPDATED_EVENT,
@@ -8,11 +9,31 @@ import {
   type WorkoutSetup,
   type VenueProfile,
   type BrandPalette,
+  type SessionPhase,
 } from "@/lib/workout-engine/storage";
 import { systemFeatures } from "@/lib/system-features";
 import MainLayout from "@/components/MainLayout";
 import { NexusCard } from "@/components/ui/NexusCard";
 import { NexusButton } from "@/components/ui/NexusButton";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseClient =
+  supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
+
+const PHASE_COLOR: Record<SessionPhase, string> = {
+  prep: "#00BFFF",
+  work: "#FF4D4D",
+  rest: "#32CD32",
+  complete: "#FFD100",
+};
+
+const PHASE_LABEL: Record<SessionPhase, string> = {
+  prep: "Get Ready",
+  work: "Work",
+  rest: "Rest",
+  complete: "Complete",
+};
 
 const DEFAULT_BRAND_COLORS: BrandPalette = {
   primary: "#00BFFF",
@@ -40,6 +61,12 @@ export default function HomePage() {
     accent: DEFAULT_BRAND_COLORS.accent,
   });
   const [venueError, setVenueError] = useState<string | null>(null);
+  const [globalTimer, setGlobalTimer] = useState({
+    timeLeft: 0,
+    phase: 'prep' as SessionPhase,
+    isActive: false,
+    targetEndTime: null as Date | null,
+  });
 
   useEffect(() => {
     const workoutSetup = storage.getSetup();
@@ -69,6 +96,110 @@ export default function HomePage() {
     }
 
     return () => window.removeEventListener(VENUES_UPDATED_EVENT, handleVenueUpdate);
+  }, []);
+
+  // Global timer subscription (READ-ONLY)
+  useEffect(() => {
+    if (!supabaseClient) return;
+
+    // Subscribe to global timer changes
+    const timerChannel = supabaseClient
+      .channel('global-timer-home')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'global_timer', filter: 'id=eq.active' }, (payload) => {
+        const timerData = payload.new as any;
+        console.log('Home: Global timer update received:', timerData);
+        if (timerData && timerData.target_end_time) {
+          // Calculate time left from target end time - this eliminates lag!
+          const targetEndTime = new Date(timerData.target_end_time).getTime();
+          const now = Date.now();
+          const calculatedTimeLeft = Math.max(0, Math.ceil((targetEndTime - now) / 1000));
+
+          setGlobalTimer({
+            timeLeft: calculatedTimeLeft,
+            phase: timerData.phase || 'prep',
+            isActive: timerData.is_active || false,
+            targetEndTime: new Date(timerData.target_end_time),
+          });
+          console.log('Home: Calculated timeLeft from target:', calculatedTimeLeft);
+        } else if (timerData) {
+          // Fallback to old method if target_end_time not available
+          setGlobalTimer({
+            timeLeft: timerData.time_left || 0,
+            phase: timerData.phase || 'prep',
+            isActive: timerData.is_active || false,
+            targetEndTime: null,
+          });
+        }
+      })
+      .subscribe();
+
+    // Local countdown that calculates from target time
+    const localInterval = setInterval(() => {
+      setGlobalTimer(prev => {
+        if (!prev.isActive || !prev.targetEndTime) return prev;
+
+        // Calculate time left from target end time
+        const targetEndTime = prev.targetEndTime.getTime();
+        const now = Date.now();
+        let calculatedTimeLeft = Math.max(0, Math.ceil((targetEndTime - now) / 1000));
+
+        // Prevent showing 0 if timer should be active and time > 0
+        if (calculatedTimeLeft === 0 && (targetEndTime - now) > 1000) {
+          // Target time is in the future but calculation gave 0, use fallback
+          calculatedTimeLeft = prev.timeLeft || 1;
+        }
+
+        return {
+          ...prev,
+          timeLeft: calculatedTimeLeft,
+        };
+      });
+    }, 100); // Update every 100ms for smooth countdown
+
+    // Fetch initial timer state (READ-ONLY) - do this immediately
+    const fetchTimer = async () => {
+      console.log('Home: Fetching initial timer state...');
+      const { data, error } = await supabaseClient
+        .from('global_timer')
+        .select('*')
+        .eq('id', 'active')
+        .single();
+
+      if (data && data.is_active) {
+        let calculatedTimeLeft = 0;
+        let targetEndTime = null;
+
+        if (data.target_end_time) {
+          // Use target end time for precise calculation
+          targetEndTime = new Date(data.target_end_time);
+          const now = Date.now();
+          calculatedTimeLeft = Math.max(0, Math.ceil((targetEndTime.getTime() - now) / 1000));
+          console.log('Home: Using target end time:', data.target_end_time);
+        } else {
+          // Fallback to time_left
+          calculatedTimeLeft = data.time_left || 0;
+          console.log('Home: Using time_left (fallback)');
+        }
+
+        setGlobalTimer({
+          timeLeft: calculatedTimeLeft,
+          phase: data.phase || 'work',
+          isActive: true,
+          targetEndTime: targetEndTime,
+        });
+        console.log('Home: Initial sync complete - timeLeft:', calculatedTimeLeft, 'phase:', data.phase);
+      } else {
+        console.log('Home: No active timer found');
+      }
+    };
+
+    // Fetch immediately
+    fetchTimer();
+
+    return () => {
+      if (timerChannel) supabaseClient.removeChannel(timerChannel);
+      clearInterval(localInterval);
+    };
   }, []);
 
   const handleVenueFormChange = (field: keyof VenueFormState, value: string) => {
@@ -225,6 +356,44 @@ export default function HomePage() {
       }
     >
       <div className="flex flex-col gap-10">
+        {/* Global Timer Display */}
+        {globalTimer.isActive && (
+          <NexusCard
+            className="p-6 border-2 bg-black/40"
+            style={{
+              borderColor: PHASE_COLOR[globalTimer.phase],
+              boxShadow: `0 0 40px ${PHASE_COLOR[globalTimer.phase]}30`,
+            }}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+              <div className="text-center">
+                <div className="text-xs uppercase tracking-[0.4em] mb-2" style={{ color: PHASE_COLOR[globalTimer.phase] }}>
+                  Current Phase
+                </div>
+                <div className="heading-font text-2xl font-bold" style={{ color: PHASE_COLOR[globalTimer.phase] }}>
+                  {PHASE_LABEL[globalTimer.phase]}
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="text-xs uppercase tracking-[0.4em] mb-2 text-slate-400">
+                  Time Remaining
+                </div>
+                <div className="heading-font text-4xl font-black" style={{ color: PHASE_COLOR[globalTimer.phase] }}>
+                  {globalTimer.timeLeft}s
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="text-xs uppercase tracking-[0.4em] mb-2 text-slate-400">
+                  Status
+                </div>
+                <div className="heading-font text-lg font-semibold text-slate-300">
+                  Synced Across All Displays
+                </div>
+              </div>
+            </div>
+          </NexusCard>
+        )}
+
         <NexusCard className="p-8">
           <div className="grid gap-8 md:grid-cols-2">
             <div className="space-y-4">
