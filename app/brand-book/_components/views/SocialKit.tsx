@@ -1750,7 +1750,7 @@ export const SocialKit: React.FC = () => {
                                         toast.error(`Publish failed: ${err.message}`);
                                     }
                                 } else {
-                                    toast.success("Post scheduled in Brand OS");
+                                    toast.success("Post scheduled in AVLR Gym Interface");
                                     onClose();
                                 }
                             }}

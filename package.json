@@ -1,7 +1,7 @@
 {
-  "name": "brand-os",
+  "name": "avlr-gym-interface",
   "version": "1.0.0",
-  "description": "AVLR Brand OS",
+  "description": "AVLR Gym Interface",
   "main": "index.js",
   "directories": {
     "lib": "lib"

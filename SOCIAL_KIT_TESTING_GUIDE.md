@@ -197,7 +197,7 @@ If issues found:
 ## Deploy Status
 
 🚀 **Deploying to Vercel now...**
-- Inspect: https://vercel.com/wellnessbrotherjay-debugs-projects/brand-os/BZpvx7r3FWWCbCsaaEmxjQeupSLP
-- Production URL: https://brand-os-wellnessbrotherjay-debugs-projects.vercel.app
+- Inspect: https://vercel.com/wellnessbrotherjay-debugs-projects/avlr-gym-interface/BZpvx7r3FWWCbCsaaEmxjQeupSLP
+- Production URL: https://avlr-gym-interface-wellnessbrotherjay-debugs-projects.vercel.app
 
 Build should complete in ~2-3 minutes.

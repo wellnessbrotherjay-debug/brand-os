@@ -4,15 +4,15 @@ import MainLayout from '@/components/MainLayout';
 
 export default function PrivacyPage() {
     return (
-        <MainLayout title="Privacy Policy" subtitle="AVLR Brand OS">
+        <MainLayout title="Privacy Policy" subtitle="AVLR Gym Interface">
             <div className="mx-auto max-w-4xl px-6 py-10 text-slate-300">
                 <div className="prose prose-invert max-w-none">
-                    <h1>AVLR Brand OS – Privacy Policy</h1>
+                    <h1>AVLR Gym Interface – Privacy Policy</h1>
                     <p className="text-sm text-slate-400">Last updated: 2025-12-15</p>
 
                     <p>
-                        This Privacy Policy explains how AVLR Brand OS (“we”, “us”, “our”) – operated under solutions.xyz – collects, uses, and protects information when you use our services or connect your Meta accounts (Facebook, Instagram, etc.) to our platform.
-                        By using AVLR Brand OS or connecting your Meta assets, you agree to the practices described in this Policy.
+                        This Privacy Policy explains how AVLR Gym Interface (“we”, “us”, “our”) – operated under solutions.xyz – collects, uses, and protects information when you use our services or connect your Meta accounts (Facebook, Instagram, etc.) to our platform.
+                        By using AVLR Gym Interface or connecting your Meta assets, you agree to the practices described in this Policy.
                     </p>
 
                     <h3>1. Information We Collect</h3>
@@ -25,7 +25,7 @@ export default function PrivacyPage() {
                     </ul>
 
                     <h4>1.2 Meta / Advertising Data</h4>
-                    <p>When you connect your Meta assets to AVLR Brand OS, we may receive:</p>
+                    <p>When you connect your Meta assets to AVLR Gym Interface, we may receive:</p>
                     <ul>
                         <li>Facebook Pages and Instagram accounts you choose to connect.</li>
                         <li>Ad accounts, campaigns, ad sets, ads, and related settings.</li>
@@ -43,7 +43,7 @@ export default function PrivacyPage() {
                     <h3>2. How We Use Your Information</h3>
                     <p>We use the information we collect to:</p>
                     <ul>
-                        <li>Connect and sync your Facebook and Instagram assets with AVLR Brand OS.</li>
+                        <li>Connect and sync your Facebook and Instagram assets with AVLR Gym Interface.</li>
                         <li>Create, manage, and optimize ad campaigns and content on your behalf.</li>
                         <li>Show you analytics, dashboards, and reports in our app.</li>
                         <li>Provide customer support and respond to your requests.</li>
@@ -56,7 +56,7 @@ export default function PrivacyPage() {
                     <h3>3. Legal Basis (for users in the EEA/UK)</h3>
                     <p>If you are in the European Economic Area or the United Kingdom, we process your data on the following legal bases:</p>
                     <ul>
-                        <li>Performance of a contract – to provide you with the AVLR Brand OS services you sign up for.</li>
+                        <li>Performance of a contract – to provide you with the AVLR Gym Interface services you sign up for.</li>
                         <li>Legitimate interests – to maintain and improve our services, prevent fraud, and secure our systems.</li>
                         <li>Consent – where required, such as when you connect your Meta accounts and grant specific permissions.</li>
                     </ul>
@@ -112,7 +112,7 @@ export default function PrivacyPage() {
                     <ul>
                         <li>Your Facebook Business Integrations settings; and/or</li>
                         <li>Your Instagram account settings; and/or</li>
-                        <li>The disconnect option in AVLR Brand OS.</li>
+                        <li>The disconnect option in AVLR Gym Interface.</li>
                     </ul>
                     <p>Once revoked, we will stop receiving new data and will delete previously stored data within a reasonable timeframe as described in this Policy.</p>
 
@@ -126,17 +126,17 @@ export default function PrivacyPage() {
                     <p>You can manage cookies via your browser settings. If you disable cookies, some features may not work correctly.</p>
 
                     <h3>10. International Transfers</h3>
-                    <p>Our servers or service providers may be located in different countries. By using AVLR Brand OS, you acknowledge that your information may be processed in countries that may have different data protection laws than your home country. Where required, we take steps to ensure an adequate level of protection for such transfers.</p>
+                    <p>Our servers or service providers may be located in different countries. By using AVLR Gym Interface, you acknowledge that your information may be processed in countries that may have different data protection laws than your home country. Where required, we take steps to ensure an adequate level of protection for such transfers.</p>
 
                     <h3>11. Contact Us</h3>
                     <p>If you have any questions about this Privacy Policy or how we handle your data, contact:</p>
                     <p>
-                        AVLR Brand OS – Data Protection<br />
+                        AVLR Gym Interface – Data Protection<br />
                         Email: wellnessbrotherjay@gmail.com
                     </p>
 
                     <h3>12. Changes to This Policy</h3>
-                    <p>We may update this Privacy Policy from time to time. When we do, we will change the “Last updated” date at the top of this page. Continued use of AVLR Brand OS after changes means you accept the revised Policy.</p>
+                    <p>We may update this Privacy Policy from time to time. When we do, we will change the “Last updated” date at the top of this page. Continued use of AVLR Gym Interface after changes means you accept the revised Policy.</p>
 
                     <p className="border-t border-white/10 pt-4 mt-8 text-xs text-slate-500">
                         This Privacy Policy is a general template and does not constitute legal advice. For specific legal requirements in your jurisdiction, consult a qualified lawyer.

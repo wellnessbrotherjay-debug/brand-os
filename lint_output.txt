@@ -1,5 +1,5 @@
 
-> brand-os@1.0.0 lint
+> avlr-gym-interface@1.0.0 lint
 > next lint
 
 

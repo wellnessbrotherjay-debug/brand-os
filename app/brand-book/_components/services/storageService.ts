@@ -18,7 +18,7 @@ export const uploadAsset = async (file: File, brandId: string, projectId?: strin
         const filePath = `assets/${fileName}`;
 
         const { data, error } = await supabase.storage
-            .from('brand-os-assets')
+            .from('avlr-gym-interface-assets')
             .upload(filePath, file);
 
         if (error) {
@@ -27,7 +27,7 @@ export const uploadAsset = async (file: File, brandId: string, projectId?: strin
         }
 
         const { data: { publicUrl } } = supabase.storage
-            .from('brand-os-assets')
+            .from('avlr-gym-interface-assets')
             .getPublicUrl(filePath);
 
         return publicUrl;

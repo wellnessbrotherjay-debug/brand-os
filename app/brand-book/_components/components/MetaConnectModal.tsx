@@ -50,9 +50,9 @@ export const MetaConnectModal: React.FC<Props> = ({ isOpen, onClose, onConnect }
                             <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-6">
                                 <Shield className="text-[#1877F2] w-8 h-8" />
                             </div>
-                            <h3 className="text-xl font-bold mb-2">Connect to Hotel Solutions Brand OS</h3>
+                            <h3 className="text-xl font-bold mb-2">Connect to Hotel Solutions AVLR Gym Interface</h3>
                             <p className="text-sm text-gray-500 mb-8">
-                                Brand OS is requesting access to:
+                                AVLR Gym Interface is requesting access to:
                             </p>
                             <div className="space-y-3 w-full text-left bg-gray-50 p-4 rounded-lg border border-gray-100 text-sm">
                                 <div className="flex gap-3">

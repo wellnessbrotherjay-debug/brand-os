@@ -152,7 +152,7 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setView, children }
                     {/* Main App Title */}
                     <div className="mb-6">
                         <h1 className="font-serif-brand text-2xl font-bold leading-none tracking-tight">
-                            Hotel Solutions<br />Brand OS
+                            Hotel Solutions<br />AVLR Gym Interface
                         </h1>
                         <p className="text-[10px] opacity-50 uppercase tracking-widest mt-1">Multi-Brand System</p>
                     </div>

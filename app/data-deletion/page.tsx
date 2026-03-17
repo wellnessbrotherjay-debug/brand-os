@@ -4,14 +4,14 @@ import MainLayout from '@/components/MainLayout';
 
 export default function DataDeletionPage() {
     return (
-        <MainLayout title="Data Deletion" subtitle="AVLR Brand OS">
+        <MainLayout title="Data Deletion" subtitle="AVLR Gym Interface">
             <div className="mx-auto max-w-4xl px-6 py-10 text-slate-300">
                 <div className="prose prose-invert max-w-none">
-                    <h1>AVLR Brand OS – Data Deletion Instructions</h1>
+                    <h1>AVLR Gym Interface – Data Deletion Instructions</h1>
                     <p className="text-sm text-slate-400">Last updated: 2025-12-15</p>
 
                     <p>
-                        If you have used AVLR Brand OS and would like your data to be deleted, please follow the steps below.
+                        If you have used AVLR Gym Interface and would like your data to be deleted, please follow the steps below.
                     </p>
 
                     <h3>1. Disconnect Your Meta Accounts (Optional but Recommended)</h3>
@@ -20,26 +20,26 @@ export default function DataDeletionPage() {
                     <h4>Facebook:</h4>
                     <ul>
                         <li>Go to Settings & Privacy → Settings → Business Integrations / Apps and Websites.</li>
-                        <li>Find AVLR Brand OS (or our app name shown by Meta).</li>
+                        <li>Find AVLR Gym Interface (or our app name shown by Meta).</li>
                         <li>Click Remove to revoke access.</li>
                     </ul>
 
                     <h4>Instagram:</h4>
                     <ul>
                         <li>Go to Settings → Security → Apps and Websites.</li>
-                        <li>Locate AVLR Brand OS and remove access.</li>
+                        <li>Locate AVLR Gym Interface and remove access.</li>
                     </ul>
                     <p>This stops any future data sharing from Meta to our platform.</p>
 
-                    <h3>2. Request Deletion from AVLR Brand OS</h3>
+                    <h3>2. Request Deletion from AVLR Gym Interface</h3>
                     <p>To remove data stored in our systems, please email:</p>
                     <div className="bg-white/5 p-4 rounded-lg my-4">
-                        <p className="font-mono text-sm">Subject: Data Deletion Request – AVLR Brand OS</p>
+                        <p className="font-mono text-sm">Subject: Data Deletion Request – AVLR Gym Interface</p>
                         <p className="font-mono text-sm">To: wellnessbrotherjay@gmail.com</p>
                         <p className="mt-4 mb-2">Include in your message:</p>
                         <ul className="mb-0">
                             <li>Your full name</li>
-                            <li>The email address you used with AVLR Brand OS</li>
+                            <li>The email address you used with AVLR Gym Interface</li>
                             <li>Any Facebook Page / Instagram account / Ad account IDs connected (if known)</li>
                         </ul>
                     </div>
@@ -54,7 +54,7 @@ export default function DataDeletionPage() {
                     <h3>3. Questions</h3>
                     <p>If you have any questions about how your data is handled or this deletion process, contact:</p>
                     <p>
-                        AVLR Brand OS – Data Protection<br />
+                        AVLR Gym Interface – Data Protection<br />
                         Email: wellnessbrotherjay@gmail.com
                     </p>
                 </div>

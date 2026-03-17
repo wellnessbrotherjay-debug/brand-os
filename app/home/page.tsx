@@ -10,7 +10,7 @@ import { ensureGuestSession } from "@/lib/utils/guestSession";
 
 const BUTTONS = [
   { label: "Marketing Suite", href: "/marketing", icon: "📣", blurb: "Campaigns, social, growth" },
-  { label: "Brand OS", href: "/brand-book", icon: "🎨", blurb: "Identity, colors, and styles" },
+  { label: "AVLR Gym Interface", href: "/brand-book", icon: "🎨", blurb: "Identity, colors, and styles" },
   { label: "Finance", href: "/admin/finance-suite", icon: "📈", blurb: "P&L and financial tracking" },
   { label: "Facilities", href: "/facilities", icon: "🏛️", blurb: "Spa, pool, thermal suite" },
   { label: "Room Workouts", href: "/room-workout/builder", icon: "🛌", blurb: "Curate routines for guests" },

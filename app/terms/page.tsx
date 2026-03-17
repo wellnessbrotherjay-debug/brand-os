@@ -4,14 +4,14 @@ import MainLayout from '@/components/MainLayout';
 
 export default function TermsPage() {
     return (
-        <MainLayout title="Terms of Service" subtitle="AVLR Brand OS">
+        <MainLayout title="Terms of Service" subtitle="AVLR Gym Interface">
             <div className="mx-auto max-w-4xl px-6 py-10 text-slate-300">
                 <div className="prose prose-invert max-w-none">
-                    <h1>AVLR Brand OS – Terms of Service</h1>
+                    <h1>AVLR Gym Interface – Terms of Service</h1>
                     <p className="text-sm text-slate-400">Last updated: 2025-12-15</p>
 
                     <p>
-                        These Terms of Service (“Terms”) govern your use of AVLR Brand OS (“Service”), operated by solutions.xyz (“we”, “us”, “our”). By accessing or using the Service, you agree to be bound by these Terms.
+                        These Terms of Service (“Terms”) govern your use of AVLR Gym Interface (“Service”), operated by solutions.xyz (“we”, “us”, “our”). By accessing or using the Service, you agree to be bound by these Terms.
                         If you do not agree with these Terms, do not use the Service.
                     </p>
 
@@ -32,7 +32,7 @@ export default function TermsPage() {
 
                     <h3>3. Accounts & Security</h3>
                     <ul>
-                        <li>You are responsible for maintaining the confidentiality of any login credentials to AVLR Brand OS.</li>
+                        <li>You are responsible for maintaining the confidentiality of any login credentials to AVLR Gym Interface.</li>
                         <li>You must notify us immediately if you suspect unauthorized access to your account.</li>
                         <li>We may suspend or terminate access if we detect abuse, security issues, or violation of these Terms.</li>
                     </ul>
@@ -46,7 +46,7 @@ export default function TermsPage() {
 
                     <h3>5. Intellectual Property</h3>
                     <ul>
-                        <li>All software, features, and content within AVLR Brand OS remain our property or the property of our licensors.</li>
+                        <li>All software, features, and content within AVLR Gym Interface remain our property or the property of our licensors.</li>
                         <li>You retain ownership of your brand assets, creatives, and campaign content you upload.</li>
                         <li>You grant us a limited license to use those assets only to provide the Service (e.g. store them, send them to Meta for ads, show them in your dashboard).</li>
                     </ul>
@@ -81,7 +81,7 @@ export default function TermsPage() {
                     <h3>10. Contact</h3>
                     <p>For questions about these Terms, contact:</p>
                     <p>
-                        AVLR Brand OS – Legal / Terms<br />
+                        AVLR Gym Interface – Legal / Terms<br />
                         Email: wellnessbrotherjay@gmail.com
                     </p>
                 </div>

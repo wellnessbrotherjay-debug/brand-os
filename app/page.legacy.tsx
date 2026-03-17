@@ -189,7 +189,7 @@ export default function HomePage() {
             <a href="/">🌐 Marketing Site</a>
           </NexusButton>
           <NexusButton asChild size="sm" variant="secondary">
-            <a href="/brand-book">🎨 Brand OS</a>
+            <a href="/brand-book">🎨 AVLR Gym Interface</a>
           </NexusButton>
           <NexusButton asChild size="sm" variant="secondary">
             <a href="/admin/brand">🔐 Admin Login</a>

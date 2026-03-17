@@ -69,7 +69,7 @@ const IntegrationsPage: React.FC = () => {
         <div className="p-8 max-w-7xl mx-auto">
             <header className="mb-8">
                 <h1 className="text-3xl font-bold font-serif-brand">Integrations</h1>
-                <p className="opacity-60 mt-1">Connect your Brand OS to external tools and social platforms.</p>
+                <p className="opacity-60 mt-1">Connect your AVLR Gym Interface to external tools and social platforms.</p>
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

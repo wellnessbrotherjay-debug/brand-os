@@ -249,7 +249,7 @@ export const MetaAds: React.FC = () => {
                     </div>
                     <h1 className="text-3xl font-bold mb-4">Ad Control Center</h1>
                     <p className="text-gray-500 mb-8 leading-relaxed">
-                        Connect your Meta Ad Account to manage campaigns, track ROAS, and generate creatives directly from your Brand OS.
+                        Connect your Meta Ad Account to manage campaigns, track ROAS, and generate creatives directly from your AVLR Gym Interface.
                     </p>
                     <button
                         onClick={handleConnect}
