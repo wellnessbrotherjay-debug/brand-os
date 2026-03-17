@@ -7,8 +7,8 @@ import PwaUpdater from "@/components/PwaUpdater";
 import { BrandProvider } from "@/lib/brand-context";
 
 export const metadata: Metadata = {
-  title: "Exequte Hotel",
-  description: "Workout application for hotels",
+  title: "AVLR",
+  description: "Advanced Virtual Life & Recreation",
   manifest: "/manifest.webmanifest",
 };
 

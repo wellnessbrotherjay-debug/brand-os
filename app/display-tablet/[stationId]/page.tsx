@@ -98,7 +98,6 @@ function TabletStationContent() {
   const [lastSynced, setLastSynced] = useState<string | null>(null);
   const [videoError, setVideoError] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [needsInteraction, setNeedsInteraction] = useState(true);
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -464,27 +463,6 @@ function TabletStationContent() {
       <div className="absolute bottom-10 left-10 z-20">
         <p className="text-[11px] uppercase tracking-[0.8em] font-black text-white/80 drop-shadow-md">AVLR</p>
       </div>
-
-      {/* Interaction Overlay to 'unlock' autoplay */}
-      {needsInteraction && (
-        <div 
-          className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer px-6 text-center"
-          onClick={() => {
-            setNeedsInteraction(false);
-            // Also trigger fullscreen as it's a good time to do it
-            toggleFullscreen();
-          }}
-        >
-          <div className="w-24 h-24 rounded-full bg-[#C8A871] flex items-center justify-center mb-6 shadow-[0_0_50px_rgba(200,168,113,0.4)] animate-pulse">
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-          </div>
-          <h2 className="text-4xl font-black uppercase tracking-[0.2em] text-white mb-2">Ready to Train?</h2>
-          <p className="text-[#C8A871] uppercase tracking-[0.4em] font-bold text-xs mb-8 opacity-80">Tap anywhere to start workout</p>
-          <div className="px-8 py-4 rounded-full border border-white/20 bg-white/5 uppercase tracking-[0.2em] font-black text-xs text-white/60">
-            Unlocks Video & Fullscreen
-          </div>
-        </div>
-      )}
 
       {error && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-2xl bg-red-900/90 backdrop-blur-md border border-red-500/50 text-xs uppercase tracking-widest text-white shadow-2xl">{error}</div>
