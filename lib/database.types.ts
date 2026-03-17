@@ -171,42 +171,53 @@ export type Database = {
       workouts: {
         Row: {
           id: string
-          title: string
-          description: string | null
-          program_id: string | null
-          difficulty_level: string | null
-          estimated_duration_min: number | null
-          cover_image_url: string | null
-          video_url: string | null
-          warmup_duration_min: number | null
-          cooldown_duration_min: number | null
+          data: any
           created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
-          title: string
-          description?: string | null
-          program_id?: string | null
-          difficulty_level?: string | null
-          estimated_duration_min?: number | null
-          cover_image_url?: string | null
-          video_url?: string | null
-          warmup_duration_min?: number | null
-          cooldown_duration_min?: number | null
+          data?: any
           created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
-          title?: string
-          description?: string | null
-          program_id?: string | null
-          difficulty_level?: string | null
-          estimated_duration_min?: number | null
-          cover_image_url?: string | null
-          video_url?: string | null
-          warmup_duration_min?: number | null
-          cooldown_duration_min?: number | null
+          data?: any
           created_at?: string
+          updated_at?: string
+        }
+      }
+      global_timer: {
+        Row: {
+          id: string
+          time_left: number
+          phase: 'prep' | 'work' | 'rest' | 'complete'
+          is_active: boolean
+          work_time: number
+          rest_time: number
+          target_end_time: string | null
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          time_left?: number
+          phase?: 'prep' | 'work' | 'rest' | 'complete'
+          is_active?: boolean
+          work_time?: number
+          rest_time?: number
+          target_end_time?: string | null
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          time_left?: number
+          phase?: 'prep' | 'work' | 'rest' | 'complete'
+          is_active?: boolean
+          work_time?: number
+          rest_time?: number
+          target_end_time?: string | null
+          updated_at?: string
         }
       }
       workout_exercises: {

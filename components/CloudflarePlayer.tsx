@@ -30,10 +30,8 @@ export default function CloudflarePlayer({
         muted={muted}
         responsive={true}
         className="w-full h-full object-contain"
-        // Cloudflare Stream specific props for better mobile support
+        // Cloudflare Stream specific props
         primaryColor="#ffffff"
-        preload="auto"
-        playsInline={true}
       />
     </div>
   );

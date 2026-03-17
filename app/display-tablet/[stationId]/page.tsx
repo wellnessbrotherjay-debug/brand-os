@@ -28,10 +28,7 @@ const orbitron = Orbitron({
   variable: "--font-orbitron",
 });
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const supabaseClient =
-  supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
+import { supabase as supabaseClient } from "@/lib/supabaseClient";
 
 type TabletRouteParams = { stationId: string };
 
