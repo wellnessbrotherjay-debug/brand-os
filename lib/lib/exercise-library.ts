@@ -9,14 +9,18 @@ export type ExerciseMedia = {
 const PUBLIC_VIDEO_BASE = "/videos/public";
 
 const buildVideoPath = (filename: string) => {
-  // If we have local files, we'd use them. 
-  // For now, since user says they are on Cloudflare, and local files are missing, 
-  // we fallback to a known working Cloudflare ID for the demo if the filename looks like a local path.
   if (filename.endsWith('.MP4')) {
-    return "https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/5f547fa37147777b16708dfe1f9f71cc/manifest/video.m3u8";
+    return resolveVideoUrl("5f547fa37147777b16708dfe1f9f71cc");
   }
   return `${PUBLIC_VIDEO_BASE}/${encodeURIComponent(filename)}`;
 };
+
+export function resolveVideoUrl(idOrUrl: string): string {
+  if (!idOrUrl) return "";
+  if (idOrUrl.startsWith("http")) return idOrUrl;
+  // Append min_bitrate to encourage high quality on iPad/Safari
+  return `https://customer-625e9kfx1zh9uf3o.cloudflarestream.com/${idOrUrl}/manifest/video.m3u8?min_bitrate=1.5Mbps`;
+}
 
 export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
   // Dumbbells
@@ -204,11 +208,18 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     muscles: ["cardio", "upper body"],
     cues: ["Push/pull evenly", "Keep cadence high"],
   },
+  {
+    name: "Reverse grip Deadlift into row",
+    equipment: "barbell",
+    video: "6586fd790fec609fb2277c33258e3e9b",
+    muscles: ["back", "hamstrings", "glutes"],
+    cues: ["Keep back flat", "Pull barbell to belly button", "Reverse grip (palms up)"],
+  },
 ];
 
 export const EXERCISE_MEDIA = DEFAULT_EXERCISE_MEDIA;
 export const FALLBACK_EXERCISE_VIDEO =
-  DEFAULT_EXERCISE_MEDIA[0]?.video ?? "6384f51bc1425d5e98f1862776ffd019";
+  resolveVideoUrl("cea8e05486e40fd74f7f1d5574d37c7b");
 
 export function getMediaForExercise(exerciseName: string): ExerciseMedia | null {
   return DEFAULT_EXERCISE_MEDIA.find(

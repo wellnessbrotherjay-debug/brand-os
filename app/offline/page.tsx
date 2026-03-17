@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Offline | Hotel Fit Solutions",
+  title: "Offline | AVLR",
   description: "Offline fallback for the Hotel Fit PWA shell."
 };
 

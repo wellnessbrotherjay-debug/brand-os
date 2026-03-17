@@ -22,7 +22,7 @@ const PLACEHOLDER_SERVICES: Service[] = [
     description: "Private suite session with Hotel Fit coach and bespoke programming.",
     duration_minutes: 60,
     price_cents: 22000,
-    booking_url: "https://booking.hotelfit.com/pt",
+    booking_url: "https://booking.avlr.app/pt",
   },
   {
     id: "svc-spa",
@@ -30,7 +30,7 @@ const PLACEHOLDER_SERVICES: Service[] = [
     description: "Contrast therapy + guided breathwork curated by TS Suites spa team.",
     duration_minutes: 75,
     price_cents: 26000,
-    booking_url: "https://booking.hotelfit.com/thermal",
+    booking_url: "https://booking.avlr.app/thermal",
   },
 ];
 
@@ -92,7 +92,7 @@ export default function ServicesPage() {
                   </p>
                 </div>
                 <p className="mt-3 text-sm text-slate-300">
-                  {service.description ?? "Tailored service curated by Hotel Fit Solutions."}
+                  {service.description ?? "Tailored service curated by AVLR."}
                 </p>
                 {service.booking_url && (
                   <a

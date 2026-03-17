@@ -393,7 +393,9 @@ export const Identity: React.FC = () => {
     };
 
     const handleValuesUpdate = (value: string) => {
-        updateBrand(activeBrandId, { values: value });
+        if (activeBrandId) {
+            updateBrand(activeBrandId, { values: value });
+        }
     };
 
     return (
@@ -687,7 +689,7 @@ export const Identity: React.FC = () => {
                                 <div className="p-8 border border-black/5 bg-gray-50/50">
                                     <p className="text-lg leading-relaxed max-w-md">
                                         Design determines how your brand is perceived. Every curve, color, and font tells a story.
-                                        Make sure it's the one you want to tell.
+                                        Make sure it&apos;s the one you want to tell.
                                     </p>
                                     <p className="mt-4 opacity-50 text-xs uppercase tracking-widest">{identity.font_body}</p>
                                 </div>

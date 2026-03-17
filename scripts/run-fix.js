@@ -16,20 +16,46 @@ if (!url || !key) {
 
 const supabase = createClient(url, key);
 
+const { Pool } = require('pg');
+
+const connectionString = process.env.DATABASE_URL || process.env.DIRECT_URL;
+
+if (!connectionString) {
+  console.error('Missing DATABASE_URL or DIRECT_URL in .env.local');
+  process.exit(1);
+}
+
+const pool = new Pool({
+  connectionString,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
 async function runFix() {
+  console.log('Reading SQL file...');
   const sql = fs.readFileSync(path.resolve(__dirname, 'fix-schema.sql'), 'utf8');
   
-  // supabase-js doesn't have a direct 'query' or 'unsafe SQL' tool for DDL.
-  // We usually have to use a dedicated migration tool or an RPC if configured.
-  // However, we can try to use the 'rpc' method if 'exec_sql' exists, 
-  // or we can just try to perform the actions via the client if possible (but DDL isn't supported).
-  
-  // Since I can't run raw SQL via the client easily without an RPC, 
-  // I'll try to perform the table creation/check via the client if possible, 
-  // but for ALTER TABLE etc, I really need SQL access.
-  
-  console.log('Please run the SQL in scripts/fix-schema.sql in your Supabase SQL Editor.');
-  console.log('I will try to check if I can add columns via RPC if available.');
+  try {
+    console.log('Connecting to database and executing SQL...');
+    const client = await pool.connect();
+    try {
+      await client.query(sql);
+      console.log('✅ SQL executed successfully!');
+    } finally {
+      client.release();
+    }
+  } catch (err) {
+    console.error('❌ Error executing SQL:', err.message);
+    if (err.position) {
+      console.error('Error position:', err.position);
+      // Log some context around the error
+      const pos = parseInt(err.position);
+      console.error('Near:', sql.substring(Math.max(0, pos - 50), Math.min(sql.length, pos + 50)));
+    }
+  } finally {
+    await pool.end();
+  }
 }
 
 runFix();

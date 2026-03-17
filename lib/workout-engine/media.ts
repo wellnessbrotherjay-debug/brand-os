@@ -26,9 +26,10 @@ export function resolveExerciseMedia(
   const isLocalVideo = storedVideo?.startsWith("/videos/");
   const shouldPreferFallback =
     Boolean(fallbackVideo) && (!storedVideo || (isLocalVideo && storedVideo !== fallbackVideo));
-  const resolvedVideo = shouldPreferFallback
+  const { resolveVideoUrl } = require("@/lib/lib/exercise-library");
+  const resolvedVideo = resolveVideoUrl(shouldPreferFallback
     ? fallbackVideo
-    : storedVideo ?? fallbackVideo ?? FALLBACK_EXERCISE_VIDEO;
+    : storedVideo ?? fallbackVideo ?? FALLBACK_EXERCISE_VIDEO);
 
   return {
     name: exercise.name,

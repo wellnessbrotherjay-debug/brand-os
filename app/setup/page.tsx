@@ -89,6 +89,12 @@ export default function SetupPage() {
   const [numericFont, setNumericFont] = useState<FontKey>(
     previousSetup?.fonts?.numeric ?? DEFAULT_FONT_SETTINGS.numeric
   );
+  const [studioMode, setStudioMode] = useState<'studio-a' | 'studio-b'>(
+    (previousSetup?.mode as any) ?? 'studio-a'
+  );
+  const [exercisesPerStation, setExercisesPerStation] = useState<number>(
+    previousSetup?.exercisesPerStation ?? (studioMode === 'studio-b' ? 2 : 1)
+  );
 
   // Manual equipment setup state
   const [customEquipment, setCustomEquipment] = useState<string>("");
@@ -96,6 +102,29 @@ export default function SetupPage() {
   const [showManualSetup, setShowManualSetup] = useState(false);
   const [videoLoadingStatus, setVideoLoadingStatus] = useState<string>("");
   const [availableEquipment, setAvailableEquipment] = useState<EquipmentOption[]>(getAllEquipmentOptions());
+
+  useEffect(() => {
+    const nextSetup = storage.getSetup();
+    if (nextSetup) {
+      setStationCount(nextSetup.stations.length);
+      setStations(buildStationList(nextSetup.stations.length, nextSetup.stations));
+      setLogoData(nextSetup.logo ?? null);
+      setTheme(nextSetup.theme);
+      setWorkTime(nextSetup.workTime);
+      setRestTime(nextSetup.restTime);
+      setRounds(nextSetup.rounds);
+      setFacilityName(nextSetup.facilityName ?? "AVRL");
+      setQuote(nextSetup.quote ?? "");
+      setPrimaryColor(nextSetup.colors?.primary ?? defaultPalette.primary);
+      setSecondaryColor(nextSetup.colors?.secondary ?? defaultPalette.secondary);
+      setAccentColor(nextSetup.colors?.accent ?? defaultPalette.accent);
+      setHeadingFont(nextSetup.fonts?.heading ?? DEFAULT_FONT_SETTINGS.heading);
+      setBodyFont(nextSetup.fonts?.body ?? DEFAULT_FONT_SETTINGS.body);
+      setNumericFont(nextSetup.fonts?.numeric ?? DEFAULT_FONT_SETTINGS.numeric);
+      setStudioMode(nextSetup.mode);
+      setExercisesPerStation(nextSetup.exercisesPerStation ?? (nextSetup.mode === 'studio-b' ? 2 : 1));
+    }
+  }, [defaultPalette.accent, defaultPalette.primary, defaultPalette.secondary]);
 
   useEffect(() => {
     if (themeRef.current !== theme) {
@@ -111,6 +140,12 @@ export default function SetupPage() {
     const clamped = Math.min(Math.max(value, MIN_STATIONS), MAX_STATIONS);
     setStationCount(clamped);
     setStations((prev) => buildStationList(clamped, prev));
+  };
+
+  const handleModeChange = (mode: 'studio-a' | 'studio-b') => {
+    storage.setActiveStudioId(mode);
+    setStudioMode(mode);
+    setExercisesPerStation(mode === 'studio-b' ? 2 : 1);
   };
 
   const handleEquipmentChange = (id: number, equipment: EquipmentOption) => {
@@ -271,6 +306,8 @@ export default function SetupPage() {
         body: bodyFont,
         numeric: numericFont,
       },
+      mode: studioMode,
+      exercisesPerStation,
     };
 
     storage.saveSetup(payload);
@@ -293,19 +330,50 @@ export default function SetupPage() {
         onSubmit={handleSubmit}
         className="mx-auto flex w-full max-w-5xl flex-col gap-10 rounded-3xl border border-white/10 bg-black/60 p-10 shadow-[0_0_45px_rgba(0,175,255,0.18)] backdrop-blur-md"
       >
-        <header className="space-y-2 text-center">
-          <p className="heading-font text-xs uppercase tracking-[0.4em] text-sky-400/70">Hotel Fitness Builder</p>
-          <h1 className="heading-font text-4xl font-semibold text-slate-200">Setup Console</h1>
-          <p className="text-sm text-slate-400">
-            Configure stations, equipment, and branding before you launch a workout.
-          </p>
-          <Link
-            href="/setup/console"
-            className="text-sm font-semibold text-sky-300 underline-offset-4 transition hover:text-sky-100"
-          >
-            View Library Catalogs
-          </Link>
-        </header>
+          <header className="space-y-4 text-center">
+            <p className="heading-font text-xs uppercase tracking-[0.4em] text-sky-400/70">Hotel Fitness Builder</p>
+            <h1 className="heading-font text-4xl font-semibold text-slate-200">Setup Console</h1>
+            
+            {/* Studio Mode Selector */}
+            <div className="flex justify-center mt-6">
+              <div className="flex p-1 bg-black/40 border border-white/10 rounded-xl">
+                <button
+                  type="button"
+                  onClick={() => handleModeChange('studio-a')}
+                  className={`px-6 py-2 text-xs font-bold uppercase tracking-[0.2em] rounded-lg transition-all ${
+                    studioMode === 'studio-a' 
+                      ? 'bg-sky-500 text-white shadow-lg' 
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  Studio A
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleModeChange('studio-b')}
+                  className={`px-6 py-2 text-xs font-bold uppercase tracking-[0.2em] rounded-lg transition-all ${
+                    studioMode === 'studio-b' 
+                      ? 'bg-sky-500 text-white shadow-lg' 
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  Studio B
+                </button>
+              </div>
+            </div>
+
+            <p className="text-sm text-slate-400">
+              {studioMode === 'studio-a' 
+                ? 'Standard 4-set station rotation' 
+                : '5 Station split-screen circuit (2 exercises per station)'}
+            </p>
+            <Link
+              href="/setup/console"
+              className="text-sm font-semibold text-sky-300 underline-offset-4 transition hover:text-sky-100"
+            >
+              View Library Catalogs
+            </Link>
+          </header>
 
         <section className="grid gap-6 rounded-2xl border border-white/10 bg-black/30 p-6 shadow-[0_0_30px_rgba(0,175,255,0.18)] lg:grid-cols-2">
           <label className="flex flex-col gap-2 lg:col-span-2">
@@ -330,6 +398,23 @@ export default function SetupPage() {
               {Array.from({ length: MAX_STATIONS }, (_, index) => index + 1).map((count) => (
                 <option key={count} value={count}>
                   {count}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="flex flex-col gap-2">
+            <span className="heading-font text-xs uppercase tracking-[0.35em] text-sky-400">
+              Exercises Per Station
+            </span>
+            <select
+              className="rounded-lg border border-white/10 bg-black/70 px-4 py-3 text-sm focus:border-sky-400 focus:outline-none"
+              value={exercisesPerStation}
+              onChange={(event) => setExercisesPerStation(Number(event.target.value))}
+            >
+              {[1, 2, 3, 4].map((count) => (
+                <option key={count} value={count}>
+                  {count} {count === 1 ? 'Exercise' : 'Exercises'}
                 </option>
               ))}
             </select>

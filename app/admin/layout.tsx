@@ -15,14 +15,10 @@ type NavItem = {
 const NAV_ITEMS: NavItem[] = [
   { key: 'home', label: 'Admin Home', href: '/home', group: 'Admin', icon: '⌂' },
   { key: 'branding', label: 'Branding', href: '/admin/brand', group: 'Branding', icon: '🎨' },
-  { key: 'finance', label: 'Financial Suite', href: '/admin/finance', group: 'Financial Suite', icon: '📊' },
-  { key: 'crm', label: 'CRM & Guest', href: '/crm', group: 'CRM & Guest', icon: '💬' },
   { key: 'gym-setup', label: 'Gym / Studio Setup', href: '/admin/workouts', group: 'Gym / Studio', icon: '💪' },
-  { key: 'kitchen', label: 'Kitchen & Meals', href: '/kitchen/orders', group: 'Kitchen & Meals', icon: '🍽️' },
-  { key: 'pos', label: 'POS / Retail', href: '/pos', group: 'POS / Retail', icon: '🛒' },
   { key: 'retreats', label: 'Retreat Services & Add-ons', href: '/services', group: 'Retreats', icon: '🌴' },
-  { key: 'analytics', label: 'Analytics HQ', href: '/analytics', group: 'Analytics HQ', icon: '📈' },
 ];
+
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -58,7 +54,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               HF
             </div>
             <div>
-              <p className="text-[11px] uppercase tracking-[0.35em] text-cyan-200/80">HotelFit</p>
+              <p className="text-[11px] uppercase tracking-[0.35em] text-cyan-200/80">AVLR</p>
               <p className="font-semibold text-lg">Admin Suite</p>
             </div>
           </div>

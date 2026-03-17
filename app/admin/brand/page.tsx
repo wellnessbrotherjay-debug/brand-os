@@ -46,7 +46,7 @@ export default async function BrandHubPage() {
     <MainLayout title="Brand & Marketing Hub" subtitle="Admin">
       <div className="space-y-8">
         <p className="text-slate-200">
-          Strategy + finance stitched together for HotelFit. Deep-link into brand, finance, and CRM experiences without
+          Strategy + finance stitched together for AVLR. Deep-link into brand, finance, and CRM experiences without
           leaving the stack.
         </p>
 

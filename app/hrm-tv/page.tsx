@@ -39,7 +39,7 @@ function CircularProgress({
   percentage, 
   size = 160, 
   strokeWidth = 8, 
-  color = "#00BFFF" 
+  color = "#F1EDE5" 
 }: {
   percentage: number;
   size?: number;
@@ -96,7 +96,7 @@ function HeartRateGauge({ heartRate, maxHR = 200 }: { heartRate: number; maxHR?:
   if (percentage >= 90) color = "#EF4444";
   else if (percentage >= 80) color = "#F59E0B";
   else if (percentage >= 70) color = "#10B981";
-  else if (percentage >= 60) color = "#3B82F6";
+  else if (percentage >= 60) color = "#F1EDE5"; // Beige instead of Blue
 
   return (
     <div className="relative flex items-center justify-center">
@@ -140,7 +140,7 @@ function ParticipantCard({
     <div 
       className={`rounded-[24px] border border-white/10 bg-black/60 p-6 text-center shadow-[0_0_45px_rgba(0,0,0,0.4)] backdrop-blur-md transition-all duration-500 ${
         isLeader 
-          ? 'ring-2 ring-yellow-400/50 bg-gradient-to-br from-yellow-900/20 to-black/60' 
+          ? 'ring-2 ring-[#C8A871]/50 bg-gradient-to-br from-[#C8A871]/20 to-black/60' 
           : ''
       }`}
       style={{
@@ -154,7 +154,7 @@ function ParticipantCard({
         <div 
           className={`w-10 h-10 rounded-full flex items-center justify-center text-lg font-black ${
             isLeader 
-              ? 'bg-yellow-400 text-black' 
+              ? 'bg-[#C8A871] text-black' 
               : 'bg-white/10 text-white border border-white/20'
           }`}
           style={{
@@ -264,7 +264,8 @@ export default function HRMTVPage() {
 
 function HRMTVContent() {
   const searchParams = useSearchParams();
-  const location = searchParams.get('location') || 'Studio A';
+  const mode = searchParams?.get('mode');
+  const location = searchParams?.get('location') || (mode === 'studio-b' ? 'Studio B' : mode === 'studio-a' ? 'Studio A' : 'Studio A');
   
   const [setup, setSetup] = useState<WorkoutSetup | null>(null);
   const [session, setSession] = useState<WorkoutSession | null>(null);
@@ -272,10 +273,13 @@ function HRMTVContent() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const { activeVenue } = useVenueContext();
 
-  const brandColors = useMemo(
-    () => resolveBrandColors({ activeVenue, setup }),
-    [activeVenue, setup]
-  );
+  // Hardcode brand colors to Beige and White - NO BLUE, NO YELLOW
+  const brandColors = {
+    primary: "#FFFFFF",   // White
+    secondary: "#F1EDE5", // Beige
+    accent: "#F1EDE5",    // Beige
+  };
+
   const { primary: primaryBrand, secondary: secondaryBrand, accent: accentBrand } = brandColors;
 
   useEffect(() => {
@@ -343,12 +347,9 @@ function HRMTVContent() {
             />
           )}
           <div>
-            <h1 className="text-4xl font-bold" style={{ color: primaryBrand }}>
-              {setup.facilityName || "Fitness Center"}
+            <h1 className="text-5xl font-black md:text-7xl tracking-[0.2em] text-[#F1EDE5]" style={{ fontFamily: 'var(--font-orbitron)' }}>
+              AVRL
             </h1>
-            <p className="text-lg tracking-[0.15em] uppercase" style={{ color: hexToRgba('#6B7280', 0.8) }}>
-              Heart Rate Monitoring • {location}
-            </p>
           </div>
         </div>
 
@@ -433,7 +434,7 @@ function HRMTVContent() {
 
       {/* Footer */}
       <footer className="relative z-10 p-6 border-t border-white/10 text-center">
-        <div className="text-sm uppercase tracking-[0.25em]" style={{ color: hexToRgba('#6B7280', 0.8) }}>
+        <div className="text-sm uppercase tracking-[0.25em] text-white/50">
           Real-time heart rate monitoring • Updates every 2 seconds
         </div>
       </footer>

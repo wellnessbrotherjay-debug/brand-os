@@ -24,6 +24,8 @@ export interface WorkoutSetup {
   colors?: BrandPalette;
   quote?: string;
   fonts?: FontSettings;
+  mode: 'studio-a' | 'studio-b';
+  exercisesPerStation?: number;
 }
 
 export const DEFAULT_STATIONS: StationSetup[] = Array.from({ length: 6 }, (_, index) => ({
@@ -32,18 +34,20 @@ export const DEFAULT_STATIONS: StationSetup[] = Array.from({ length: 6 }, (_, in
 }));
 
 export const DEFAULT_SETUP: WorkoutSetup = {
-  facilityName: "Hotel Fit Solutionss",
+  facilityName: "AVRL",
   stations: DEFAULT_STATIONS,
-  logo: "https://r2.erweima.ai/img/compressed/378812c3f156687071e2170364d93026.png",
-  theme: "Gold",
+  logo: "/logos/avrl-logo.png", // Recommended local path
+  theme: "avrl",
   workTime: 45,
   restTime: 15,
   rounds: 1,
   colors: {
-    primary: "#0A84FF",
-    secondary: "#38D9A9",
-    accent: "#FFB703",
+    primary: "#121112", // Matte Black
+    secondary: "#C8A871", // Gold
+    accent: "#F1EDE5", // Cream
   },
+  mode: 'studio-a',
+  exercisesPerStation: 1,
 };
 
 export interface StationExercise {
@@ -53,11 +57,15 @@ export interface StationExercise {
   equipment?: string | null;
   muscles?: string[];
   cues?: string[];
+  part?: number; // For Studio B: index of exercise at this station (0 or 1)
 }
 
 export interface WorkoutPlan {
+  name?: string;
   goal: "Fat Loss" | "Strength" | "Endurance";
   exercises: StationExercise[];
+  studioMode?: 'studio-a' | 'studio-b';
+  scheduledDate?: string;
 }
 
 export interface VenueProfile {
@@ -80,11 +88,12 @@ export type VenueUpdatePayload = {
   colors?: BrandPalette;
 };
 
-export type SessionPhase = "prep" | "work" | "rest" | "complete";
+export type SessionPhase = "prep" | "work" | "rest" | "change" | "complete";
 
 export interface SessionState {
   stationId: number;
   round: number;
+  setNumber: number; // For Studio A: 1-4 sets per station
   phase: SessionPhase;
   remaining: number;
   updatedAt: number;
@@ -96,24 +105,37 @@ export const STORAGE_KEYS = {
   session: "workoutSessionState",
   venues: "workoutVenues",
   activeVenueId: "activeVenueId",
+  activeStudioId: "activeStudioId",
 } as const;
 
 function buildFallbackPlan(stations: StationSetup[] = DEFAULT_SETUP.stations): WorkoutPlan {
+  const activeStudio = getActiveStudioIdInternal();
   const safeStations = stations.length ? stations : DEFAULT_STATIONS;
-  const exercises = safeStations.map((station, index) => {
-    const exercise = EXERCISE_LIBRARY[index % EXERCISE_LIBRARY.length];
-    return {
-      stationId: station.id,
-      name: exercise.name,
-      video: exercise.video,
-      equipment: exercise.equipment,
-      muscles: exercise.muscles,
-      cues: exercise.cues,
-    };
+  const exercises: StationExercise[] = [];
+  
+  const setup = readScopedJSON<WorkoutSetup>(STORAGE_KEYS.setup);
+  const exerciseCount = setup?.exercisesPerStation ?? (activeStudio === 'studio-b' ? 2 : 1);
+
+  safeStations.forEach((station, index) => {
+    for (let i = 0; i < exerciseCount; i++) {
+      const exerciseIndex = (index * exerciseCount + i) % EXERCISE_LIBRARY.length;
+      const exercise = EXERCISE_LIBRARY[exerciseIndex];
+      exercises.push({
+        stationId: station.id,
+        name: exercise.name,
+        video: exercise.video,
+        equipment: exercise.equipment,
+        muscles: exercise.muscles,
+        cues: exercise.cues,
+        part: i,
+      });
+    }
   });
+
   return {
     goal: "Fat Loss",
     exercises,
+    studioMode: activeStudio as 'studio-a' | 'studio-b',
   };
 }
 
@@ -184,16 +206,35 @@ function emitVenueUpdate() {
   window.dispatchEvent(new Event(VENUES_UPDATED_EVENT));
 }
 
-function getScopedStorageKey(baseKey: string, venueId: string | null = getActiveVenueIdInternal()) {
-  if (!venueId) return baseKey;
-  return `${baseKey}::${venueId}`;
+function getScopedStorageKey(
+  baseKey: string,
+  venueId: string | null = getActiveVenueIdInternal(),
+  studioId: string | null = getActiveStudioIdInternal()
+) {
+  let key = baseKey;
+  if (venueId) key += `::${venueId}`;
+  if (studioId) key += `::${studioId}`;
+  return key;
 }
 
 function readScopedJSON<T>(baseKey: string): T | null {
-  const scopedKey = getScopedStorageKey(baseKey);
+  const activeVenue = getActiveVenueIdInternal();
+  const activeStudio = getActiveStudioIdInternal();
+  const scopedKey = getScopedStorageKey(baseKey, activeVenue, activeStudio);
   const scopedValue = readJSONKey<T>(scopedKey);
   if (scopedValue !== null) return scopedValue;
 
+  // Fallback 1: Venue-only namespace (migration from before studio namespacing)
+  if (activeStudio) {
+    const venueOnlyKey = getScopedStorageKey(baseKey, activeVenue, null);
+    const venueOnlyValue = readJSONKey<T>(venueOnlyKey);
+    if (venueOnlyValue !== null) {
+      writeJSONKey(scopedKey, venueOnlyValue);
+      return venueOnlyValue;
+    }
+  }
+
+  // Fallback 2: Global namespace (original legacy)
   if (scopedKey !== baseKey) {
     const legacyValue = readJSONKey<T>(baseKey);
     if (legacyValue !== null) {
@@ -282,6 +323,15 @@ function setActiveVenueIdInternal(id: string | null) {
   emitVenueUpdate();
 }
 
+function getActiveStudioIdInternal(): string | null {
+  return readValue(STORAGE_KEYS.activeStudioId) || 'studio-a';
+}
+
+function setActiveStudioIdInternal(id: string | null) {
+  writeValue(STORAGE_KEYS.activeStudioId, id);
+  emitVenueUpdate(); // Re-use venue update event to trigger broad refreshes
+}
+
 function getActiveVenueInternal(): VenueProfile | null {
   const venues = getStoredVenues();
   const activeId = getActiveVenueIdInternal();
@@ -321,12 +371,29 @@ export function getActiveVenue(): VenueProfile | null {
   return getActiveVenueInternal();
 }
 
+export function getActiveStudioId(): string {
+  return getActiveStudioIdInternal() || 'studio-a';
+}
+
+export function setActiveStudioId(id: string) {
+  setActiveStudioIdInternal(id);
+}
+
 export const storage = {
   getSetup(): WorkoutSetup | null {
     const stored = readScopedJSON<WorkoutSetup>(STORAGE_KEYS.setup);
     if (stored) return stored;
-    writeScopedJSON(STORAGE_KEYS.setup, DEFAULT_SETUP);
-    return DEFAULT_SETUP;
+    
+    // Create a mode-appropriate default setup
+    const activeStudio = getActiveStudioIdInternal() as 'studio-a' | 'studio-b';
+    const defaultForMode: WorkoutSetup = {
+      ...DEFAULT_SETUP,
+      mode: activeStudio || 'studio-a',
+      exercisesPerStation: activeStudio === 'studio-b' ? 2 : 1
+    };
+    
+    writeScopedJSON(STORAGE_KEYS.setup, defaultForMode);
+    return defaultForMode;
   },
   saveSetup(setup: WorkoutSetup) {
     writeScopedJSON(STORAGE_KEYS.setup, setup);
@@ -357,6 +424,7 @@ export const storage = {
     const initialState: SessionState = {
       stationId: 1,
       round: 1,
+      setNumber: 1,
       phase: "prep",
       remaining: 10, // 10 seconds prep time
       updatedAt: Date.now(),
@@ -398,6 +466,8 @@ export const storage = {
   getActiveVenueId,
   setActiveVenueId,
   getActiveVenue,
+  getActiveStudioId,
+  setActiveStudioId,
 };
 
 export function buildStationList(
@@ -430,6 +500,11 @@ const THEME_COLOR_MAP: Record<string, BrandPalette> = {
     primary: "#F4D03F",
     secondary: "#76D7C4",
     accent: "#FDFEFE",
+  },
+  avrl: {
+    primary: "#121112", // Matte Black
+    secondary: "#C8A871", // Gold
+    accent: "#F1EDE5", // Cream
   },
 };
 

@@ -41,7 +41,7 @@ export default function BrandingConsole() {
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
         <header className="space-y-3">
           <p className="text-xs uppercase tracking-[0.4em] text-emerald-300">Brand Console</p>
-          <h1 className="text-3xl font-semibold">HotelFit / GLVT Theme Builder</h1>
+          <h1 className="text-3xl font-semibold">AVLR / GLVT Theme Builder</h1>
           <p className="text-sm text-slate-400">
             Sync logo, colors, and media to Supabase so every welcome screen, workout display, and builder view stay
             perfectly on-brand.
@@ -117,46 +117,7 @@ export default function BrandingConsole() {
           </div>
         </section>
 
-        <section className="rounded-3xl border border-white/10 bg-slate-900/50 p-6">
-          <p className="text-xs uppercase tracking-[0.4em] text-amber-300">Live preview</p>
-          <motion.div
-            className="mt-4 rounded-[40px] border border-white/10 bg-cover bg-center p-6"
-            style={{ backgroundImage: `url(${draft.backgroundUrl})` }}
-            initial={{ opacity: 0.7 }}
-            animate={{ opacity: 1 }}
-          >
-            <div className="rounded-[32px] border border-white/20 bg-black/60 p-6" style={{ fontFamily: draft.font }}>
-              <div className="flex items-center gap-4">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={draft.logoUrl}
-                  alt="brand logo"
-                  className="h-14 w-14 rounded-full border border-white/20 bg-white/5 object-contain"
-                  onError={(event) => {
-                    (event.target as HTMLImageElement).style.opacity = "0.2";
-                  }}
-                />
-                <div>
-                  <p className="text-xs uppercase tracking-[0.35em] text-white/70">{draft.name}</p>
-                  <h2 className="text-2xl font-semibold" style={{ color: draft.accent }}>
-                    TV Welcome Preview
-                  </h2>
-                </div>
-              </div>
-              <div className="mt-5 grid gap-4 md:grid-cols-2">
-                {["Facilities", "Workouts", "Menu", "Services"].map((label) => (
-                  <div
-                    key={label}
-                    className="rounded-2xl border border-white/10 p-4 text-sm font-semibold"
-                    style={{ background: `linear-gradient(135deg, ${draft.primary}, ${draft.secondary})` }}
-                  >
-                    {label} →
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        </section>
+
       </div>
     </div>
   );

@@ -19,7 +19,7 @@ const LINKS = [
 
 export default function AdminHomePage() {
   return (
-    <MainLayout title="Admin Home" subtitle="HotelFit Admin">
+    <MainLayout title="Admin Home" subtitle="AVLR Admin">
       <div className="space-y-8">
         <NexusCard className="p-6 border-white/10 bg-black/30">
           <p className="text-sm text-slate-300">

@@ -7,11 +7,14 @@ import {
   VENUES_UPDATED_EVENT,
   DEFAULT_SETUP,
   type WorkoutSetup,
+  STORAGE_KEYS,
+  getActiveStudioId,
+  setActiveStudioId,
   type VenueProfile,
   type BrandPalette,
   type SessionPhase,
 } from "@/lib/workout-engine/storage";
-import { systemFeatures } from "@/lib/system-features";
+import { systemFeatures, getFeaturesForStudio } from "@/lib/system-features";
 import MainLayout from "@/components/MainLayout";
 import { NexusCard } from "@/components/ui/NexusCard";
 import { NexusButton } from "@/components/ui/NexusButton";
@@ -21,18 +24,20 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabaseClient =
   supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
 
-const PHASE_COLOR: Record<SessionPhase, string> = {
-  prep: "#00BFFF",
-  work: "#FF4D4D",
-  rest: "#32CD32",
-  complete: "#FFD100",
-};
-
 const PHASE_LABEL: Record<SessionPhase, string> = {
   prep: "Get Ready",
   work: "Work",
   rest: "Rest",
+  change: "Station Change",
   complete: "Complete",
+};
+
+const PHASE_COLOR: Record<SessionPhase, string> = {
+  prep: "#F1EDE5", // Beige
+  work: "#FF4D4D", // Red
+  rest: "#C8A871", // Gold
+  change: "#C8A871", // Gold
+  complete: "#C0C0C0", // Silver/Complete
 };
 
 const DEFAULT_BRAND_COLORS: BrandPalette = {
@@ -53,6 +58,7 @@ export default function HomePage() {
   const [setup, setSetup] = useState<WorkoutSetup | null>(null);
   const [venues, setVenues] = useState<VenueProfile[]>([]);
   const [activeVenue, setActiveVenue] = useState<VenueProfile | null>(null);
+  const [activeStudio, setActiveStudio] = useState<string>('studio-a');
   const [venueForm, setVenueForm] = useState<VenueFormState>({
     name: "",
     logo: "",
@@ -73,10 +79,12 @@ export default function HomePage() {
     setSetup(workoutSetup ?? DEFAULT_SETUP);
     setVenues(storage.getVenues());
     setActiveVenue(storage.getActiveVenue());
+    setActiveStudio(storage.getActiveStudioId());
 
     const handleVenueUpdate = () => {
       setVenues(storage.getVenues());
       setActiveVenue(storage.getActiveVenue());
+      setActiveStudio(storage.getActiveStudioId());
     };
 
     window.addEventListener(VENUES_UPDATED_EVENT, handleVenueUpdate);
@@ -85,12 +93,12 @@ export default function HomePage() {
     if (workoutSetup?.facilityName === "Sammy's Club" || workoutSetup?.facilityName === "MGM Hotel Gym") {
       storage.saveSetup({
         ...workoutSetup,
-        facilityName: "Hotel Fit Solutionss",
+        facilityName: "AVLR",
         logo: "https://r2.erweima.ai/img/compressed/378812c3f156687071e2170364d93026.png"
       });
       setSetup({
         ...workoutSetup,
-        facilityName: "Hotel Fit Solutionss",
+        facilityName: "AVLR",
         logo: "https://r2.erweima.ai/img/compressed/378812c3f156687071e2170364d93026.png"
       });
     }
@@ -257,11 +265,6 @@ export default function HomePage() {
 
   const mobileSuiteFeatures = [
     {
-      title: "Workout Remote",
-      description: "Guests run the entire station flow from their phone.",
-      href: "/mobile",
-    },
-    {
       title: "Room Service Sync",
       description: "Push fuel orders straight to the kitchen queue.",
       href: "/room/101/food",
@@ -272,6 +275,7 @@ export default function HomePage() {
       href: "/hrm-live",
     },
   ];
+
 
   const operationalSystems = [
     {
@@ -289,37 +293,8 @@ export default function HomePage() {
       description: "Live BLE heart-rate monitoring outside the TV wall",
       href: "/hrm-live",
     },
-    {
-      title: "POS & Retail",
-      description: "Stripe-powered checkout for merch, passes, or add-ons",
-      href: "/pos",
-    },
-    {
-      title: "CRM Drip Center",
-      description: "Customer follow-ups, automations, and reminders",
-      href: "/crm",
-    },
-    {
-      title: "Analytics HQ",
-      description: "High-level KPIs ready for Metabase/Looker handoff",
-      href: "/analytics",
-    },
-    {
-      title: "Financials & ROI",
-      description: "Model pricing, compare competitors, and simulate breakeven in seconds",
-      href: "/financials",
-    },
-    {
-      title: "Kitchen & Meals",
-      description: "Track meal orders and menu macros",
-      href: "/kitchen/orders",
-    },
-    {
-      title: "Mobile QA Sandbox",
-      description: "Device previews & tooling for the phone experience",
-      href: "/mobile",
-    },
   ];
+
 
   const displayColors = activeVenue?.colors ?? setup.colors ?? DEFAULT_SETUP.colors ?? DEFAULT_BRAND_COLORS;
   const displayName = activeVenue?.name ?? setup.facilityName ?? DEFAULT_SETUP.facilityName;
@@ -327,7 +302,7 @@ export default function HomePage() {
 
   return (
     <MainLayout
-      title={displayName || "Hotel Fit Solutionss"}
+      title={displayName || "AVLR"}
       subtitle="Complete Workout Management System"
       actions={
         <div className="flex flex-wrap items-center gap-2">
@@ -418,48 +393,6 @@ export default function HomePage() {
           </div>
         </NexusCard>
 
-        <NexusCard className="p-8 border-emerald-500/20 bg-gradient-to-br from-emerald-900/40 via-slate-900/50 to-slate-950/60">
-          <div className="grid gap-6 lg:grid-cols-[1fr,1fr]">
-            <div className="space-y-3">
-              <p className="text-xs uppercase tracking-[0.4em] text-emerald-300">New v3</p>
-              <h2 className="text-3xl font-semibold text-white">Financials & ROI Live Preview</h2>
-              <p className="text-sm text-slate-200">
-                Map costs, bookings, and competitor pricing in one screen before the Supabase sync finishes. Slide
-                scenarios, watch payback move, and seed your pricing decisions long before the database tables exist.
-              </p>
-              <ul className="mt-4 space-y-2 text-[13px] text-slate-300">
-                <li>• Scenario sliders for classes/day, memberships, day passes, and occupancy</li>
-                <li>• Live KPI badges for profitability, payback months, and annual ROI</li>
-                <li>• Competitor match actions that seed pricing from Body Factory, Paradise Bali, and Ocean Club</li>
-                <li>• Revenue/cost bar view so you see breakeven & profit at a glance</li>
-              </ul>
-              <NexusButton asChild size="md" variant="secondary">
-                <a href="/financials">Open ROI studio →</a>
-              </NexusButton>
-            </div>
-            <NexusCard className="p-6 text-sm text-slate-200 border-emerald-400/30 bg-black/40 shadow-[0_25px_80px_rgba(8,42,29,0.45)]">
-              <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Ready for hotel investors</p>
-              <p className="mt-3 text-sm text-white">
-                Jay can now simulate 3 classes/day, tweak drop-in pricing, and instantly see breakeven versus rent and
-                salaries. This mock view stays synced with the simulator even while Supabase roles are pending.
-              </p>
-              <div className="mt-6 grid gap-3 text-xs uppercase tracking-[0.3em] text-slate-400">
-                <div className="flex items-center justify-between">
-                  <span>Mock investment</span>
-                  <span>$153k</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Monthly profit</span>
-                  <span>$27k</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Payback</span>
-                  <span>5.8 months</span>
-                </div>
-              </div>
-            </NexusCard>
-          </div>
-        </NexusCard>
 
         <NexusCard className="p-6">
           <div className="grid gap-8 lg:grid-cols-2">
@@ -559,21 +492,52 @@ export default function HomePage() {
 
         <section className="space-y-6">
           <div className="text-center">
-            <h2 className="heading-font text-3xl uppercase tracking-[0.35em] text-slate-300">System Features</h2>
-            <p className="mt-3 text-sm text-slate-400">Launch any display or control surface directly from your dashboard.</p>
-          </div>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-5">
-            {features.map((feature) => (
-              <NexusCard
-                key={feature.href}
-                className="p-6 text-left bg-black/35 border-white/10 hover:border-sky-400/40 hover:shadow-[0_0_32px_rgba(0,175,255,0.25)] transition"
-              >
-                <a href={feature.href}>
-                  <div className="heading-font text-xs uppercase tracking-[0.35em] text-sky-300">{feature.title}</div>
-                  <p className="mt-4 text-sm text-slate-300">{feature.description}</p>
-                </a>
-              </NexusCard>
-            ))}
+            {/* Studio Selector */}
+            <div className="flex justify-center mb-12">
+              <div className="bg-[#121112]/50 backdrop-blur-md p-1 rounded-2xl border border-[#C8A871]/20 flex gap-2">
+                {['studio-a', 'studio-b'].map((sId) => (
+                  <button
+                    key={sId}
+                    onClick={() => {
+                      storage.setActiveStudioId(sId);
+                      setActiveStudio(sId);
+                    }}
+                    className={`px-8 py-3 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all ${
+                      activeStudio === sId
+                        ? 'bg-[#C8A871] text-[#121112] shadow-[0_0_20px_rgba(200,168,113,0.3)]'
+                        : 'text-white/40 hover:text-white/80'
+                    }`}
+                  >
+                    {sId === 'studio-a' ? 'Studio A' : 'Studio B'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <h2 className="text-3xl md:text-4xl font-black uppercase tracking-[0.4em] mb-4 text-[#F1EDE5] drop-shadow-2xl">
+              System Features
+            </h2>
+            <p className="text-[10px] md:text-sm uppercase tracking-[0.4em] text-[#C8A871] font-bold mb-16 opacity-80">
+              Launch any display or control surface directly from your dashboard.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+              {getFeaturesForStudio(activeStudio).map((feature) => (
+                <NexusCard
+                  key={feature.title}
+                  className="p-6 text-left bg-black/35 border-white/10 hover:border-[#C8A871]/40 hover:shadow-[0_0_32px_rgba(200,168,113,0.15)] transition cursor-pointer group"
+                >
+                  <a href={feature.href} className="block h-full">
+                    <div className="text-[10px] uppercase tracking-[0.35em] text-[#C8A871] font-black group-hover:text-white transition-colors">
+                      {feature.title}
+                    </div>
+                    <p className="mt-4 text-xs text-[#F1EDE5]/60 uppercase tracking-widest leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </a>
+                </NexusCard>
+              ))}
+            </div>
           </div>
         </section>
 

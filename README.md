@@ -1,11 +1,11 @@
-# Hotel Fit Solutions
+# AVLR
 
 Venue-aware wellness operating system built with Next.js 14 (App Router) and Supabase. The platform powers the in-room builder, displays (TV, tablet, timer, HRM) and now includes scaffolding for the Stage 1.5 upgrade roadmap (body scan dashboard, TDEE lab, CRM, POS, analytics, and PWA prep).
 
 ## Upgrade Roadmap
 
 ### 2025 v3.0 Overview
-We captured the full **Hotel Fit Solutions v3.0** product brief (modules, schema, APIs, roadmap, pricing) inside [`docs/hotel-fit-suite-v3.md`](docs/hotel-fit-suite-v3.md). Use that doc as the source of truth when implementing the new multi-tenant CMS, playlist engine, POS/inventory stack, and analytics upgrades.
+We captured the full **AVLR v3.0** product brief (modules, schema, APIs, roadmap, pricing) inside [`docs/hotel-fit-suite-v3.md`](docs/hotel-fit-suite-v3.md). Use that doc as the source of truth when implementing the new multi-tenant CMS, playlist engine, POS/inventory stack, and analytics upgrades.
 
 ### 2025 v2.0 Recap
 

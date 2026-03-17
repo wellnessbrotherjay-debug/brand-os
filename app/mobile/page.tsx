@@ -267,7 +267,7 @@ export default function MobilePage() {
       <main className="mx-auto flex max-w-xl flex-col gap-6 px-4 pb-24 pt-6">
         <header id="mobile-dashboard" className="rounded-3xl border border-white/5 bg-gradient-to-br from-slate-900 to-slate-800/60 p-5 shadow-[0_20px_45px_rgba(2,6,23,0.45)]">
           <p className="text-xs uppercase tracking-[0.35em] text-emerald-300">
-            {config.isHotel ? "HotelFit Mobile" : "Gym Control"}
+            {config.isHotel ? "AVLR Mobile" : "Gym Control"}
           </p>
           <div className="mt-4 flex items-center justify-between">
             <div>
@@ -508,7 +508,7 @@ export default function MobilePage() {
               <p className="text-xs uppercase tracking-[0.4em] text-sky-300">Events</p>
               <h2 className="text-lg font-semibold text-white">Stay in the loop</h2>
             </div>
-            <a href="mailto:concierge@hotelfit.com" className="text-xs uppercase tracking-[0.4em] text-emerald-300">
+            <a href="mailto:concierge@avlr.app" className="text-xs uppercase tracking-[0.4em] text-emerald-300">
               Subscribe
             </a>
           </div>

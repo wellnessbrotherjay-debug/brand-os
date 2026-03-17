@@ -28,7 +28,7 @@ const sanitizeValue = (value: unknown) => {
 
 const buildWorkbook = () => {
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = "HotelFit ROI Engine";
+  workbook.creator = "AVLR ROI Engine";
   workbook.created = new Date();
 
   const tables = getTables();
@@ -85,7 +85,7 @@ const respondWithWorkbook = async () => {
   return new NextResponse(buffer, {
     headers: {
       "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "Content-Disposition": 'attachment; filename="hotelfit-roi.xlsx"',
+      "Content-Disposition": 'attachment; filename="avlr-roi.xlsx"',
     },
   });
 };

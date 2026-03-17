@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
-import { useParams, useRouter } from "next/navigation";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Orbitron } from "next/font/google";
 import {
   storage,
@@ -14,13 +13,12 @@ import {
 } from "@/lib/workout-engine/storage";
 import {
   FALLBACK_EXERCISE_VIDEO,
-  resolveExerciseMedia,
 } from "@/lib/workout-engine/media";
-import { getExerciseInstructions } from "@/lib/workout-engine/instructions";
 import { useVenueContext } from "@/lib/venue-context";
 import { resolveBrandColors } from "@/lib/workout-engine/brand-colors";
 import { useExerciseMediaLibrary } from "@/lib/workout-engine/library-hooks";
 import CloudflarePlayer from "@/components/CloudflarePlayer";
+import { supabase as supabaseClient } from "@/lib/supabaseClient";
 
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -28,15 +26,14 @@ const orbitron = Orbitron({
   variable: "--font-orbitron",
 });
 
-import { supabase as supabaseClient } from "@/lib/supabaseClient";
-
 type TabletRouteParams = { stationId: string };
 
 const PHASE_COLOR: Record<SessionPhase, string> = {
-  prep: "#00BFFF", // Deep Sky Blue
+  prep: "#F1EDE5", // Beige
   work: "#FF4D4D", // Red
-  rest: "#32CD32", // Lime Green
-  complete: "#FFD100", // Gold
+  rest: "#C8A871", // Gold
+  change: "#C8A871", // Gold
+  complete: "#C8A871", // Gold
 };
 
 const FALLBACK_VIDEO = FALLBACK_EXERCISE_VIDEO;
@@ -52,8 +49,25 @@ function hexToRgba(hex: string, alpha: number) {
 }
 
 export default function TabletStationPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin w-12 h-12 border-2 border-blue-400 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <div className="text-xl font-bold">Loading...</div>
+        </div>
+      </div>
+    }>
+      <TabletStationContent />
+    </Suspense>
+  );
+}
+
+function TabletStationContent() {
   const router = useRouter();
   const params = useParams<TabletRouteParams>();
+  const searchParams = useSearchParams();
+  const modeOverride = searchParams?.get('mode') as 'studio-a' | 'studio-b' | null;
   const stationId = Number(params?.stationId ?? NaN);
 
   const [setup, setSetup] = useState<WorkoutSetup | null>(null);
@@ -68,11 +82,11 @@ export default function TabletStationPage() {
     workTime: 45,
     restTime: 15,
     targetEndTime: null as Date | null,
+    setNumber: 1,
   });
 
   const { activeVenue } = useVenueContext();
   const { library: exerciseLibrary } = useExerciseMediaLibrary();
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   const brandColors = useMemo(() => {
     return resolveBrandColors({ activeVenue, setup });
@@ -83,11 +97,57 @@ export default function TabletStationPage() {
   const [error, setError] = useState<string | null>(null);
   const [lastSynced, setLastSynced] = useState<string | null>(null);
   const [videoError, setVideoError] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [needsInteraction, setNeedsInteraction] = useState(true);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const doc = document as any;
+      const isFull = !!(doc.fullscreenElement || doc.webkitFullscreenElement);
+      setIsFullscreen(isFull);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+    };
+  }, []);
+
+  const toggleFullscreen = async () => {
+    try {
+      const doc = document as any;
+      const elem = document.documentElement as any;
+
+      if (!doc.fullscreenElement && !doc.webkitFullscreenElement) {
+        if (elem.requestFullscreen) {
+          await elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) {
+          await elem.webkitRequestFullscreen();
+        } else {
+          setIsFullscreen(true);
+        }
+      } else {
+        if (doc.exitFullscreen) {
+          await doc.exitFullscreen();
+        } else if (doc.webkitExitFullscreen) {
+          await doc.webkitExitFullscreen();
+        } else {
+          setIsFullscreen(false);
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen error:", err);
+      setIsFullscreen(!isFullscreen);
+    }
+  };
 
   // Editable Layout System
   const [isEditMode, setIsEditMode] = useState(false);
   const [layoutConfig, setLayoutConfig] = useState({
-    videoFit: 'cover' as 'cover' | 'contain' | 'fill',
+    videoFit: 'contain' as 'cover' | 'contain' | 'fill',
     videoScale: 100,
     videoPosition: { x: 50, y: 50 }, // percentage based
     blackBars: {
@@ -139,18 +199,10 @@ export default function TabletStationPage() {
     const unsubPlan = storage.subscribe(STORAGE_KEYS.plan, handlePlanUpdate);
     const unsubSession = storage.subscribe(STORAGE_KEYS.session, handleSessionUpdate);
 
-    const interval = window.setInterval(() => {
-      const latestSession = storage.getSession();
-      if (!latestSession) return;
-      setTimeLeft(latestSession.remaining);
-      setCurrentPhase(latestSession.phase);
-    }, 1000);
-
     return () => {
       unsubSetup?.();
       unsubPlan?.();
       unsubSession?.();
-      window.clearInterval(interval);
     };
   }, []);
 
@@ -158,14 +210,11 @@ export default function TabletStationPage() {
   useEffect(() => {
     if (!supabaseClient) return;
 
-    // Subscribe to global timer changes
     const channel = supabaseClient
       .channel('global-timer')
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'global_timer', filter: 'id=eq.active' }, (payload) => {
         const timerData = payload.new as any;
-        console.log('Timer update received:', timerData);
         if (timerData && timerData.target_end_time) {
-          // Calculate time left from target end time
           const targetEndTime = new Date(timerData.target_end_time).getTime();
           const now = Date.now();
           const calculatedTimeLeft = Math.max(0, Math.ceil((targetEndTime - now) / 1000));
@@ -173,211 +222,103 @@ export default function TabletStationPage() {
           setGlobalTimer({
             timeLeft: calculatedTimeLeft,
             phase: timerData.phase || 'work',
-            isActive: true, // Force active - tablet is master controller
+            isActive: true,
             workTime: timerData.work_time || 45,
             restTime: timerData.rest_time || 15,
             targetEndTime: new Date(timerData.target_end_time),
+            setNumber: timerData.set_number || 1,
           });
           setTimeLeft(calculatedTimeLeft);
           setCurrentPhase(timerData.phase || 'work');
-        } else if (timerData) {
-          // Fallback if target_end_time not available yet
-          setGlobalTimer({
-            timeLeft: timerData.time_left || 45,
-            phase: timerData.phase || 'work',
-            isActive: true, // Force active - tablet is master controller
-            workTime: timerData.work_time || 45,
-            restTime: timerData.rest_time || 15,
-            targetEndTime: null,
-          });
-          setTimeLeft(timerData.time_left || 45);
-          setCurrentPhase(timerData.phase || 'work');
         }
       })
-      .subscribe((status) => {
-        console.log('Subscription status:', status);
-      });
+      .subscribe();
 
-    // Fetch initial timer state and activate if needed
     const fetchTimer = async () => {
-      const { data, error } = await supabaseClient
+      const { data } = await supabaseClient
         .from('global_timer')
         .select('*')
         .eq('id', 'active')
         .single();
 
-      console.log('Fetched timer data:', data, 'Error:', error);
-
       if (data) {
-        // If timer exists but not active, activate it
-        if (!data.is_active) {
-          console.log('Activating timer...');
-          const targetEndTime = new Date(Date.now() + 45000); // 45 seconds from now
-          await supabaseClient
-            .from('global_timer')
-            .update({
-              is_active: true,
-              target_end_time: targetEndTime.toISOString(),
-              updated_at: new Date().toISOString(),
-            })
-            .eq('id', 'active');
-        }
-
-        // Calculate time left from target end time
+        let targetEndTime = (data as any).target_end_time ? new Date((data as any).target_end_time) : null;
         let calculatedTimeLeft = 45;
-        if (data.target_end_time) {
-          const targetEndTime = new Date(data.target_end_time).getTime();
-          const now = Date.now();
-          calculatedTimeLeft = Math.max(0, Math.ceil((targetEndTime - now) / 1000));
-        } else {
-          // Set target end time if missing
-          calculatedTimeLeft = data.time_left || 45;
-          const targetEndTime = new Date(Date.now() + calculatedTimeLeft * 1000);
-          await supabaseClient
-            .from('global_timer')
-            .update({ target_end_time: targetEndTime.toISOString() })
-            .eq('id', 'active');
+        const now = Date.now();
+
+        if (targetEndTime && targetEndTime.getTime() > now) {
+          calculatedTimeLeft = Math.max(0, Math.ceil((targetEndTime.getTime() - now) / 1000));
         }
 
         setGlobalTimer({
           timeLeft: calculatedTimeLeft,
-          phase: data.phase || 'work',
+          phase: (data as any).phase || 'work',
           isActive: true,
-          workTime: data.work_time || 45,
-          restTime: data.rest_time || 15,
-          targetEndTime: data.target_end_time ? new Date(data.target_end_time) : null,
+          workTime: (data as any).work_time || 45,
+          restTime: (data as any).rest_time || 15,
+          targetEndTime: targetEndTime,
+          setNumber: (data as any).set_number || 1,
         });
         setTimeLeft(calculatedTimeLeft);
-        setCurrentPhase(data.phase || 'work');
-      } else if (!error) {
-        // Timer doesn't exist, create it
-        console.log('Creating new timer...');
-        const targetEndTime = new Date(Date.now() + 45000); // 45 seconds from now
-        const { data: newData } = await supabaseClient
-          .from('global_timer')
-          .insert({
-            id: 'active',
-            time_left: 45,
-            phase: 'work',
-            is_active: true,
-            work_time: 45,
-            rest_time: 15,
-            target_end_time: targetEndTime.toISOString(),
-          })
-          .select()
-          .single();
-
-        if (newData) {
-          setGlobalTimer({
-            timeLeft: 45,
-            phase: 'work',
-            isActive: true,
-            workTime: 45,
-            restTime: 15,
-            targetEndTime: targetEndTime,
-          });
-          setTimeLeft(45);
-          setCurrentPhase('work');
-        }
+        setCurrentPhase((data as any).phase || 'work');
       }
     };
 
     fetchTimer();
 
-    // Local countdown that calculates from target time (MASTER - controls phase switching)
     const localInterval = setInterval(() => {
       setGlobalTimer(prev => {
         if (!prev.isActive || !prev.targetEndTime) return prev;
-
-        // Calculate time left from target end time - this eliminates sync drift!
-        const targetEndTime = prev.targetEndTime.getTime();
         const now = Date.now();
-        let calculatedTimeLeft = Math.max(0, Math.ceil((targetEndTime - now) / 1000));
-
-        // Prevent showing 0 if timer should be active and time > 0
-        if (calculatedTimeLeft === 0 && (targetEndTime - now) > 1000) {
-          calculatedTimeLeft = prev.timeLeft || 1;
-        }
-
+        const diff = prev.targetEndTime.getTime() - now;
+        let calculatedTimeLeft = Math.max(0, Math.ceil(diff / 1000));
+        
         setTimeLeft(calculatedTimeLeft);
-
-        // Detect when we've reached the end of current phase
-        if (calculatedTimeLeft <= 0 && (targetEndTime - now) <= 1000) {
-          // Timer reached 0, switch phases automatically
-          const nextPhase = prev.phase === 'work' ? 'rest' : 'work';
-          const nextTime = nextPhase === 'work' ? prev.workTime : prev.restTime;
-          const newTargetEndTime = new Date(Date.now() + nextTime * 1000);
-
-          console.log('🚨 TABLET Phase switch:', prev.phase, '->', nextPhase, 'Time:', nextTime, 'Target:', newTargetEndTime.toISOString());
-
-          // Update Supabase with new phase and target time - all other devices will follow
-          supabaseClient
-            .from('global_timer')
-            .update({
-              phase: nextPhase,
-              target_end_time: newTargetEndTime.toISOString(),
-              time_left: nextTime,
-              updated_at: new Date().toISOString(),
-            })
-            .eq('id', 'active')
-            .then(({ error }) => {
-              if (error) {
-                console.error('❌ TABLET Failed to update Supabase:', error);
-              } else {
-                console.log('✅ TABLET Successfully updated Supabase - other displays should switch now');
-              }
-            });
-
-          // Update local state immediately for smooth UI
-          setTimeLeft(nextTime);
-          setCurrentPhase(nextPhase);
-
-          return {
-            ...prev,
-            timeLeft: nextTime,
-            phase: nextPhase,
-            targetEndTime: newTargetEndTime,
-          };
-        }
-
-        return {
-          ...prev,
-          timeLeft: calculatedTimeLeft,
-        };
+        setCurrentPhase(prev.phase);
+        return { ...prev, timeLeft: calculatedTimeLeft };
       });
-    }, 100);
+    }, 200);
 
     return () => {
       if (channel) supabaseClient.removeChannel(channel);
       clearInterval(localInterval);
     };
-  }, [supabaseClient]);
+  }, []);
 
   useEffect(() => {
     if (!supabaseClient) return;
-
     let mounted = true;
 
     const fetchLatestPlan = async () => {
       try {
-        const { data, error: fetchError } = await supabaseClient
-          .from("workouts")
+        const today = new Date().toISOString().split('T')[0];
+        const { data: scheduledData } = await (supabaseClient
+          .from("workouts") as any)
+          .select("data")
+          .eq("id", today)
+          .single();
+
+        if (scheduledData?.data && mounted) {
+          storage.savePlan(scheduledData.data);
+          setPlan(scheduledData.data);
+          setLastSynced(new Date().toLocaleString());
+          setError(null);
+          return;
+        }
+
+        const { data: activeData } = await (supabaseClient
+          .from("workouts") as any)
           .select("data")
           .eq("id", "active")
           .single();
-        if (fetchError) {
-          console.error("Failed to fetch workout plan", fetchError);
-          if (mounted) setError("Unable to fetch latest plan from Supabase.");
-          return;
-        }
-        if (data?.data && mounted) {
-          storage.savePlan(data.data);
-          setPlan(data.data);
+
+        if (activeData?.data && mounted) {
+          storage.savePlan(activeData.data);
+          setPlan(activeData.data);
           setLastSynced(new Date().toLocaleString());
           setError(null);
         }
       } catch (err) {
-        console.error("Unexpected Supabase error", err);
         if (mounted) setError("Unexpected Supabase error. Using local plan.");
       }
     };
@@ -402,443 +343,213 @@ export default function TabletStationPage() {
     };
   }, []);
 
-  const currentExercise = useMemo(() => {
-    if (!plan?.exercises?.length) return null;
-    return plan.exercises.find((exercise) => exercise.stationId === stationId) ?? null;
+  const currentExercises = useMemo(() => {
+    if (!plan?.exercises?.length) return [];
+    return plan.exercises
+      .filter((exercise) => Number(exercise.stationId) === Number(stationId))
+      .sort((a, b) => (a.part || 0) - (b.part || 0));
   }, [plan, stationId]);
 
-  const exerciseName =
-    currentExercise?.name ?? (plan ? `No Exercise Assigned (Station ${stationId})` : "No Plan Loaded");
-  const resolvedMedia = useMemo(
-    () => resolveExerciseMedia(currentExercise, { library: exerciseLibrary }),
-    [currentExercise, exerciseLibrary]
-  );
+  const studioMode = modeOverride || plan?.studioMode || setup?.mode || 'studio-a';
 
-  const videoSrc = resolvedMedia?.video || FALLBACK_VIDEO;
+  const exerciseNames = useMemo(() => {
+    if (currentExercises.length === 0) return plan ? `No Exercise Assigned (Station ${stationId})` : "No Plan Loaded";
+    return currentExercises.map(ex => ex.name).join(" + ");
+  }, [currentExercises, plan, stationId]);
+
+  const resolvedVideoIds = useMemo(() => {
+    return currentExercises.map(ex => ex.video || "cea8e05486e40fd74f7f1d5574d37c7b");
+  }, [currentExercises]);
+
+  const videoId1 = resolvedVideoIds[0];
+  const videoId2 = resolvedVideoIds[1];
 
   useEffect(() => {
     if (!setup) {
       setError("Setup missing. Please configure your stations first.");
     } else if (!plan) {
       setError("No workout plan found. Use the builder to assign exercises.");
-    } else if (!currentExercise) {
+    } else if (currentExercises.length === 0) {
       setError(`No exercise assigned to Station ${stationId}.`);
     } else {
       setError(null);
     }
-  }, [setup, plan, currentExercise, stationId]);
+  }, [setup, plan, currentExercises, stationId]);
 
-  const facilityName = setup?.facilityName || "HOTEL FITNESS";
-
-  // Display global timer if active, otherwise fall back to session timer
   const displayTime = globalTimer.isActive ? globalTimer.timeLeft : timeLeft;
   const displayPhase = globalTimer.isActive ? globalTimer.phase : currentPhase;
   const displayPhaseColor = PHASE_COLOR[displayPhase];
 
-  // Control video playback based on timer phase
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    // iOS video loading fix
-    const loadVideo = () => {
-      if (video.readyState < 1) {
-        try {
-          video.load();
-        } catch (err) {
-          console.log('Video load failed:', err);
-        }
-      }
-    };
-
-    if (globalTimer.isActive) {
-      if (globalTimer.phase === 'work') {
-        // Play video during work phase
-        loadVideo();
-        video.play().catch((err: Error) => {
-          console.log('Video autoplay failed:', err);
-          // iOS autoplay failed - try with user interaction hint
-          if (err.name === 'NotAllowedError') {
-            console.log('iOS autoplay blocked - waiting for user interaction');
-          }
-        });
-      } else if (globalTimer.phase === 'rest') {
-        // Pause video during rest phase
-        video.pause();
-      }
-    }
-  }, [globalTimer.isActive, globalTimer.phase]);
-
   return (
     <main
-      className={`${orbitron.variable} ${orbitron.className} relative h-screen w-screen overflow-hidden`}
+      className={`${orbitron.variable} ${orbitron.className} relative h-screen w-screen overflow-hidden bg-black text-white`}
     >
-      {/* FULLSCREEN VIDEO BACKGROUND */}
-      <div className="absolute inset-0 bg-black">
-        {videoSrc.startsWith('http') || videoSrc.startsWith('/') ? (
-          <video
-            ref={videoRef}
-            src={videoSrc}
-            autoPlay
-            loop
-            muted
-            playsInline
-            // iOS-specific attributes for better streaming
-            webkit-playsinline="true"
-            x-webkit-airplay="allow"
-            x5-video-player-type="h5"
-            x5-video-player-fullscreen="false"
-            // Preload for faster startup
-            preload="auto"
-            // Poster for fallback
-            poster={videoSrc.includes('cloudflare') ? undefined : videoSrc.replace(/\.(mp4|webm|mov)$/i, '.jpg')}
-            className="absolute inset-0 w-full h-full transition-all duration-200"
+      <div className={`absolute inset-0 bg-black flex ${studioMode === 'studio-b' ? 'flex-row' : ''}`}>
+        <div className={`relative ${studioMode === 'studio-b' ? 'w-1/2 h-full border-r border-white/20' : 'h-full w-full'}`}>
+          <CloudflarePlayer
+            key={videoId1}
+            videoId={videoId1}
+            playing={displayPhase === 'work' || displayPhase === 'prep'}
+            loop={true}
+            muted={true}
+            controls={false}
             style={{
               objectFit: layoutConfig.videoFit,
               transform: `scale(${layoutConfig.videoScale / 100}) translate(${(layoutConfig.videoPosition.x - 50) * -0.5}%, ${(layoutConfig.videoPosition.y - 50) * -0.5}%)`,
               transformOrigin: 'center center',
             }}
-            onLoadedMetadata={() => {
-              console.log('✅ Video loaded successfully');
-            }}
-            onError={(e) => {
-              console.error('❌ Video error:', e);
-              setVideoError(`Video load failed: ${videoSrc}`);
-            }}
-            onCanPlay={() => {
-              console.log('✅ Video can play');
-            }}
           />
-        ) : (
-          <CloudflarePlayer
-            videoId={videoSrc}
-            autoPlay={true}
-            controls={false}
-            className="absolute inset-0 w-full h-full"
-          />
+          {studioMode === 'studio-b' && (
+            <div className="absolute top-2 left-2 z-10 bg-black/40 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#C8A871]">Exercise 1</p>
+              <p className="text-xs font-bold text-white truncate max-w-[150px]">{currentExercises[0]?.name}</p>
+            </div>
+          )}
+        </div>
+        {studioMode === 'studio-b' && (
+          <div className="relative w-1/2 h-full">
+            <CloudflarePlayer
+              key={videoId2}
+              videoId={videoId2}
+              playing={displayPhase === 'work' || displayPhase === 'prep'}
+              loop={true}
+              muted={true}
+              controls={false}
+              style={{
+                objectFit: layoutConfig.videoFit,
+                transform: `scale(${layoutConfig.videoScale / 100}) translate(${(layoutConfig.videoPosition.x - 50) * -0.5}%, ${(layoutConfig.videoPosition.y - 50) * -0.5}%)`,
+                transformOrigin: 'center center',
+              }}
+            />
+            <div className="absolute top-2 left-2 z-10 bg-black/40 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#C8A871]">Exercise 2</p>
+              <p className="text-xs font-bold text-white truncate max-w-[150px]">{currentExercises[1]?.name}</p>
+            </div>
+          </div>
         )}
       </div>
 
-      {/* Dark Overlay for readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
+      <div className="absolute top-0 left-0 right-0 h-32 bg-[#F1EDE5] z-30 flex items-center justify-between px-10 shadow-lg">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl font-black uppercase tracking-[0.2em] text-[#F1EDE5]">AVRL</h1>
+          </div>
+          <p className="text-[10px] uppercase tracking-[0.4em] font-bold text-[#121112]">STATION {stationId}</p>
+        </div>
 
-      {/* Optional Black Bars for Design */}
-      {layoutConfig.blackBars.top > 0 && (
-        <div className="absolute top-0 left-0 right-0 bg-black z-20" style={{ height: `${layoutConfig.blackBars.top}%` }} />
-      )}
-      {layoutConfig.blackBars.bottom > 0 && (
-        <div className="absolute bottom-0 left-0 right-0 bg-black z-20" style={{ height: `${layoutConfig.blackBars.bottom}%` }} />
-      )}
-      {layoutConfig.blackBars.left > 0 && (
-        <div className="absolute left-0 top-0 bottom-0 bg-black z-20" style={{ width: `${layoutConfig.blackBars.left}%` }} />
-      )}
-      {layoutConfig.blackBars.right > 0 && (
-        <div className="absolute right-0 top-0 bottom-0 bg-black z-20" style={{ width: `${layoutConfig.blackBars.right}%` }} />
-      )}
+        <div className="text-center w-full max-w-xl">
+          <h2 className={`${studioMode === 'studio-b' ? 'text-xl' : 'text-3xl md:text-5xl'} font-black uppercase tracking-tight text-[#121112] leading-none italic`}>
+            {studioMode === 'studio-b' ? 'Studio B Circuit' : exerciseNames}
+          </h2>
+        </div>
 
-      {/* Subtle Progress Bar at the very top */}
-      <div className="absolute top-0 left-0 w-full h-1.5 bg-white/5 z-50">
+        <div className="flex flex-col items-end gap-1">
+          <div className="flex items-center gap-3 bg-white/50 backdrop-blur-md rounded-full px-4 py-2 border border-[#C8A871]/30">
+            <div
+              className="w-3 h-3 rounded-full animate-pulse shadow-[0_0_8px_currentColor]"
+              style={{ backgroundColor: displayPhaseColor === PHASE_COLOR.work ? "#C8A871" : displayPhaseColor, color: displayPhaseColor === PHASE_COLOR.work ? "#C8A871" : displayPhaseColor }}
+            />
+            <span className="text-2xl font-black tabular-nums tracking-tighter text-[#121112]">
+              {displayTime}<span className="text-[10px] ml-0.5 opacity-60 italic">s</span>
+            </span>
+          </div>
+          <p className="text-[9px] uppercase tracking-[0.5em] font-black mr-2 text-[#C8A871]">
+            {displayPhase === 'change' ? 'STATION CHANGE' : displayPhase} {displayPhase !== 'change' && displayPhase !== 'prep' && displayPhase !== 'complete' ? `(SET ${globalTimer.setNumber}/4)` : ''}
+          </p>
+        </div>
+      </div>
+
+      <div className="absolute top-32 left-0 right-0 h-24 bg-gradient-to-b from-[#F1EDE5]/40 to-transparent pointer-events-none z-20" />
+
+      <div className="absolute top-[128px] left-0 w-full h-1 bg-[#121112]/10 z-50">
         <div
-          className="h-full transition-all duration-1000 ease-linear shadow-[0_0_10px_rgba(255,255,255,0.3)]"
+          className="h-full transition-all duration-1000 ease-linear"
           style={{
-            backgroundColor: displayPhaseColor,
+            backgroundColor: displayPhaseColor === PHASE_COLOR.work ? "#C8A871" : displayPhaseColor,
             width: `${Math.min(100, (displayTime / Math.max(1, (displayPhase === 'work' ? (globalTimer.workTime || setup?.workTime) : (globalTimer.restTime || setup?.restTime)) ?? 45)) * 100)}%`
           }}
         />
       </div>
 
-      {/* Floating UI Overlay */}
-      <div className="relative z-10 h-full flex flex-col justify-between py-8 px-6">
+      <div className="absolute bottom-10 left-10 z-20">
+        <p className="text-[11px] uppercase tracking-[0.8em] font-black text-white/80 drop-shadow-md">AVRL</p>
+      </div>
 
-        {/* Top Bar */}
-        <div className="flex items-start justify-between">
-          {/* Station - Top Left */}
-          <div className="flex items-center gap-3">
-            <h1 className="text-xl font-black uppercase tracking-[0.15em]" style={{ color: primaryBrand }}>
-              STATION {stationId}
-            </h1>
-            <div
-              className="h-[1px] w-16 opacity-30"
-              style={{ backgroundColor: primaryBrand }}
-            />
+      {/* Interaction Overlay to 'unlock' autoplay */}
+      {needsInteraction && (
+        <div 
+          className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer px-6 text-center"
+          onClick={() => {
+            setNeedsInteraction(false);
+            // Also trigger fullscreen as it's a good time to do it
+            toggleFullscreen();
+          }}
+        >
+          <div className="w-24 h-24 rounded-full bg-[#C8A871] flex items-center justify-center mb-6 shadow-[0_0_50px_rgba(200,168,113,0.4)] animate-pulse">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
           </div>
-
-          {/* Exercise Name - Top Center */}
-          <div className="absolute left-1/2 top-8 -translate-x-1/2 text-center">
-            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white drop-shadow-[0_0_25px_rgba(255,255,255,0.4)] leading-none">
-              {exerciseName}
-            </h2>
+          <h2 className="text-4xl font-black uppercase tracking-[0.2em] text-white mb-2">Ready to Train?</h2>
+          <p className="text-[#C8A871] uppercase tracking-[0.4em] font-bold text-xs mb-8 opacity-80">Tap anywhere to start workout</p>
+          <div className="px-8 py-4 rounded-full border border-white/20 bg-white/5 uppercase tracking-[0.2em] font-black text-xs text-white/60">
+            Unlocks Video & Fullscreen
           </div>
         </div>
-      </div>
-
-      {/* Logo - Bottom Center */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
-        <p className="text-[10px] uppercase tracking-[0.6em] font-bold opacity-70">
-          {facilityName}
-        </p>
-      </div>
-
-      {/* Mini Timer - Top Right */}
-      <div className="fixed top-6 right-6 z-40">
-        <div className="flex items-center gap-2 bg-black/60 backdrop-blur-xl rounded-full px-3 py-1.5 border border-white/20 shadow-2xl">
-          <div
-            className="w-2 h-2 rounded-full animate-pulse"
-            style={{ backgroundColor: displayPhaseColor }}
-          />
-          <span className="text-sm font-bold tabular-nums tracking-tight" style={{ color: displayPhaseColor }}>
-            {displayTime}s
-          </span>
-        </div>
-      </div>
+      )}
 
       {error && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-2xl bg-red-900/90 backdrop-blur-md border border-red-500/50 text-xs uppercase tracking-widest text-white shadow-2xl">
-          {error}
-        </div>
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-2xl bg-red-900/90 backdrop-blur-md border border-red-500/50 text-xs uppercase tracking-widest text-white shadow-2xl">{error}</div>
       )}
 
       {videoError && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-2xl bg-orange-900/90 backdrop-blur-md border border-orange-500/50 text-xs uppercase tracking-widest text-white shadow-2xl max-w-md text-center">
-          Video Error: {videoError}
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-2xl bg-orange-900/90 backdrop-blur-md border border-orange-500/50 text-xs uppercase tracking-widest text-white shadow-2xl max-w-md text-center">{videoError}</div>
+      )}
+
+      {!showDebug && (
+        <div className="fixed bottom-6 right-6 z-40 flex flex-col gap-4">
+          <button onClick={toggleFullscreen} className="w-12 h-12 rounded-full flex items-center justify-center transition-all bg-black/50 text-white border border-white/20 hover:bg-white/20">
+            {isFullscreen ? '⤓' : '⤢'}
+          </button>
+          <button
+            onClick={() => !layoutConfig.locked && setIsEditMode(!isEditMode)}
+            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${isEditMode ? 'bg-white text-black shadow-[0_0_30px_rgba(255,255,255,0.5)]' : 'bg-black/50 text-white border border-white/20 hover:bg-white/20'} ${layoutConfig.locked ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            {isEditMode ? '✓' : '⚙'}
+          </button>
         </div>
       )}
 
-      {/* Edit Mode Toggle (Bottom Right) */}
-      {!showDebug && (
-        <>
-          <div
-            className="fixed bottom-6 right-6 z-40 cursor-pointer group"
-            onClick={() => !layoutConfig.locked && setIsEditMode(!isEditMode)}
-          >
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
-              isEditMode
-                ? 'bg-white text-black shadow-[0_0_30px_rgba(255,255,255,0.5)]'
-                : 'bg-black/50 text-white border border-white/20 group-hover:bg-white/20'
-            } ${layoutConfig.locked ? 'opacity-50 cursor-not-allowed' : ''}`}>
-              {isEditMode ? '✓' : '⚙'}
-            </div>
-          </div>
+      <div className="absolute top-0 right-0 w-20 h-20 z-50 cursor-pointer" onClick={() => setShowDebug(true)} />
 
-          {/* Debug Trigger (Transparent top right) */}
-          <div
-            className="absolute top-0 right-0 w-20 h-20 z-50 cursor-pointer"
-            onClick={() => setShowDebug(true)}
-          />
-        </>
-      )}
-
-      {showDebug && (
+      {showDebug && !isFullscreen && (
         <div className="fixed top-20 right-6 z-50 bg-black/99 text-white border border-white/20 rounded-2xl shadow-2xl p-6 text-[10px] font-mono max-w-xs backdrop-blur-xl">
-          <div className="flex justify-between items-center mb-4 border-b border-white/10 pb-2">
-            <strong>SYSTEM DEBUG</strong>
-            <button onClick={() => setShowDebug(false)}>✕</button>
-          </div>
+          <div className="flex justify-between items-center mb-4 border-b border-white/10 pb-2"><strong>SYSTEM DEBUG</strong><button onClick={() => setShowDebug(false)}>✕</button></div>
           <div className="space-y-1 opacity-80">
             <div>SYNC: {lastSynced || "WAITING"}</div>
             <div>STATION: {stationId}</div>
-            <div>PHASE: {currentPhase}</div>
-            <div>TIME: {timeLeft}s</div>
-            <div className="truncate">PLAN: {JSON.stringify(plan)}</div>
+            <div>PHASE: {displayPhase}</div>
+            <div>TIME: {displayTime}s</div>
           </div>
         </div>
       )}
 
-      {/* Edit Mode Controls Panel */}
-      {isEditMode && (
+      {isEditMode && !isFullscreen && (
         <div className="fixed top-20 left-6 z-50 bg-black/95 text-white border border-white/20 rounded-2xl shadow-2xl p-6 text-xs backdrop-blur-xl max-w-sm">
-          <div className="flex justify-between items-center mb-4 border-b border-white/10 pb-2">
-            <strong className="text-sm">LAYOUT EDITOR</strong>
-            <button
-              onClick={() => setIsEditMode(false)}
-              className="text-white/60 hover:text-white"
-            >
-              ✕
-            </button>
-          </div>
-
+          <strong className="text-sm block mb-4 border-b border-white/10 pb-2">LAYOUT EDITOR</strong>
           <div className="space-y-4">
-            {/* Video Fit Mode */}
             <div>
-              <label className="block text-[10px] uppercase tracking-wider opacity-60 mb-2">
-                Video Fit Mode
-              </label>
+              <label className="block text-[10px] uppercase tracking-wider opacity-60 mb-2">Video Fit Mode</label>
               <div className="grid grid-cols-3 gap-2">
                 {(['cover', 'contain', 'fill'] as const).map((mode) => (
                   <button
                     key={mode}
                     onClick={() => !layoutConfig.locked && setLayoutConfig(prev => ({ ...prev, videoFit: mode }))}
-                    className={`px-3 py-2 rounded-lg text-[10px] uppercase tracking-wide transition-all ${
-                      layoutConfig.videoFit === mode
-                        ? 'bg-white text-black shadow-lg'
-                        : 'bg-white/10 text-white/60 hover:bg-white/20'
-                    } ${layoutConfig.locked ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`px-3 py-2 rounded-lg text-[10px] uppercase tracking-wide transition-all ${layoutConfig.videoFit === mode ? 'bg-white text-black' : 'bg-white/10 text-white/60 hover:bg-white/20'}`}
                   >
                     {mode}
                   </button>
                 ))}
               </div>
-              <div className="mt-2 text-[9px] opacity-50">
-                {layoutConfig.videoFit === 'cover' && 'Fills screen, may crop edges'}
-                {layoutConfig.videoFit === 'contain' && 'Shows full video, adds letterbox'}
-                {layoutConfig.videoFit === 'fill' && 'Stretches to fill, may distort'}
-              </div>
             </div>
-
-            {/* Video Scale */}
-            <div>
-              <label className="block text-[10px] uppercase tracking-wider opacity-60 mb-2">
-                Video Scale: {layoutConfig.videoScale}%
-              </label>
-              <input
-                type="range"
-                min="50"
-                max="200"
-                value={layoutConfig.videoScale}
-                onChange={(e) => !layoutConfig.locked && setLayoutConfig(prev => ({ ...prev, videoScale: Number(e.target.value) }))}
-                disabled={layoutConfig.locked}
-                className="w-full accent-white"
-              />
-            </div>
-
-            {/* Video Position */}
-            <div>
-              <label className="block text-[10px] uppercase tracking-wider opacity-60 mb-2">
-                Video Position (X: {Math.round(layoutConfig.videoPosition.x)}%, Y: {Math.round(layoutConfig.videoPosition.y)}%)
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={layoutConfig.videoPosition.x}
-                  onChange={(e) => !layoutConfig.locked && setLayoutConfig(prev => ({
-                    ...prev,
-                    videoPosition: { ...prev.videoPosition, x: Number(e.target.value) }
-                  }))}
-                  disabled={layoutConfig.locked}
-                  className="w-full accent-white"
-                />
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={layoutConfig.videoPosition.y}
-                  onChange={(e) => !layoutConfig.locked && setLayoutConfig(prev => ({
-                    ...prev,
-                    videoPosition: { ...prev.videoPosition, y: Number(e.target.value) }
-                  }))}
-                  disabled={layoutConfig.locked}
-                  className="w-full accent-white"
-                />
-              </div>
-            </div>
-
-            {/* Black Bars (Design Overlays) */}
-            <div className="pt-2 border-t border-white/10">
-              <label className="block text-[10px] uppercase tracking-wider opacity-60 mb-2">
-                Black Bars (Design Overlays)
-              </label>
-              <div className="grid grid-cols-2 gap-2 text-[9px]">
-                <div>
-                  <span className="opacity-50">Top</span>
-                  <input
-                    type="number"
-                    min="0"
-                    max="50"
-                    value={layoutConfig.blackBars.top}
-                    onChange={(e) => !layoutConfig.locked && setLayoutConfig(prev => ({
-                      ...prev,
-                      blackBars: { ...prev.blackBars, top: Number(e.target.value) }
-                    }))}
-                    disabled={layoutConfig.locked}
-                    className="w-full mt-1 px-2 py-1 rounded bg-white/10 border border-white/20 text-white text-center"
-                  />
-                </div>
-                <div>
-                  <span className="opacity-50">Bottom</span>
-                  <input
-                    type="number"
-                    min="0"
-                    max="50"
-                    value={layoutConfig.blackBars.bottom}
-                    onChange={(e) => !layoutConfig.locked && setLayoutConfig(prev => ({
-                      ...prev,
-                      blackBars: { ...prev.blackBars, bottom: Number(e.target.value) }
-                    }))}
-                    disabled={layoutConfig.locked}
-                    className="w-full mt-1 px-2 py-1 rounded bg-white/10 border border-white/20 text-white text-center"
-                  />
-                </div>
-                <div>
-                  <span className="opacity-50">Left</span>
-                  <input
-                    type="number"
-                    min="0"
-                    max="50"
-                    value={layoutConfig.blackBars.left}
-                    onChange={(e) => !layoutConfig.locked && setLayoutConfig(prev => ({
-                      ...prev,
-                      blackBars: { ...prev.blackBars, left: Number(e.target.value) }
-                    }))}
-                    disabled={layoutConfig.locked}
-                    className="w-full mt-1 px-2 py-1 rounded bg-white/10 border border-white/20 text-white text-center"
-                  />
-                </div>
-                <div>
-                  <span className="opacity-50">Right</span>
-                  <input
-                    type="number"
-                    min="0"
-                    max="50"
-                    value={layoutConfig.blackBars.right}
-                    onChange={(e) => !layoutConfig.locked && setLayoutConfig(prev => ({
-                      ...prev,
-                      blackBars: { ...prev.blackBars, right: Number(e.target.value) }
-                    }))}
-                    disabled={layoutConfig.locked}
-                    className="w-full mt-1 px-2 py-1 rounded bg-white/10 border border-white/20 text-white text-center"
-                  />
-                </div>
-              </div>
-              <div className="mt-2 text-[9px] opacity-50">
-                Add intentional black space (0-50% each side)
-              </div>
-            </div>
-
-            {/* Lock/Unlock Layout */}
-            <div className="pt-2 border-t border-white/10">
-              <button
-                onClick={() => setLayoutConfig(prev => ({ ...prev, locked: !prev.locked }))}
-                className={`w-full px-4 py-3 rounded-lg text-[11px] uppercase tracking-wider font-bold transition-all ${
-                  layoutConfig.locked
-                    ? 'bg-red-500/20 text-red-400 border border-red-500/50'
-                    : 'bg-green-500/20 text-green-400 border border-green-500/50'
-                }`}
-              >
-                {layoutConfig.locked ? '🔒 Layout Locked' : '🔓 Layout Unlocked'}
-              </button>
-              <div className="mt-2 text-[9px] opacity-50 text-center">
-                {layoutConfig.locked ? 'Click to unlock and enable editing' : 'Click to lock current layout'}
-              </div>
-            </div>
-
-            {/* Reset Button */}
-            <button
-              onClick={() => !layoutConfig.locked && setLayoutConfig({
-                videoFit: 'cover',
-                videoScale: 100,
-                videoPosition: { x: 50, y: 50 },
-                blackBars: { top: 0, bottom: 0, left: 0, right: 0 },
-                locked: false
-              })}
-              disabled={layoutConfig.locked}
-              className={`w-full px-4 py-2 rounded-lg bg-white/10 text-white/60 hover:bg-white/20 text-[10px] uppercase tracking-wide transition-all ${
-                layoutConfig.locked ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
-            >
-              Reset to Default
-            </button>
           </div>
         </div>
       )}

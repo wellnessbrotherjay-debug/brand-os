@@ -54,7 +54,7 @@ export interface WorkoutSession {
   beginsAt: string;
   status: 'preparing' | 'active' | 'rest' | 'complete';
   participants: HRMAssignment[];
-  currentPhase: 'prep' | 'work' | 'rest' | 'complete';
+  currentPhase: 'prep' | 'work' | 'rest' | 'change' | 'complete';
   remaining: number;
 }
 
@@ -75,10 +75,10 @@ export interface HRMMetrics {
 // Heart Rate Zones
 export const HR_ZONES = {
   1: { name: 'Recovery', color: '#9CA3AF', min: 50, max: 60 },
-  2: { name: 'Base', color: '#3B82F6', min: 60, max: 70 },
-  3: { name: 'Aerobic', color: '#10B981', min: 70, max: 80 },
-  4: { name: 'Threshold', color: '#F59E0B', min: 80, max: 90 },
-  5: { name: 'VO2 Max', color: '#EF4444', min: 90, max: 100 }
+  2: { name: 'Base', color: '#F1EDE5', min: 60, max: 70 }, // Beige
+  3: { name: 'Aerobic', color: '#FFFFFF', min: 70, max: 80 }, // White
+  4: { name: 'Threshold', color: '#C8A871', min: 80, max: 90 }, // Gold
+  5: { name: 'VO2 Max', color: '#FF4D4D', min: 90, max: 100 } // Red
 } as const;
 
 export type HRZone = keyof typeof HR_ZONES;

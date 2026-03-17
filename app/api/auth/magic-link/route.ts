@@ -38,7 +38,7 @@ export async function POST(request: Request) {
       linkData?.properties?.action_link ||
       linkData?.properties?.email_otp ||
       redirectTo ||
-      "https://app.hotelfit.solutions/login";
+      "https://app.avlr.app/login";
 
     await sendMagicLinkEmail({
       email,

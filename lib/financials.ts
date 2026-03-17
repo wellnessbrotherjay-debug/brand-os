@@ -48,8 +48,8 @@ export type FinancialProject = {
 };
 
 export const financialProject: FinancialProject = {
-  id: "proj-hotelfit-v3",
-  name: "HotelFit Solutions Studio",
+  id: "proj-avlr-v3",
+  name: "AVLR Solutions Studio",
   currency: "USD",
   investments: [
     { id: "inv-1", title: "Studio Build-out", category: "Construction", amount: 82000 },

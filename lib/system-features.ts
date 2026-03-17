@@ -2,6 +2,7 @@ export type SystemFeature = {
   title: string;
   description: string;
   href: string;
+  studios?: ('studio-a' | 'studio-b')[]; // Optional: if omitted, shown in both
 };
 
 export const systemFeatures: SystemFeature[] = [
@@ -9,41 +10,37 @@ export const systemFeatures: SystemFeature[] = [
     title: "Gym TV Display",
     description: "Full lineup view for every gym station",
     href: "/display-tv",
+    studios: ["studio-a", "studio-b"],
   },
   {
     title: "Gym HRM Wall",
     description: "Real-time heart rate monitoring for the floor",
     href: "/hrm-tv",
+    studios: ["studio-a", "studio-b"],
   },
   {
     title: "Gym Timer Display",
     description: "Large-format timer for the workout stage",
     href: "/display-timer",
+    studios: ["studio-a", "studio-b"],
   },
   {
     title: "Tablet Station Display",
-    description: "Trainer tablet control for each station",
+    description: "Trainer tablet control (Single Exercise)",
     href: "/display-tablet/1",
+    studios: ["studio-a"],
+  },
+  {
+    title: "Studio B Split Display",
+    description: "Horizontal split-screen station control",
+    href: "/display-tablet/1",
+    studios: ["studio-b"],
   },
   {
     title: "Room Workout Screen",
     description: "In-room guided workout experience for guests",
     href: "/tv/workout",
-  },
-  {
-    title: "Hotel Home Display",
-    description: "Luxury TV welcome hub with services, menu & workouts",
-    href: "/home",
-  },
-  {
-    title: "TV Welcome Screen",
-    description: "Hotel-branded welcome hub with services & orders",
-    href: "/welcome",
-  },
-  {
-    title: "Mobile Workout Screen",
-    description: "User-controlled workout experience on mobile",
-    href: "/mobile",
+    studios: ["studio-a"],
   },
   {
     title: "Workout Builder",
@@ -59,20 +56,18 @@ export const systemFeatures: SystemFeature[] = [
     title: "HRM Management",
     description: "Heart rate monitor control center",
     href: "/hrm-management",
-  },
-  {
-    title: "QR Codes",
-    description: "Generate workout access QR codes",
-    href: "/qr-codes",
+    studios: ["studio-a"],
   },
   {
     title: "Setup Console",
     description: "Configure stations, equipment, and branding",
     href: "/setup",
   },
-  {
-    title: "Financial ROI Engine",
-    description: "Live scenarios, charts, and AI insights",
-    href: "/financials/roi",
-  },
 ];
+
+
+export function getFeaturesForStudio(studioId: string): SystemFeature[] {
+  return systemFeatures.filter(
+    (f) => !f.studios || f.studios.includes(studioId as any)
+  );
+}

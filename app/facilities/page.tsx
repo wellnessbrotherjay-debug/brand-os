@@ -21,28 +21,28 @@ const PLACEHOLDER: Facility[] = [
     id: "pool",
     name: "Skyline Pool Deck",
     description: "Heated infinity pools · cabanas · sunset DJs",
-    booking_url: "https://booking.hotelfit.com/cabana",
+    booking_url: "https://booking.avlr.app/cabana",
     image_url: "/assets/facilities/pool.jpg",
   },
   {
     id: "recovery",
     name: "Recovery Lab",
     description: "Infrared saunas, cold plunge, compression boots",
-    booking_url: "https://booking.hotelfit.com/recovery-lab",
+    booking_url: "https://booking.avlr.app/recovery-lab",
     image_url: "/assets/facilities/recovery.jpg",
   },
   {
     id: "studio",
     name: "Movement Studio",
     description: "Yoga, reformers, functional circuits",
-    booking_url: "https://booking.hotelfit.com/studio",
+    booking_url: "https://booking.avlr.app/studio",
     image_url: "/assets/facilities/studio.jpg",
   },
   {
     id: "lounge",
     name: "Executive Lounge",
     description: "Co-working by day · curated mocktails by night",
-    booking_url: "mailto:concierge@hotelfit.com",
+    booking_url: "mailto:concierge@avlr.app",
     image_url: "/assets/facilities/lounge.jpg",
   },
 ];
@@ -115,7 +115,7 @@ export default function FacilitiesPage() {
               <p className="text-sm text-slate-300">{facility.description}</p>
               {facility.hours && <p className="mt-2 text-xs text-slate-400">Hours: {facility.hours}</p>}
               <a
-                href={facility.booking_url ?? "mailto:concierge@hotelfit.com"}
+                href={facility.booking_url ?? "mailto:concierge@avlr.app"}
                 target={facility.booking_url ? "_blank" : undefined}
                 rel="noreferrer"
                 className="mt-4 inline-flex rounded-full border border-white/20 px-5 py-2 text-xs uppercase tracking-[0.35em] text-white/80 transition hover:bg-white/10"

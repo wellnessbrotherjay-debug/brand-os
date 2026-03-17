@@ -431,16 +431,9 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setView, children }
                                             accentColor={accentBg}
                                             textColor={textPrimary}
                                         />
-                                        <NavItem
-                                            icon={<BarChart3 size={20} />}
-                                            label="Analytics"
-                                            isActive={currentView === 'analytics'}
-                                            onClick={() => setView('analytics')}
-                                            accentColor={accentBg}
-                                            textColor={textPrimary}
-                                        />
                                     </>
                                 )}
+
                             </div>
 
                             <div className="pt-4 mt-4 border-t" style={{ borderColor: `${textPrimary}10` }}>

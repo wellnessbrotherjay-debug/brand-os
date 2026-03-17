@@ -402,7 +402,7 @@ export default function FinancialsPage() {
   ];
 
   return (
-    <MainLayout title="Financial engine for HotelFit" subtitle="Fathom-style ROI">
+    <MainLayout title="Financial engine for AVLR" subtitle="Fathom-style ROI">
       <main className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-6 text-white">
         <header className="space-y-2 text-center">
           <p className="text-sm text-slate-300">

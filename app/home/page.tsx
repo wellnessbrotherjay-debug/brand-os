@@ -43,7 +43,7 @@ export default function HotelHomePage() {
     <BrandScreen
       eyebrow="GLVT Home Display"
       title={brand.name}
-      description="Tailored in-room concierge by Hotel Fit Solutionss"
+      description="Tailored in-room concierge by AVLR"
       actions={
         <div className="flex flex-wrap items-center gap-3">
           <span className="rounded-full border border-white/20 px-4 py-1 text-xs uppercase tracking-[0.35em] text-white/70">
@@ -56,7 +56,7 @@ export default function HotelHomePage() {
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="space-y-2 text-left">
             <p className="text-[11px] uppercase tracking-[0.35em] text-cyan-200/80">Finance Suite</p>
-            <h3 className="text-xl font-semibold text-white">BrandOS P&amp;L embedded in HotelFit</h3>
+            <h3 className="text-xl font-semibold text-white">BrandOS P&amp;L embedded in AVLR</h3>
             <p className="text-sm text-zinc-300">
               Launch the finance cockpit without leaving admin. Same rounded shell and sidebar from port 3000.
             </p>

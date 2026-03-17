@@ -194,7 +194,7 @@ export const HospitalityPMS: React.FC = () => {
               <List className="text-gray-300" />
            </div>
            <h3 className="text-gray-900 font-medium mb-1">No data available today</h3>
-           <p className="text-gray-400 text-sm mb-6">You haven't added any data yet.</p>
+           <p className="text-gray-400 text-sm mb-6">You haven&apos;t added any data yet.</p>
            <div className="flex justify-center gap-3">
               <button className="flex items-center gap-2 px-4 py-2 rounded-md text-white text-sm font-medium shadow-sm" style={{ backgroundColor: THEME_ACCENT }}>
                  <Plus size={16} /> Add Data

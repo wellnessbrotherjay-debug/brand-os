@@ -303,7 +303,7 @@ export const BrandBook: React.FC = () => {
               </div>
               
               <div className="max-w-md ml-auto text-right">
-                   <p className="text-2xl font-serif-brand italic mb-4 drop-shadow-md">"{getStrategy('Creative Direction')}"</p>
+                   <p className="text-2xl font-serif-brand italic mb-4 drop-shadow-md">&quot;{getStrategy('Creative Direction')}&quot;</p>
                    <div className="w-24 h-1 bg-white ml-auto mb-4"></div>
                    <p className="text-sm opacity-90 leading-relaxed drop-shadow-md">{identity.image_style}</p>
               </div>
@@ -525,7 +525,7 @@ export const BrandBook: React.FC = () => {
                        <div>
                            <h4 className="font-bold text-sm mb-2">Caption Style</h4>
                            <p className="text-sm opacity-60 leading-relaxed italic">
-                               "{getStrategy('Tone of Voice')}"
+                               &quot;{getStrategy('Tone of Voice')}&quot;
                            </p>
                        </div>
                        

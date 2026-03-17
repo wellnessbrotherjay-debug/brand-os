@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { Orbitron, Outfit } from "next/font/google";
 import { useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import {
@@ -25,6 +26,9 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabaseClient =
   supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
 
+const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700", "900"] });
+const outfit = Outfit({ subsets: ["latin"], weight: ["400", "600", "800"] });
+
 function hexToRgba(hex: string, alpha: number) {
   const sanitized = hex.replace("#", "");
   if (sanitized.length !== 6) return `rgba(255,255,255,${alpha})`;
@@ -37,8 +41,8 @@ function hexToRgba(hex: string, alpha: number) {
 
 export default function BuilderPage() {
   const router = useRouter();
-  const setup = useMemo<WorkoutSetup | null>(() => storage.getSetup(), []);
-  const storedPlan = useMemo<WorkoutPlan | null>(() => storage.getPlan(), []);
+  const [setup, setSetup] = useState<WorkoutSetup | null>(null);
+  const [storedPlan, setStoredPlan] = useState<WorkoutPlan | null>(null);
   const { activeVenue } = useVenueContext();
 
   // Get brand colors using default values since branding might not exist in setup
@@ -50,22 +54,10 @@ export default function BuilderPage() {
 
   const { primary: primaryBrand, secondary: secondaryBrand, accent: accentBrand } = brandColors;
 
-  const [goal, setGoal] = useState<GoalOption>(
-    (storedPlan?.goal as GoalOption | undefined) ?? "Fat Loss"
-  );
-  const [libraryEquipment, setLibraryEquipment] = useState<string | null>(
-    null
-  );
-  const [libraryExercise, setLibraryExercise] = useState<string | null>(
-    null
-  );
-  const [selectedExercises, setSelectedExercises] = useState<Record<number, string>>(() => {
-    if (!setup || !storedPlan?.exercises?.length) return {};
-    return storedPlan.exercises.reduce<Record<number, string>>((acc, entry) => {
-      acc[entry.stationId] = entry.name;
-      return acc;
-    }, {});
-  });
+  const [goal, setGoal] = useState<GoalOption>("Fat Loss");
+  const [libraryEquipment, setLibraryEquipment] = useState<string | null>(null);
+  const [libraryExercise, setLibraryExercise] = useState<string | null>(null);
+  const [selectedExercises, setSelectedExercises] = useState<Record<string, string>>({});
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showDebug, setShowDebug] = useState(false);
@@ -74,6 +66,9 @@ export default function BuilderPage() {
   const [newVideoUrl, setNewVideoUrl] = useState("");
   const [isUpdatingLibrary, setIsUpdatingLibrary] = useState(false);
   const [librarySearch, setLibrarySearch] = useState("");
+  const [workoutName, setWorkoutName] = useState("");
+  const [scheduledDate, setScheduledDate] = useState("");
+  
   const {
     library: exerciseLibrary,
     isLoading: isLibraryLoading,
@@ -81,24 +76,78 @@ export default function BuilderPage() {
   } = useExerciseMediaLibrary();
   const libraryError = libraryLoadError;
 
+  // Initial load
   useEffect(() => {
-    if (!setup) router.replace("/setup");
-  }, [router, setup]);
+    const initialSetup = storage.getSetup();
+    const initialPlan = storage.getPlan();
+    
+    if (initialSetup) {
+      setSetup(initialSetup);
+    } else {
+      router.replace("/setup");
+    }
 
+    if (initialPlan) {
+      setStoredPlan(initialPlan);
+      setGoal((initialPlan.goal as GoalOption) ?? "Fat Loss");
+      setWorkoutName(initialPlan.name || "");
+      setSelectedExercises(
+        initialPlan.exercises.reduce((acc: Record<string, string>, entry: any) => {
+          const key = initialSetup?.exercisesPerStation && initialSetup.exercisesPerStation > 1 ? `${entry.stationId}_${entry.part || 0}` : `${entry.stationId}`;
+          acc[key] = entry.name;
+          return acc;
+        }, {} as Record<string, string>)
+      );
+    }
+  }, [router]);
+
+  // Subscriptions
   useEffect(() => {
-    const unsubscribe = storage.subscribe(STORAGE_KEYS.plan, (nextPlan) => {
+    const unsubPlan = storage.subscribe(STORAGE_KEYS.plan, (nextPlan) => {
       if (!nextPlan) return;
+      setStoredPlan(nextPlan);
       setSavedAt(new Date().toLocaleString());
       setGoal((nextPlan.goal as GoalOption) ?? "Fat Loss");
+      setWorkoutName(nextPlan.name || "");
       setSelectedExercises(
-        nextPlan.exercises.reduce((acc: Record<number, string>, entry: any) => {
-          acc[entry.stationId] = entry.name;
+        nextPlan.exercises.reduce((acc: Record<string, string>, entry: any) => {
+          const key = setup?.exercisesPerStation && setup.exercisesPerStation > 1 ? `${entry.stationId}_${entry.part || 0}` : `${entry.stationId}`;
+          acc[key] = entry.name;
           return acc;
-        }, {} as Record<number, string>)
+        }, {} as Record<string, string>)
       );
     });
-    return () => unsubscribe?.();
-  }, []);
+
+    const unsubSetup = storage.subscribe(STORAGE_KEYS.setup, (nextSetup) => {
+      if (nextSetup) {
+        setSetup(nextSetup);
+        // Resync selected exercises when setup changes
+        const currentPlan = storage.getPlan();
+        if (currentPlan) {
+          setSelectedExercises(
+            currentPlan.exercises.reduce((acc: Record<string, string>, entry: any) => {
+              const key = nextSetup.exercisesPerStation && nextSetup.exercisesPerStation > 1 ? `${entry.stationId}_${entry.part || 0}` : `${entry.stationId}`;
+              acc[key] = entry.name;
+              return acc;
+            }, {} as Record<string, string>)
+          );
+        }
+      }
+    });
+
+    return () => {
+      unsubPlan?.();
+      unsubSetup?.();
+    };
+  }, [setup?.mode, setup?.exercisesPerStation]);
+
+  useEffect(() => {
+    if (setup?.facilityName?.toLowerCase().includes("hotel fit")) {
+      const nextSetup = { ...setup, facilityName: "AVLR" };
+      storage.saveSetup(nextSetup);
+      setSetup(nextSetup);
+    }
+  }, [setup]);
 
   const libraryEquipmentOptions = useMemo(() => {
     return Array.from(
@@ -143,7 +192,6 @@ export default function BuilderPage() {
       (exercise) =>
         exercise.equipment.toLowerCase() === equipment.toLowerCase()
     ).sort((a, b) => {
-      // Prioritize exercises with videos
       if (a.video && !b.video) return -1;
       if (!a.video && b.video) return 1;
       return a.name.localeCompare(b.name);
@@ -152,7 +200,7 @@ export default function BuilderPage() {
 
   const ensureSelections = (): StationExercise[] | null => {
     const assignments: StationExercise[] = [];
-    const sanitizedSelections: Record<number, string> = { ...selectedExercises };
+    const sanitizedSelections: Record<string, string> = { ...selectedExercises };
 
     for (const station of setup.stations) {
       const options = getOptionsForEquipment(station.equipment);
@@ -163,19 +211,25 @@ export default function BuilderPage() {
         return null;
       }
 
-      const chosenName = sanitizedSelections[station.id];
-      const selectedMeta =
-        options.find((option) => option.name === chosenName) ?? options[0];
+      const exerciseCount = setup.exercisesPerStation ?? (setup.mode === 'studio-b' ? 2 : 1);
+      
+      for (let i = 0; i < exerciseCount; i++) {
+        const key = exerciseCount > 1 ? `${station.id}_${i}` : `${station.id}`;
+        const chosenName = sanitizedSelections[key];
+        const selectedMeta =
+          options.find((option) => option.name === chosenName) ?? (i === 1 && options.length > 1 ? options[1] : options[0]);
 
-      sanitizedSelections[station.id] = selectedMeta.name;
-      assignments.push({
-        stationId: station.id,
-        name: selectedMeta.name,
-        video: selectedMeta.video ?? null,
-        equipment: selectedMeta.equipment ?? station.equipment,
-        muscles: selectedMeta.muscles,
-        cues: selectedMeta.cues,
-      });
+        sanitizedSelections[key] = selectedMeta.name;
+        assignments.push({
+          stationId: station.id,
+          name: selectedMeta.name,
+          video: selectedMeta.video ?? null,
+          equipment: selectedMeta.equipment ?? station.equipment,
+          muscles: selectedMeta.muscles,
+          cues: selectedMeta.cues,
+          part: i,
+        });
+      }
     }
 
     setSelectedExercises(sanitizedSelections);
@@ -191,8 +245,11 @@ export default function BuilderPage() {
     setIsSaving(true);
     const now = new Date();
     const payload: WorkoutPlan = {
+      name: workoutName || goal || "Active Workout",
       goal,
       exercises: assignments,
+      studioMode: setup?.mode || 'studio-a',
+      scheduledDate: scheduledDate || undefined,
     };
 
     storage.savePlan(payload);
@@ -206,8 +263,8 @@ export default function BuilderPage() {
           .upsert(
             [
               {
-                id: "active",
-                name: goal || "Active Workout",
+                id: scheduledDate || "active",
+                name: workoutName || goal || "Active Workout",
                 data: payload,
                 updated_at: now.toISOString(),
               },
@@ -234,7 +291,6 @@ export default function BuilderPage() {
     setError(null);
 
     try {
-      // Find the Supabase record ID if we have it
       const { error: updateError } = await supabaseClient
         .from("exercise_library")
         .update({ video_url: newVideoUrl })
@@ -242,12 +298,8 @@ export default function BuilderPage() {
 
       if (updateError) throw updateError;
 
-      // Refresh the library by triggering a reload or local update
-      // For now, we'll inform the user and suggest a refresh
       setSavedAt(new Date().toLocaleString());
       setEditingVideoId(null);
-      
-      // Proactively update local state to avoid refresh
       exercise.video = newVideoUrl;
     } catch (err) {
       console.error("Failed to update video URL", err);
@@ -257,8 +309,10 @@ export default function BuilderPage() {
     }
   };
 
-  const handleExerciseChange = (stationId: number, name: string) => {
-    setSelectedExercises((prev) => ({ ...prev, [stationId]: name }));
+  const handleExerciseChange = (stationId: number, name: string, part: number = 0) => {
+    const exerciseCount = setup.exercisesPerStation ?? (setup.mode === 'studio-b' ? 2 : 1);
+    const key = exerciseCount > 1 ? `${stationId}_${part}` : `${stationId}`;
+    setSelectedExercises((prev) => ({ ...prev, [key]: name }));
   };
 
   const handleLibraryEquipmentChange = (value: string) => {
@@ -275,7 +329,7 @@ export default function BuilderPage() {
 
   return (
     <main
-      className="font-orbitron relative flex min-h-screen w-screen items-center justify-center bg-black text-white"
+      className={`${outfit.className} relative flex min-h-screen w-screen items-center justify-center bg-black text-white`}
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#202020,transparent_55%)]" />
 
@@ -325,7 +379,7 @@ export default function BuilderPage() {
                 <span>{token}</span>
                 <span
                   className="mt-1 h-8 w-8 rounded-full border border-white/10"
-                  style={{ backgroundColor: brandColors[token] }}
+                  style={{ backgroundColor: (brandColors as any)[token] }}
                 />
               </div>
             ))}
@@ -399,7 +453,7 @@ export default function BuilderPage() {
                   <div className="mb-4">
                     {selectedLibraryExerciseData.video && (
                       <div 
-                        className="relative w-full rounded-xl border border-white/10 overflow-hidden bg-black aspect-video"
+                        className="relative w-full rounded-xl border border-white/10 overflow-hidden bg-black max-h-[500px] flex items-center justify-center"
                         style={{ boxShadow: `0 0 30px ${hexToRgba(accentBrand, 0.15)}` }}
                       >
                         <CloudflarePlayer
@@ -528,13 +582,13 @@ export default function BuilderPage() {
             )}
             <div>
               <p
-                className="text-sm uppercase tracking-[0.55em] mb-3"
+                className="text-sm uppercase tracking-[0.55em] mb-1"
                 style={{ color: hexToRgba(secondaryBrand, 0.9) }}
               >
                 {setup?.facilityName || "BUILDER CONSOLE"}
               </p>
               <h1
-                className="text-4xl font-extrabold uppercase"
+                className={`text-4xl font-extrabold uppercase mb-2 ${orbitron.className}`}
                 style={{
                   color: primaryBrand,
                   textShadow: `0 0 25px ${hexToRgba(primaryBrand, 0.5)}`
@@ -542,8 +596,35 @@ export default function BuilderPage() {
               >
                 Exercise Builder
               </h1>
+              <div className="flex justify-center mt-2">
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] px-3 py-1 rounded-full border border-white/10 bg-white/5 text-slate-400">
+                  Mode: <span className="text-sky-400">{setup.mode === 'studio-b' ? 'Studio B (Dual)' : 'Studio A (Standard)'}</span>
+                </span>
+              </div>
             </div>
           </header>
+
+          <section className="mb-8 grid gap-6 md:grid-cols-2">
+            <div className="flex flex-col gap-2">
+              <label className="text-xs uppercase tracking-[0.3em] text-slate-400">Workout Name</label>
+              <input
+                type="text"
+                value={workoutName}
+                onChange={(e) => setWorkoutName(e.target.value)}
+                placeholder="e.g., Morning HIIT Blast"
+                className="rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white focus:border-sky-400 focus:outline-none"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-xs uppercase tracking-[0.3em] text-slate-400">Scheduled Date (Optional)</label>
+              <input
+                type="date"
+                value={scheduledDate}
+                onChange={(e) => setScheduledDate(e.target.value)}
+                className="rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white focus:border-sky-400 focus:outline-none"
+              />
+            </div>
+          </section>
 
           <section
             className="flex flex-col gap-6 rounded-[20px] border-2 p-6 mb-8 shadow-lg"
@@ -590,50 +671,64 @@ export default function BuilderPage() {
           <section className="space-y-6">
             {setup.stations.map((station) => {
               const options = getOptionsForEquipment(station.equipment);
-              const currentSelection = selectedExercises[station.id];
-              const selection = options.find((exercise) => exercise.name === currentSelection)?.name ?? options[0]?.name ?? "";
+              const exerciseCount = setup.exercisesPerStation ?? (setup.mode === 'studio-b' ? 2 : 1);
 
               return (
                 <div
                   key={station.id}
-                  className="flex flex-col gap-4 rounded-[20px] border-2 p-6 shadow-lg"
+                  className="flex flex-col gap-6 rounded-[20px] border-2 p-6 shadow-lg"
                   style={{
                     borderColor: hexToRgba(primaryBrand, 0.3),
                     backgroundColor: "rgba(0,0,0,0.6)",
                     boxShadow: `0 0 25px ${hexToRgba(primaryBrand, 0.1)}`
                   }}
                 >
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                      <p
-                        className="text-sm uppercase tracking-[0.3em] font-bold mb-1"
-                        style={{ color: primaryBrand }}
-                      >
-                        STATION {station.id}
-                      </p>
-                      <p
-                        className="text-sm"
-                        style={{ color: hexToRgba(secondaryBrand, 0.8) }}
-                      >
-                        Equipment: <span className="text-white font-medium">{station.equipment}</span>
-                      </p>
-                    </div>
-                    <select
-                      className="rounded-[12px] border-2 px-4 py-3 font-medium bg-black/80 sm:w-80"
-                      style={{
-                        borderColor: hexToRgba(accentBrand, 0.4),
-                        color: "white"
-                      }}
-                      value={selection}
-                      onChange={(event) => handleExerciseChange(station.id, event.target.value)}
+                  <div className="flex flex-col gap-1">
+                    <p
+                      className="text-sm uppercase tracking-[0.3em] font-bold mb-1"
+                      style={{ color: primaryBrand }}
                     >
-                      {options.map((exercise) => (
-                        <option key={exercise.name} value={exercise.name} className="bg-black">
-                          {exercise.video ? "🎥 " : ""}{exercise.name}
-                        </option>
-                      ))}
-                    </select>
+                      STATION {station.id}
+                    </p>
+                    <p
+                      className="text-sm"
+                      style={{ color: hexToRgba(secondaryBrand, 0.8) }}
+                    >
+                      Equipment: <span className="text-white font-medium">{station.equipment}</span>
+                    </p>
                   </div>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {Array.from({ length: exerciseCount }).map((_, i) => {
+                      const key = setup.mode === 'studio-b' ? `${station.id}_${i}` : `${station.id}`;
+                      const currentSelection = selectedExercises[key];
+                      const selection = options.find((exercise) => exercise.name === currentSelection)?.name ?? options[i % options.length]?.name ?? "";
+
+                      return (
+                        <div key={i} className="flex flex-col gap-2">
+                          <p className={`text-[10px] uppercase font-bold tracking-widest ${exerciseCount > 1 ? 'text-sky-400' : 'text-slate-500'}`}>
+                            {exerciseCount > 1 ? `Exercise ${i + 1}` : 'Selected Exercise'}
+                          </p>
+                          <select
+                            className="rounded-[12px] border-2 px-4 py-3 font-medium bg-black/80 w-full"
+                            style={{
+                              borderColor: hexToRgba(accentBrand, 0.4),
+                              color: "white"
+                            }}
+                            value={selection}
+                            onChange={(event) => handleExerciseChange(station.id, event.target.value, i)}
+                          >
+                            {options.map((exercise) => (
+                              <option key={exercise.name} value={exercise.name} className="bg-black">
+                                {exercise.video ? "🎥 " : ""}{exercise.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  
                   {!options.length && (
                     <p className="text-xs text-red-400 font-medium">
                       No exercises available for {station.equipment}. Update your library to continue.

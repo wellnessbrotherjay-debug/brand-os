@@ -340,7 +340,7 @@ export default function WelcomePage() {
       <div className="relative z-10 flex min-h-screen flex-col px-6 py-10 lg:px-14">
         <header className="flex flex-wrap items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <div className="text-xs uppercase tracking-[0.5em] text-white/60">HOTEL FIT COLLECTION</div>
+            <div className="text-xs uppercase tracking-[0.5em] text-white/60">AVLR COLLECTION</div>
             <button
               onClick={() => setIsEditing(true)}
               className="rounded-full border border-white/20 px-4 py-1 text-xs uppercase tracking-[0.4em] text-white/80 transition hover:border-white/60"
@@ -520,7 +520,7 @@ export default function WelcomePage() {
             ))}
           </div>
           <footer className="mt-6 text-center text-sm text-white/70">
-            Powered by <span className="font-semibold text-white">Hotel Fit Solutionss™</span>
+            Powered by <span className="font-semibold text-white">AVLR™</span>
           </footer>
         </nav>
       </div>

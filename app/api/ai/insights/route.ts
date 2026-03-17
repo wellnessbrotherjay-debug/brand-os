@@ -5,7 +5,7 @@ import { ROIScenarios } from "@/lib/roi-scenarios";
 import { getTables } from "@/lib/roi-store";
 
 const DEFAULT_PROMPT =
-  "Summarize the Fathom-style ROI data for HotelFit. Identify 2 quick cost reduction ideas, 2 pricing adjustments, and provide a one-paragraph investor update.";
+  "Summarize the Fathom-style ROI data for AVLR. Identify 2 quick cost reduction ideas, 2 pricing adjustments, and provide a one-paragraph investor update.";
 
 export async function POST(req: Request) {
   const payload = await req.json().catch(() => ({}));

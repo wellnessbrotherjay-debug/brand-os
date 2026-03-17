@@ -29,14 +29,16 @@ const PHASE_LABEL: Record<SessionPhase, string> = {
   prep: "Get Ready",
   work: "Work",
   rest: "Rest",
+  change: "Station Change",
   complete: "Complete",
 };
 
 const PHASE_TONE: Record<SessionPhase, string> = {
-  prep: "#00BFFF",
-  work: "#FF4D4D",
-  rest: "#32CD32",
-  complete: "#FFD100",
+  prep: "#F1EDE5", // Beige
+  work: "#FF4D4D", // Red
+  rest: "#C8A871", // Gold
+  change: "#C8A871", // Gold
+  complete: "#C8A871", // Gold
 };
 
 function formatTime(seconds: number) {
@@ -75,14 +77,18 @@ export default function TimerDisplayPage() {
     phase: 'prep' as SessionPhase,
     isActive: false,
     workTime: 45,
-    restTime: 15,
+    restTime: 45, // Updated for Studio A
     targetEndTime: null as Date | null,
+    setNumber: 1, // Added for Studio A
   });
 
-  const brandColors = useMemo(
-    () => resolveBrandColors({ activeVenue, setup }),
-    [activeVenue, setup]
-  );
+  // Hardcode brand colors to Beige and White - NO BLUE, NO YELLOW
+  const brandColors = {
+    primary: "#FFFFFF",   // White
+    secondary: "#F1EDE5", // Beige
+    accent: "#F1EDE5",    // Beige
+  };
+
   const { primary: primaryBrand, secondary: secondaryBrand, accent: accentBrand } = brandColors;
 
   useEffect(() => {
@@ -187,9 +193,10 @@ export default function TimerDisplayPage() {
             timeLeft: calculatedTimeLeft,
             phase: timerData.phase || 'work',
             isActive: true,
-            workTime: timerData.work_time || 45,
-            restTime: timerData.rest_time || 15,
+            workTime: timerData.work_time || (setup?.workTime ?? 45),
+            restTime: timerData.rest_time || (setup?.restTime ?? 15),
             targetEndTime: new Date(timerData.target_end_time),
+            setNumber: timerData.set_number || 1,
           });
         } else if (timerData) {
           // Fallback to old method if target_end_time not available
@@ -198,9 +205,10 @@ export default function TimerDisplayPage() {
             timeLeft: timerData.time_left || 45,
             phase: timerData.phase || 'work',
             isActive: true,
-            workTime: timerData.work_time || 45,
-            restTime: timerData.rest_time || 15,
+            workTime: timerData.work_time || (setup?.workTime ?? 45),
+            restTime: timerData.rest_time || (setup?.restTime ?? 15),
             targetEndTime: null,
+            setNumber: timerData.set_number || 1,
           });
         }
       })
@@ -208,33 +216,89 @@ export default function TimerDisplayPage() {
         console.log('Display timer: Subscription status:', status);
       });
 
-    // Local countdown that calculates from target time
+    // Local countdown that calculates from target time (MASTER - controls phase switching)
     const localInterval = setInterval(() => {
       setGlobalTimer(prev => {
-        // Always run countdown if we have a valid target end time
-        if (!prev.targetEndTime) return prev;
+        if (!prev.isActive || !prev.targetEndTime) return prev;
 
-        // Calculate time left from target end time
+        // Calculate time left from target end time - this eliminates sync drift!
         const targetEndTime = prev.targetEndTime.getTime();
         const now = Date.now();
         const diff = targetEndTime - now;
 
-        let calculatedTimeLeft = Math.ceil(diff / 1000);
+        let calculatedTimeLeft = Math.max(0, Math.ceil(diff / 1000));
 
         // Ensure we show at least 1 second if timer is active and target is in future
         if (diff > 100 && calculatedTimeLeft <= 0) {
           calculatedTimeLeft = 1;
-        } else if (diff <= 0) {
-          calculatedTimeLeft = 0;
         }
 
-        // Only update timeLeft, preserve everything else including phase
+        // Detect when we've reached the end of current phase (Master Logic)
+        if (calculatedTimeLeft <= 0 && diff <= 1000) {
+          // Timer reached 0, switch phases automatically
+          let nextPhase: SessionPhase = prev.phase === 'work' ? 'rest' : 'work';
+          let nextSet = prev.setNumber;
+          let nextTime = 45;
+          const workTime = prev.workTime;
+          const restTime = prev.restTime;
+
+          if (prev.phase === 'work') {
+            // After WORK...
+            if (prev.setNumber >= (setup?.rounds ?? 4)) {
+              // End of sets -> Station Change
+              nextPhase = 'change';
+              nextTime = 60; // Station change is usually fixed at 60s
+            } else {
+              // Normal Rest
+              nextPhase = 'rest';
+              nextTime = restTime;
+            }
+          } else if (prev.phase === 'rest' || prev.phase === 'change' || prev.phase === 'prep') {
+            // After REST or CHANGE or PREP -> Back to WORK (next set or new station)
+            nextPhase = 'work';
+            nextTime = workTime;
+            if (prev.phase === 'change') {
+               nextSet = 1; // Reset to set 1 after station change
+            } else if (prev.phase === 'rest') {
+               nextSet = prev.setNumber + 1; // Increment set number
+            }
+          }
+
+          const newTargetEndTime = new Date(Date.now() + nextTime * 1000);
+
+          console.log('🚨 MASTER Timer Phase switch:', prev.phase, '->', nextPhase, 'Set:', nextSet, 'Time:', nextTime);
+
+          // Update Supabase with new phase and target time - all slave devices will follow
+          supabaseClient
+            .from('global_timer')
+            .update({
+              phase: nextPhase,
+              target_end_time: newTargetEndTime.toISOString(),
+              time_left: nextTime,
+              set_number: nextSet, // Assuming this column exists
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', 'active')
+            .then(({ error }) => {
+              if (error) console.error('❌ MASTER Failed to update Supabase:', error);
+            });
+
+          // Update local state immediately for smooth UI
+          return {
+            ...prev,
+            timeLeft: nextTime,
+            phase: nextPhase,
+            setNumber: nextSet,
+            targetEndTime: newTargetEndTime,
+          };
+        }
+
         return {
           ...prev,
           timeLeft: calculatedTimeLeft,
         };
       });
-    }, 500); // ✅ Increased from 100ms to 500ms to reduce iPad CPU load
+    }, 100); // Back to 100ms for Master accuracy
 
     // Fetch initial timer state (READ-ONLY) - do this immediately
     const fetchTimer = async () => {
@@ -309,8 +373,9 @@ export default function TimerDisplayPage() {
           phase: phase,
           isActive: isActive, // Always true for display timer
           workTime: data.work_time || 45,
-          restTime: data.rest_time || 15,
+          restTime: data.rest_time || 45,
           targetEndTime: targetEndTime,
+          setNumber: data.set_number || 1,
         });
         setTimeLeft(calculatedTimeLeft);
         console.log('Display timer: Initial sync complete - timeLeft:', calculatedTimeLeft, 'phase:', phase);
@@ -338,8 +403,9 @@ export default function TimerDisplayPage() {
             phase: 'work',
             isActive: true,
             workTime: 45,
-            restTime: 15,
+            restTime: 45,
             targetEndTime: newTargetEndTime,
+            setNumber: 1,
           });
           console.log('Display timer: Created new timer');
         }
@@ -379,8 +445,9 @@ export default function TimerDisplayPage() {
             phase: data.phase || 'work',
             isActive: true,
             workTime: data.work_time || 45,
-            restTime: data.rest_time || 15,
+            restTime: data.rest_time || 45,
             targetEndTime: targetEndTime,
+            setNumber: data.set_number || 1,
           });
         }
       } catch (error) {
@@ -415,11 +482,11 @@ export default function TimerDisplayPage() {
       : setup
         ? `Rounds: ${setup.rounds}`
         : "Rounds: --";
-  const facilityName = setup?.facilityName ?? "RaceFit Facility";
-  const totalWork = setup ? setup.workTime : 0;
-  const totalRest = setup ? setup.restTime : 0;
-  const intervalSummary =
-    totalWork || totalRest ? `${totalWork}s work • ${totalRest}s rest` : "Configure timing";
+  const facilityName = setup?.facilityName ?? "AVRL";
+  const totalWork = globalTimer.workTime;
+  const totalRest = globalTimer.restTime;
+  const setSummary = `SET ${globalTimer.setNumber} OF ${setup?.rounds ?? 4}`;
+  const intervalSummary = `${totalWork}s work • ${totalRest}s rest`;
   const nextPhase: SessionPhase =
     phase === "prep" ? "work" : phase === "work" ? "rest" : phase === "rest" ? "work" : "complete";
   const nextPhaseLabel = PHASE_LABEL[nextPhase];
@@ -484,16 +551,13 @@ export default function TimerDisplayPage() {
 
       <div className="relative flex h-full w-full flex-col gap-12 px-6 py-10 lg:px-12 lg:py-12">
         <header className="flex flex-col items-center gap-3 text-center">
-          <p className="text-xs uppercase tracking-[0.55em]" style={{ color: hexToRgba(secondaryBrand, 0.9) }}>
-            {facilityName}
-          </p>
-          <h1 className="text-4xl font-extrabold uppercase md:text-5xl" style={{ color: primaryBrand }}>
-            Stage Timer
+          <h1 className="text-5xl font-extrabold uppercase md:text-7xl tracking-[0.2em]" style={{ color: "#F1EDE5" }}>
+            AVRL
           </h1>
           <div className="flex flex-wrap items-center justify-center gap-3 text-xs uppercase tracking-[0.35em]" style={{ color: hexToRgba(accentBrand, 0.7) }}>
             <span>{intervalSummary}</span>
             <span>•</span>
-            <span>{plan?.goal ?? "Workout"}</span>
+            <span>{setSummary}</span>
             <span>•</span>
             <span>{roundsSummary}</span>
           </div>
@@ -509,7 +573,7 @@ export default function TimerDisplayPage() {
             }}
           >
             <p className="text-sm uppercase tracking-[0.45em] md:text-base" style={{ color: phaseColor }}>
-              {PHASE_LABEL[phase]}
+              {PHASE_LABEL[phase]} {phase !== 'change' && phase !== 'complete' && phase !== 'prep' ? `• SET ${globalTimer.setNumber}` : ''}
             </p>
             <p
               className="mt-8 text-[9rem] font-black leading-none tracking-[0.12em] md:text-[12rem]"
@@ -524,17 +588,17 @@ export default function TimerDisplayPage() {
 
           <aside className="flex flex-col justify-between gap-6 rounded-[24px] border border-white/10 bg-black/60 px-6 py-8 text-sm shadow-[0_0_45px_rgba(0,0,0,0.4)] backdrop-blur-md">
             <div className="space-y-3">
-              <p className="text-xs uppercase tracking-[0.4em]" style={{ color: secondaryBrand }}>
+              <p className="text-xs uppercase tracking-[0.4em] text-[#F1EDE5]">
                 Interval Blueprint
               </p>
               <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/50 px-4 py-3">
-                <span className="text-xs uppercase tracking-[0.35em]" style={{ color: hexToRgba(accentBrand, 0.7) }}>
+                <span className="text-xs uppercase tracking-[0.35em] text-white/50">
                   Work
                 </span>
                 <span className="text-2xl font-bold text-white">{totalWork ? `${totalWork}s` : "--"}</span>
               </div>
               <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/50 px-4 py-3">
-                <span className="text-xs uppercase tracking-[0.35em]" style={{ color: hexToRgba(accentBrand, 0.7) }}>
+                <span className="text-xs uppercase tracking-[0.35em] text-white/50">
                   Change
                 </span>
                 <span className="text-2xl font-bold text-white">{totalRest ? `${totalRest}s` : "--"}</span>
@@ -542,7 +606,7 @@ export default function TimerDisplayPage() {
             </div>
 
             <div className="space-y-3">
-              <p className="text-xs uppercase tracking-[0.4em]" style={{ color: secondaryBrand }}>
+              <p className="text-xs uppercase tracking-[0.4em] text-[#F1EDE5]">
                 Guidance
               </p>
               <p className="text-sm leading-relaxed text-neutral-300">
@@ -551,7 +615,7 @@ export default function TimerDisplayPage() {
               </p>
             </div>
 
-            <div className="space-y-2 text-xs uppercase tracking-[0.3em]" style={{ color: hexToRgba(accentBrand, 0.65) }}>
+            <div className="space-y-2 text-xs uppercase tracking-[0.3em] text-white/70">
               <p>Active Station: {session?.stationId ? `Station ${session.stationId}` : "TBD"}</p>
               <p>Next Cue In: {formatDuration(Math.max(0, displayTimeLeft))}</p>
               <p>{lastUpdated ? `Synced ${lastUpdated}` : "Local mode"}</p>

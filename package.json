@@ -1,7 +1,7 @@
 {
   "name": "brand-os",
   "version": "1.0.0",
-  "description": "Hotel Fit Solutions Brand OS",
+  "description": "AVLR Brand OS",
   "main": "index.js",
   "directories": {
     "lib": "lib"

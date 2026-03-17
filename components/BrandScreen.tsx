@@ -1,12 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Orbitron } from 'next/font/google';
 import { useBranding } from "@/lib/hooks/useBranding";
 import { useGreetingClock } from "@/lib/hooks/useGreetingClock";
 import BrandErrorBoundary from "@/components/BrandErrorBoundary";
 import BackButton from "@/components/BackButton";
 import { DEFAULT_WELCOME_VIDEO_URL } from "@/lib/brandConfig";
 import { Stream } from "@cloudflare/stream-react";
+
+const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700", "900"] });
 
 type BrandScreenProps = {
   eyebrow?: string;
@@ -65,8 +68,8 @@ export default function BrandScreen({ eyebrow, title, description, children, act
                   <BackButton href={backHref} label={backLabel} />
                 </div>
               )}
-              <p className="text-xs uppercase tracking-[0.45em]" style={{ color: brand.accent }}>
-                {eyebrow ?? "Hotel Fit Collection"}
+              <p className={`text-xs uppercase tracking-[0.45em] ${orbitron.className}`} style={{ color: brand.accent }}>
+                {eyebrow ?? "AVLR Collection"}
               </p>
               <div className="mt-4 flex items-center gap-4">
                 <div className="h-16 w-16 rounded-full border border-white/15 bg-black/40 p-3">
@@ -81,8 +84,8 @@ export default function BrandScreen({ eyebrow, title, description, children, act
                   />
                 </div>
                 <div>
-                  <h1 className="text-4xl font-semibold tracking-tight">{title ?? brand.name}</h1>
-                  <p className="text-sm text-zinc-300">{description ?? "Curated by Hotel Fit Solutionss™"}</p>
+                  <h1 className={`text-4xl font-semibold tracking-tight ${orbitron.className}`}>{title ?? brand.name}</h1>
+                  <p className="text-sm text-zinc-300">{description ?? "Curated by AVLR™"}</p>
                   {actions && <div className="mt-3 flex flex-wrap gap-3">{actions}</div>}
                 </div>
               </div>
@@ -100,8 +103,8 @@ export default function BrandScreen({ eyebrow, title, description, children, act
           >
             {children}
           </motion.div>
-          <footer className="mt-10 text-center text-xs uppercase tracking-[0.35em] text-zinc-500">
-            Powered by Hotel Fit Solutionss™
+          <footer className={`mt-10 text-center text-xs uppercase tracking-[0.35em] text-zinc-500 ${orbitron.className}`}>
+            Powered by AVLR™
           </footer>
         </div>
       </div>
