@@ -15,6 +15,8 @@ BEGIN
             is_active BOOLEAN DEFAULT true,
             work_time INTEGER DEFAULT 45,
             rest_time INTEGER DEFAULT 15,
+            set_number INTEGER DEFAULT 1,
+            active_station_id INTEGER DEFAULT 1,
             target_end_time TIMESTAMPTZ,
             updated_at TIMESTAMPTZ DEFAULT NOW()
         );
@@ -22,8 +24,8 @@ BEGIN
 END $$;
 
 -- Ensure the active timer exists and is active
-INSERT INTO global_timer (id, time_left, phase, is_active, work_time, rest_time, target_end_time)
-VALUES ('active', 45, 'work', true, 45, 15, NOW() + INTERVAL '45 seconds')
+INSERT INTO global_timer (id, time_left, phase, is_active, work_time, rest_time, set_number, active_station_id, target_end_time)
+VALUES ('active', 45, 'work', true, 45, 15, 1, 1, NOW() + INTERVAL '45 seconds')
 ON CONFLICT (id) DO UPDATE SET
     is_active = true,
     target_end_time = COALESCE(global_timer.target_end_time, NOW() + INTERVAL '45 seconds'),

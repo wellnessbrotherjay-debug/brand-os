@@ -11,6 +11,8 @@ export interface BrandPalette {
 export interface StationSetup {
   id: number;
   equipment: EquipmentOption;
+  locked?: boolean; // AI: If true, don't rotate exercise
+  allowedEquipment?: EquipmentOption[]; // AI: Allowed equipment for this station if variable
 }
 
 export interface WorkoutSetup {
@@ -36,7 +38,7 @@ export const DEFAULT_STATIONS: StationSetup[] = Array.from({ length: 6 }, (_, in
 export const DEFAULT_SETUP: WorkoutSetup = {
   facilityName: "AVRL",
   stations: DEFAULT_STATIONS,
-  logo: "/logos/avrl-logo.png", // Recommended local path
+  logo: "/logos/global-avrl-logo.png", // New global logo path
   theme: "avrl",
   workTime: 45,
   restTime: 15,
@@ -66,6 +68,7 @@ export interface WorkoutPlan {
   exercises: StationExercise[];
   studioMode?: 'studio-a' | 'studio-b';
   scheduledDate?: string;
+  isAiGenerated?: boolean;
 }
 
 export interface VenueProfile {

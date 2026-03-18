@@ -59,6 +59,16 @@ export const systemFeatures: SystemFeature[] = [
     studios: ["studio-a"],
   },
   {
+    title: "Workout Library",
+    description: "Manage and load saved workout templates",
+    href: "/builder/library",
+  },
+  {
+    title: "Schedule Manager",
+    description: "View and manage scheduled studio sessions",
+    href: "/builder/schedule",
+  },
+  {
     title: "Setup Console",
     description: "Configure stations, equipment, and branding",
     href: "/setup",

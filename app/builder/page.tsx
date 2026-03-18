@@ -17,6 +17,7 @@ import { type ExerciseMedia } from "@/lib/lib/exercise-library";
 import { useExerciseMediaLibrary } from "@/lib/workout-engine/library-hooks";
 import { useVenueContext } from "@/lib/venue-context";
 import CloudflarePlayer from "@/components/CloudflarePlayer";
+import { generateWorkoutPlan } from "@/lib/workout-engine/generator";
 
 const GOALS = ["Fat Loss", "Strength", "Endurance"] as const;
 type GoalOption = (typeof GOALS)[number];
@@ -62,12 +63,16 @@ export default function BuilderPage() {
   const [error, setError] = useState<string | null>(null);
   const [showDebug, setShowDebug] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [editingVideoId, setEditingVideoId] = useState<string | null>(null);
   const [newVideoUrl, setNewVideoUrl] = useState("");
   const [isUpdatingLibrary, setIsUpdatingLibrary] = useState(false);
   const [librarySearch, setLibrarySearch] = useState("");
   const [workoutName, setWorkoutName] = useState("");
   const [scheduledDate, setScheduledDate] = useState("");
+  const [showLibrary, setShowLibrary] = useState(false);
+  const [templates, setTemplates] = useState<any[]>([]);
+  const [isLoadingTemplates, setIsLoadingTemplates] = useState(false);
   
   const {
     library: exerciseLibrary,
@@ -236,7 +241,7 @@ export default function BuilderPage() {
     return assignments;
   };
 
-  const handleSave = async () => {
+  const handleSave = async (asTemplate: boolean = false) => {
     if (isSaving) return;
     setError(null);
     const assignments = ensureSelections();
@@ -252,21 +257,27 @@ export default function BuilderPage() {
       scheduledDate: scheduledDate || undefined,
     };
 
-    storage.savePlan(payload);
-    storage.clearSession();
+    if (!asTemplate) {
+      storage.savePlan(payload);
+      storage.clearSession();
+    }
+    
     setSavedAt(now.toLocaleString());
 
     if (supabaseClient) {
       try {
+        const id = asTemplate ? `template_${Date.now()}` : (scheduledDate || "active");
         const { error: syncError } = await supabaseClient
           .from("workouts")
           .upsert(
             [
               {
-                id: scheduledDate || "active",
-                name: workoutName || goal || "Active Workout",
+                id: id,
+                name: workoutName || goal || (asTemplate ? "New Template" : "Active Workout"),
                 data: payload,
                 updated_at: now.toISOString(),
+                is_template: asTemplate,
+                scheduled_date: scheduledDate || null
               },
             ],
             { onConflict: "id" }
@@ -275,6 +286,8 @@ export default function BuilderPage() {
         if (syncError) {
           console.error("Supabase sync error:", syncError);
           setError(`Cloud sync failed: ${syncError.message}. Plan saved locally.`);
+        } else if (asTemplate) {
+          setSavedAt("Template Saved!");
         }
       } catch (err) {
         console.error("Failed to sync workout plan", err);
@@ -283,6 +296,72 @@ export default function BuilderPage() {
     }
 
     setIsSaving(false);
+  };
+
+  const fetchTemplates = async () => {
+    if (!supabaseClient) return;
+    setIsLoadingTemplates(true);
+    try {
+      const { data, error } = await supabaseClient
+        .from("workouts")
+        .select("*")
+        .eq("is_template", true)
+        .order("updated_at", { ascending: false });
+      
+      if (error) throw error;
+      setTemplates(data || []);
+    } catch (err) {
+      console.error("Failed to fetch templates", err);
+      setError("Failed to load templates.");
+    } finally {
+      setIsLoadingTemplates(false);
+    }
+  };
+
+  const loadTemplate = (template: any) => {
+    const plan = template.data as WorkoutPlan;
+    setStoredPlan(plan);
+    setGoal((plan.goal as GoalOption) ?? "Fat Loss");
+    setWorkoutName(plan.name || "");
+    
+    const newSelections: Record<string, string> = {};
+    plan.exercises.forEach((ex) => {
+      const key = setup.exercisesPerStation && setup.exercisesPerStation > 1 
+        ? `${ex.stationId}_${ex.part || 0}` 
+        : `${ex.stationId}`;
+      newSelections[key] = ex.name;
+    });
+    setSelectedExercises(newSelections);
+    setShowLibrary(false);
+    setSavedAt("Template Loaded");
+  };
+
+  const handleAiGenerate = async () => {
+    if (!setup || isGenerating) return;
+    setIsGenerating(true);
+    setError(null);
+
+    try {
+      const newPlan = generateWorkoutPlan(setup, exerciseLibrary);
+      setStoredPlan(newPlan);
+      setGoal((newPlan.goal as GoalOption) ?? "Fat Loss");
+      setWorkoutName(newPlan.name || "");
+      
+      const newSelections: Record<string, string> = {};
+      newPlan.exercises.forEach((ex) => {
+        const key = setup.exercisesPerStation && setup.exercisesPerStation > 1 
+          ? `${ex.stationId}_${ex.part || 0}` 
+          : `${ex.stationId}`;
+        newSelections[key] = ex.name;
+      });
+      setSelectedExercises(newSelections);
+      setSavedAt("Unsaved AI Draft");
+    } catch (err) {
+      console.error("AI Generation failed", err);
+      setError("AI Generation failed. Please try again.");
+    } finally {
+      setIsGenerating(false);
+    }
   };
   
   const handleUpdateVideoUrl = async (exercise: ExerciseMedia) => {
@@ -306,6 +385,17 @@ export default function BuilderPage() {
       setError("Failed to update video URL in Supabase.");
     } finally {
       setIsUpdatingLibrary(false);
+    }
+  };
+
+  const handleStationEquipmentChange = (stationId: number, equipment: string) => {
+    if (!setup) return;
+    const nextSetup = { ...setup };
+    const station = nextSetup.stations.find(s => s.id === stationId);
+    if (station) {
+      station.equipment = equipment;
+      setSetup(nextSetup);
+      storage.saveSetup(nextSetup);
     }
   };
 
@@ -445,6 +535,13 @@ export default function BuilderPage() {
                     ))}
                   </select>
                 </div>
+                <button
+                  onClick={handleAiGenerate}
+                  disabled={isGenerating || isLibraryLoading}
+                  className="mt-1 rounded-lg border-2 border-purple-500/50 bg-purple-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-purple-300 hover:bg-purple-500/20 disabled:opacity-50"
+                >
+                  {isGenerating ? "Magic..." : "✨ AI Generate"}
+                </button>
               </div>
             </div>
             {selectedLibraryExerciseData && (
@@ -551,7 +648,16 @@ export default function BuilderPage() {
         <div
           className="rounded-[24px] border border-white/10 bg-black/60 p-10 shadow-[0_0_45px_rgba(0,0,0,0.4)] backdrop-blur-md"
         >
-          <div className="flex justify-end mb-6">
+          <div className="flex justify-end items-center mb-6 gap-4">
+            <button
+              onClick={() => {
+                setShowLibrary(!showLibrary);
+                if (!showLibrary) fetchTemplates();
+              }}
+              className="text-xs uppercase tracking-[0.2em] rounded-full px-4 py-2 border border-sky-400/30 bg-sky-400/10 text-sky-300 hover:bg-sky-400/20"
+            >
+              📂 Workout Library
+            </button>
             <span
               className="text-xs uppercase tracking-[0.3em] rounded-full px-4 py-2 border-2"
               style={{
@@ -560,9 +666,41 @@ export default function BuilderPage() {
                 backgroundColor: hexToRgba(accentBrand, 0.1)
               }}
             >
-              Last Saved: {savedAt ?? "Never"}
+              Status: {savedAt ?? "Ready"}
             </span>
           </div>
+
+          {showLibrary && (
+            <div className="mb-8 rounded-2xl border border-sky-500/30 bg-sky-950/20 p-6 backdrop-blur-md">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-bold uppercase tracking-widest text-sky-400">Template Library</h3>
+                <button onClick={() => setShowLibrary(false)} className="text-slate-500 hover:text-white">✕</button>
+              </div>
+              {isLoadingTemplates ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin w-8 h-8 border-2 border-sky-400 border-t-transparent rounded-full mx-auto mb-2"></div>
+                  <p className="text-xs text-sky-400/60 font-medium">Scanning Vault...</p>
+                </div>
+              ) : templates.length === 0 ? (
+                <p className="text-center py-8 text-sm text-slate-500">No saved templates found.</p>
+              ) : (
+                <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+                  {templates.map((tpl) => (
+                    <button
+                      key={tpl.id}
+                      onClick={() => loadTemplate(tpl)}
+                      className="flex flex-col gap-1 p-3 rounded-xl border border-white/5 bg-white/5 text-left hover:bg-white/10 transition-all border-l-4 border-l-sky-500"
+                    >
+                      <span className="text-sm font-bold truncate">{tpl.name}</span>
+                      <span className="text-[10px] text-slate-500 uppercase tracking-tighter">
+                        {tpl.data?.exercises?.length || 0} Exercises • {new Date(tpl.updated_at).toLocaleDateString()}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           <header className="flex flex-col gap-6 text-center mb-10">
             {setup.logo && (
@@ -690,12 +828,40 @@ export default function BuilderPage() {
                     >
                       STATION {station.id}
                     </p>
-                    <p
-                      className="text-sm"
-                      style={{ color: hexToRgba(secondaryBrand, 0.8) }}
-                    >
-                      Equipment: <span className="text-white font-medium">{station.equipment}</span>
-                    </p>
+                    <div className="flex items-center gap-3">
+                      <p
+                        className="text-sm"
+                        style={{ color: hexToRgba(secondaryBrand, 0.8) }}
+                      >
+                        Equipment:
+                      </p>
+                      <select
+                        value={station.equipment}
+                        onChange={(e) => handleStationEquipmentChange(station.id, e.target.value)}
+                        className="rounded-lg border border-white/10 bg-black/40 px-2 py-1 text-xs text-white focus:border-sky-400 focus:outline-none"
+                      >
+                        {libraryEquipmentOptions.map((eq) => (
+                          <option key={eq} value={eq}>
+                            {eq}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <label className="mt-2 flex items-center gap-2 cursor-pointer group">
+                      <div 
+                        className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${station.locked ? 'bg-sky-500 border-sky-400' : 'border-white/20'}`}
+                        onClick={() => {
+                          const nextSetup = { ...setup };
+                          const s = nextSetup.stations.find(st => st.id === station.id);
+                          if (s) s.locked = !s.locked;
+                          setSetup(nextSetup);
+                          storage.saveSetup(nextSetup);
+                        }}
+                      >
+                        {station.locked && <span className="text-[10px]">L</span>}
+                      </div>
+                      <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 group-hover:text-slate-300">Lock Machine / Fixed Exercise</span>
+                    </label>
                   </div>
 
                   <div className="grid gap-4 md:grid-cols-2">
@@ -749,7 +915,14 @@ export default function BuilderPage() {
               </span>
             )}
             <button
-              onClick={handleSave}
+              onClick={() => handleSave(true)}
+              disabled={isSaving}
+              className="rounded-[12px] px-6 py-4 font-bold uppercase tracking-[0.2em] border-2 border-white/10 hover:bg-white/5 transition-all"
+            >
+              {isSaving ? "Wait..." : "💾 Save Template"}
+            </button>
+            <button
+              onClick={() => handleSave(false)}
               disabled={isSaving}
               className="rounded-[12px] px-8 py-4 font-bold uppercase tracking-[0.2em] shadow-lg border-2 disabled:opacity-60 transition-all hover:scale-105"
               style={{
@@ -759,7 +932,7 @@ export default function BuilderPage() {
                 boxShadow: `0 0 30px ${hexToRgba(primaryBrand, 0.4)}`
               }}
             >
-              {isSaving ? "Saving..." : "Save & Go Live"}
+              {isSaving ? "Saving..." : scheduledDate ? "📅 Schedule" : "🚀 Go Live"}
             </button>
           </div>
         </div>

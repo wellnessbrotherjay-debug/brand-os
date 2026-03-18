@@ -83,6 +83,7 @@ function TabletStationContent() {
     restTime: 15,
     targetEndTime: null as Date | null,
     setNumber: 1,
+    activeStationId: 1,
   });
 
   const { activeVenue } = useVenueContext();
@@ -112,6 +113,40 @@ function TabletStationContent() {
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
       document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    let wakeLock: any = null;
+    let isMounted = true;
+
+    const requestWakeLock = async () => {
+      try {
+        if ('wakeLock' in navigator && isMounted) {
+          wakeLock = await (navigator as any).wakeLock.request('screen');
+        }
+      } catch (err) {
+        console.log("Wake Lock error or unsupported:", err);
+      }
+    };
+    
+    requestWakeLock();
+    
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        requestWakeLock();
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      isMounted = false;
+      if (wakeLock) {
+        wakeLock.release().catch(console.log);
+        wakeLock = null;
+      }
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
@@ -226,6 +261,7 @@ function TabletStationContent() {
             restTime: timerData.rest_time || 15,
             targetEndTime: new Date(timerData.target_end_time),
             setNumber: timerData.set_number || 1,
+            activeStationId: timerData.active_station_id || 1,
           });
           setTimeLeft(calculatedTimeLeft);
           setCurrentPhase(timerData.phase || 'work');
@@ -257,6 +293,7 @@ function TabletStationContent() {
           restTime: (data as any).rest_time || 15,
           targetEndTime: targetEndTime,
           setNumber: (data as any).set_number || 1,
+          activeStationId: (data as any).active_station_id || 1,
         });
         setTimeLeft(calculatedTimeLeft);
         setCurrentPhase((data as any).phase || 'work');
@@ -289,27 +326,32 @@ function TabletStationContent() {
     let mounted = true;
 
     const fetchLatestPlan = async () => {
+      if (!supabaseClient) return;
       try {
         const today = new Date().toISOString().split('T')[0];
+        
+        // 1. Try today's scheduled workout
         const { data: scheduledData } = await (supabaseClient
           .from("workouts") as any)
           .select("data")
-          .eq("id", today)
-          .single();
+          .eq("scheduled_date", today)
+          .limit(1)
+          .maybeSingle();
 
         if (scheduledData?.data && mounted) {
           storage.savePlan(scheduledData.data);
           setPlan(scheduledData.data);
-          setLastSynced(new Date().toLocaleString());
+          setLastSynced(`Scheduled: ${today}`);
           setError(null);
           return;
         }
 
+        // 2. Fallback to manually set "active" workout
         const { data: activeData } = await (supabaseClient
           .from("workouts") as any)
           .select("data")
           .eq("id", "active")
-          .single();
+          .maybeSingle();
 
         if (activeData?.data && mounted) {
           storage.savePlan(activeData.data);
@@ -443,7 +485,7 @@ function TabletStationContent() {
             </span>
           </div>
           <p className="text-[9px] uppercase tracking-[0.5em] font-black mr-2 text-[#C8A871]">
-            {displayPhase === 'change' ? 'STATION CHANGE' : displayPhase} {displayPhase !== 'change' && displayPhase !== 'prep' && displayPhase !== 'complete' ? `(SET ${globalTimer.setNumber}/4)` : ''}
+            {displayPhase === 'change' ? 'STATION CHANGE' : displayPhase} {displayPhase !== 'change' && displayPhase !== 'prep' && displayPhase !== 'complete' ? `(SET ${globalTimer.setNumber}/${setup?.rounds ?? 4})` : ''}
           </p>
         </div>
       </div>

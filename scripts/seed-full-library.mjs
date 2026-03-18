@@ -100,6 +100,8 @@ async function seed() {
       exercise_name: ex.name,
       required_equipment: ex.equipment,
       video_url: videoUrl,
+      equipment_tags: [ex.equipment],
+      muscle_tags: ex.muscles || [],
       metadata: {
         muscles: ex.muscles,
         cues: ex.cues,

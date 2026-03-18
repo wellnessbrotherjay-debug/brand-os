@@ -75,46 +75,109 @@ export default function DisplayTvPage() {
   );
 }
 
+// Premium Boutique Fonts & Luxury Animations
+const FontStyles = () => (
+  <style dangerouslySetInnerHTML={{ __html: `
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@200;300;400;500;600;700&display=swap');
+
+    .font-serif {
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .font-sans {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Pristine Cream Background with subtle studio lighting */
+    .bg-studio-cream {
+      background-color: #F8F6F0;
+      background-image: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #F8F6F0 60%, #EBE6DC 100%);
+    }
+
+    /* Enhanced Luxury Metallic Gold Foil Effect */
+    .text-gold-foil {
+      background: linear-gradient(135deg, #AA7D39 0%, #E8D3A2 30%, #C69C50 50%, #E8D3A2 70%, #8A5F20 100%);
+      background-size: 200% auto;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: foilShine 6s linear infinite;
+    }
+
+    @keyframes foilShine {
+      to { background-position: 200% center; }
+    }
+
+    /* Smooth sweeping animation for the SVG ring */
+    .progress-ring-circle {
+      transition: stroke-dashoffset 1s linear, stroke 1s ease-in-out;
+    }
+
+    /* Soft floating for the active timeline node */
+    @keyframes softFloat {
+      0%, 100% { transform: translateY(0) scale(1.15); box-shadow: 0 10px 20px -5px rgba(170, 125, 57, 0.3); }
+      50% { transform: translateY(-4px) scale(1.15); box-shadow: 0 15px 25px -5px rgba(170, 125, 57, 0.4); }
+    }
+    .timeline-active-node {
+      animation: softFloat 3s ease-in-out infinite;
+    }
+    
+    /* Subtle pulse for the center time */
+    @keyframes timePulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.95; transform: scale(0.98); }
+    }
+    .time-active-pulse {
+      animation: timePulse 2s ease-in-out infinite;
+    }
+  ` }} />
+);
+
+// Elegant Header Logo
+const AvrlLogo = () => (
+  <div className="flex flex-col items-center justify-center relative z-10 pt-4">
+    <img 
+      src="/logos/global-avrl-logo.png" 
+      alt="AVRL Logo" 
+      className="h-[200px] w-auto object-contain"
+    />
+  </div>
+);
+
 function DisplayTvContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const modeOverride = searchParams?.get('mode') as 'studio-a' | 'studio-b' | null;
 
-  const [showDebug, setShowDebug] = useState(false);
   const [setup, setSetup] = useState<WorkoutSetup | null>(null);
   const [plan, setPlan] = useState<WorkoutPlan | null>(null);
   const [session, setSession] = useState<SessionState | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
-  const [workoutCountdown, setWorkoutCountdown] = useState(60 * 36);
-  const [globalTimer, setGlobalTimer] = useState({
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  
+  // Perpetual 24/7 State
+  const [perpetualState, setPerpetualState] = useState({
     timeLeft: 0,
     phase: 'prep' as SessionPhase,
-    isActive: false,
+    round: 1,
+    stationId: 1,
     workTime: 45,
     restTime: 15,
-    targetEndTime: null as Date | null,
-    setNumber: 1,
+    totalRounds: 1,
+    totalStations: 6
   });
 
+  const { activeVenue } = useVenueContext();
 
   const toggleFullscreen = async () => {
     try {
       const doc = document as any;
       const elem = document.documentElement as any;
-
       if (!doc.fullscreenElement && !doc.webkitFullscreenElement) {
-        if (elem.requestFullscreen) {
-          await elem.requestFullscreen();
-        } else if (elem.webkitRequestFullscreen) {
-          await elem.webkitRequestFullscreen();
-        }
+        if (elem.requestFullscreen) await elem.requestFullscreen();
+        else if (elem.webkitRequestFullscreen) await elem.webkitRequestFullscreen();
       } else {
-        if (doc.exitFullscreen) {
-          await doc.exitFullscreen();
-        } else if (doc.webkitExitFullscreen) {
-          await doc.webkitExitFullscreen();
-        }
+        if (doc.exitFullscreen) await doc.exitFullscreen();
+        else if (doc.webkitExitFullscreen) await doc.webkitExitFullscreen();
       }
     } catch (err) {
       console.error("Fullscreen error:", err);
@@ -134,117 +197,95 @@ function DisplayTvContent() {
     };
   }, []);
 
-  const { activeVenue } = useVenueContext();
-  const { library: exerciseLibrary } = useExerciseMediaLibrary();
-
-  const [isFullscreen, setIsFullscreen] = useState(false);
-
-  // Hardcode brand colors to Beige and White - NO BLUE, NO YELLOW
-  const brandColors = {
-    primary: "#FFFFFF",   // White
-    secondary: "#F1EDE5", // Beige
-    accent: "#F1EDE5",    // Beige
-  };
-
-  const { primary: primaryBrand, secondary: secondaryBrand, accent: accentBrand } = brandColors;
-
   useEffect(() => {
     const nextSetup = storage.getSetup();
     if (!nextSetup) {
-      setError("Setup missing. Please configure stations first.");
+      setError("Setup missing.");
       router.replace("/setup");
       return;
     }
     setSetup(nextSetup);
     setPlan(storage.getPlan());
     setSession(storage.getSession());
-    setLastUpdated(new Date().toLocaleString());
   }, [router]);
 
   useEffect(() => {
-    const handleSetupUpdate = (nextSetup: WorkoutSetup | null) => setSetup(nextSetup);
-    const handlePlanUpdate = (nextPlan: WorkoutPlan | null) => {
-      setPlan(nextPlan);
-      setLastUpdated(new Date().toLocaleString());
+    const handleSetupUpdate = (next: WorkoutSetup | null) => setSetup(next);
+    const handlePlanUpdate = (next: WorkoutPlan | null) => {
+      setPlan(next);
     };
-    const handleSessionUpdate = (nextSession: SessionState | null) => setSession(nextSession);
+    const handleSessionUpdate = (next: SessionState | null) => setSession(next);
 
     const unsubSetup = storage.subscribe(STORAGE_KEYS.setup, handleSetupUpdate);
     const unsubPlan = storage.subscribe(STORAGE_KEYS.plan, handlePlanUpdate);
     const unsubSession = storage.subscribe(STORAGE_KEYS.session, handleSessionUpdate);
 
-    // ✅ Added: Local storage session polling to ensure sync even without StorageEvents
-    const interval = window.setInterval(() => {
-      const latest = storage.getSession();
-      if (latest) setSession(latest);
-    }, 1000);
-
     return () => {
       unsubSetup?.();
       unsubPlan?.();
       unsubSession?.();
-      window.clearInterval(interval);
     };
   }, []);
 
+  // Perpetual State Calculation Logic
   useEffect(() => {
-    const timer = window.setInterval(() => {
-      setWorkoutCountdown((value) => (value > 0 ? value - 1 : 0));
-    }, 1000);
-    return () => window.clearInterval(timer);
-  }, []);
+    const calculateState = () => {
+      if (!setup) return;
+
+      const now = new Date();
+      // Total seconds since start of today
+      const totalSecondsToday = (now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds() + (now.getMilliseconds() / 1000);
+      
+      const workTime = setup.workTime || 45;
+      const restTime = setup.restTime || 15;
+      const roundsPerStation = setup.rounds || 1;
+      const stationCount = setup.stations?.length || 6;
+
+      const stationDuration = (workTime + restTime) * roundsPerStation;
+      const totalCircuitDuration = stationDuration * stationCount;
+
+      // Current position within the 24/7 repeating circuit
+      const currentCircuitTime = totalSecondsToday % totalCircuitDuration;
+
+      // Determine current station
+      const currentStationIndex = Math.floor(currentCircuitTime / stationDuration);
+      const timeInStation = currentCircuitTime % stationDuration;
+
+      // Determine current round within station
+      const roundDuration = workTime + restTime;
+      const currentRound = Math.floor(timeInStation / roundDuration) + 1;
+      const timeInRound = timeInStation % roundDuration;
+
+      // Determine phase (work vs rest)
+      let phase: SessionPhase = 'work';
+      let timeLeft = 0;
+
+      if (timeInRound < workTime) {
+        phase = 'work';
+        timeLeft = Math.ceil(workTime - timeInRound);
+      } else {
+        phase = 'rest';
+        timeLeft = Math.ceil(roundDuration - timeInRound);
+      }
+
+      setPerpetualState({
+        timeLeft,
+        phase,
+        round: currentRound,
+        stationId: currentStationIndex + 1,
+        workTime,
+        restTime,
+        totalRounds: roundsPerStation,
+        totalStations: stationCount
+      });
+    };
+
+    const interval = setInterval(calculateState, 100);
+    return () => clearInterval(interval);
+  }, [setup, plan]);
 
   useEffect(() => {
     if (!supabaseClient) return;
-
-    let mounted = true;
-
-    const fetchPlan = async () => {
-      try {
-        const today = new Date().toISOString().split('T')[0];
-        
-        // Priority 1: Today's scheduled workout
-        const { data: scheduledData, error: scheduledError } = await (supabaseClient
-          .from("workouts") as any)
-          .select("data")
-          .eq("id", today)
-          .single();
-
-        if (scheduledData?.data && mounted) {
-          console.log("📅 Daily workout found for", today);
-          storage.savePlan(scheduledData.data);
-          setPlan(scheduledData.data);
-          setLastUpdated(new Date().toLocaleString());
-          setError(null);
-          return;
-        }
-
-        // Priority 2: Standard "active" workout
-        const { data: activeData, error: activeError } = await (supabaseClient
-          .from("workouts") as any)
-          .select("data")
-          .eq("id", "active")
-          .single();
-
-        if (activeError) {
-          console.error("Supabase plan fetch failed", activeError);
-          if (mounted) setError("Unable to fetch latest workout from Supabase.");
-          return;
-        }
-
-        if (activeData?.data && mounted) {
-          storage.savePlan(activeData.data);
-          setPlan(activeData.data);
-          setLastUpdated(new Date().toLocaleString());
-          setError(null);
-        }
-      } catch (err) {
-        console.error("Unexpected Supabase error", err);
-        if (mounted) setError("Unexpected Supabase error. Showing local plan.");
-      }
-    };
-
-    fetchPlan();
 
     const channel = supabaseClient
       .channel("tv-workouts")
@@ -253,194 +294,14 @@ function DisplayTvContent() {
         if (nextPlan) {
           storage.savePlan(nextPlan);
           setPlan(nextPlan);
-          setLastUpdated(new Date().toLocaleString());
         }
       })
       .subscribe();
 
-    // Global timer subscription (READ-ONLY - don't run countdown here)
-    const timerChannel = supabaseClient
-      .channel('global-timer-tv')
-      .on('postgres_changes', {
-        event: 'UPDATE',
-        schema: 'public',
-        table: 'global_timer',
-        filter: 'id=eq.active',
-      }, (payload) => {
-        const timerData = payload.new as any;
-        console.log('🔥 Display TV: Global timer UPDATE received!', {
-          phase: timerData.phase,
-          timeLeft: timerData.time_left,
-          target_end_time: timerData.target_end_time,
-          is_active: timerData.is_active,
-        });
-
-        if (timerData && timerData.target_end_time) {
-          // Calculate time left from target end time - this eliminates lag!
-          const targetEndTime = new Date(timerData.target_end_time).getTime();
-          const now = Date.now();
-          const calculatedTimeLeft = Math.max(0, Math.ceil((targetEndTime - now) / 1000));
-
-          console.log('🎨 Display TV: Phase switch to', timerData.phase, 'Time:', calculatedTimeLeft, 'Color:', timerData.phase === 'work' ? '#FF4D4D' : '#32CD32');
-
-          setGlobalTimer({
-            timeLeft: calculatedTimeLeft,
-            phase: timerData.phase || 'work',
-            isActive: true,
-            workTime: timerData.work_time || (setup?.workTime ?? 45),
-            restTime: timerData.rest_time || (setup?.restTime ?? 15),
-            targetEndTime: new Date(timerData.target_end_time),
-            setNumber: timerData.set_number || 1,
-          });
-        } else if (timerData) {
-          // Fallback to old method if target_end_time not available
-          console.log('Display TV: Using fallback for phase', timerData.phase);
-          setGlobalTimer({
-            timeLeft: timerData.time_left || 45,
-            phase: timerData.phase || 'work',
-            isActive: true,
-            workTime: timerData.work_time || (setup?.workTime ?? 45),
-            restTime: timerData.rest_time || (setup?.restTime ?? 15),
-            targetEndTime: null,
-            setNumber: timerData.set_number || 1,
-          });
-        }
-      })
-      .subscribe((status) => {
-        console.log('Display TV: Subscription status:', status);
-      });
-
-    // Local countdown that calculates from target time
-    const localInterval = setInterval(() => {
-      setGlobalTimer(prev => {
-        // Always run countdown if we have a valid target end time
-        if (!prev.targetEndTime) return prev;
-
-        // Calculate time left from target end time
-        const targetEndTime = prev.targetEndTime.getTime();
-        const now = Date.now();
-        const diff = targetEndTime - now;
-
-        let calculatedTimeLeft = Math.ceil(diff / 1000);
-
-        // Ensure we show at least 1 second if timer is active and target is in future
-        if (diff > 100 && calculatedTimeLeft <= 0) {
-          calculatedTimeLeft = 1;
-        } else if (diff <= 0) {
-          calculatedTimeLeft = 0;
-        }
-
-        return {
-          ...prev,
-          timeLeft: calculatedTimeLeft,
-        };
-      });
-    }, 500); // ✅ Increased from 100ms to 500ms to reduce iPad CPU load
-
-    // Fetch initial timer state (READ-ONLY) - do this immediately
-    const fetchTimer = async () => {
-      console.log('Display TV: Fetching initial timer state...');
-      const { data, error } = await (supabaseClient
-        .from('global_timer') as any)
-        .select('*')
-        .eq('id', 'active')
-        .single();
-
-      console.log('Display TV: Fetched timer data:', data, 'Error:', error);
-
-      if (data) {
-        let calculatedTimeLeft = 45; 
-        let targetEndTime = null;
-        let phase = data.phase || 'work';
-        let isActive = true;
-
-        if ((data as any).target_end_time) {
-          targetEndTime = new Date((data as any).target_end_time);
-          const now = Date.now();
-          const diff = targetEndTime.getTime() - now;
-          calculatedTimeLeft = Math.max(0, Math.ceil(diff / 1000));
-        } else {
-          calculatedTimeLeft = (data as any).time_left || 45;
-        }
-
-        setGlobalTimer({
-          timeLeft: calculatedTimeLeft,
-          phase: phase,
-          isActive: isActive, 
-          workTime: (data as any).work_time || (setup?.workTime ?? 45),
-          restTime: (data as any).rest_time || (setup?.restTime ?? 15),
-          targetEndTime: targetEndTime,
-          setNumber: data.set_number || 1,
-        });
-        console.log('Display TV: Initial sync complete - timeLeft:', calculatedTimeLeft, 'phase:', phase);
-      } else if (!error) {
-        console.log('Display TV: No timer found, waiting for Master...');
-      } else {
-        console.log('Display TV: Error fetching timer:', error);
-      }
-    };
-
-    // Fetch immediately
-    fetchTimer();
-
-    // Polling fallback - fetch timer every 1 second to ensure we never miss updates
-    const pollInterval = setInterval(async () => {
-      try {
-        const { data } = await (supabaseClient
-          .from('global_timer') as any)
-          .select('*')
-          .eq('id', 'active')
-          .single();
-
-        if (data && data.target_end_time) {
-          const targetEndTime = new Date(data.target_end_time);
-          const now = Date.now();
-          const diff = targetEndTime.getTime() - now;
-          let calculatedTimeLeft = Math.ceil(diff / 1000);
-
-          if (diff > 100 && calculatedTimeLeft <= 0) {
-            calculatedTimeLeft = 1;
-          } else if (diff <= 0) {
-            calculatedTimeLeft = 0;
-          }
-
-          console.log('🔄 Display TV: Polling update - phase:', data.phase, 'timeLeft:', calculatedTimeLeft);
-
-          setGlobalTimer({
-            timeLeft: calculatedTimeLeft,
-            phase: data.phase || 'work',
-            isActive: true,
-            workTime: data.work_time || (setup?.workTime ?? 45),
-            restTime: data.rest_time || (setup?.restTime ?? 15),
-            targetEndTime: targetEndTime,
-            setNumber: data.set_number || 1,
-          });
-        }
-      } catch (error) {
-        console.error('Display TV: Polling error:', error);
-      }
-    }, 1000); // Poll every 1 second
-
     return () => {
-      mounted = false;
       if (channel) supabaseClient.removeChannel(channel);
-      if (timerChannel) supabaseClient.removeChannel(timerChannel);
-      clearInterval(localInterval);
-      clearInterval(pollInterval);
     };
   }, []);
-
-  useEffect(() => {
-    if (!setup) {
-      setError("Setup missing. Please configure stations first.");
-    } else if (!plan) {
-      setError("No workout plan found. Use the builder to assign exercises.");
-    } else if (!plan.exercises?.length) {
-      setError("Workout plan has no exercises.");
-    } else {
-      setError(null);
-    }
-  }, [setup, plan]);
 
   const studioMode = modeOverride || plan?.studioMode || setup?.mode || 'studio-a';
 
@@ -451,7 +312,6 @@ function DisplayTvContent() {
       if (!groups[ex.stationId]) groups[ex.stationId] = [];
       groups[ex.stationId].push(ex);
     });
-    // Sort each group by part
     Object.values(groups).forEach(group => group.sort((a, b) => (a.part || 0) - (b.part || 0)));
     return Object.entries(groups).map(([id, exercises]) => ({
       stationId: Number(id),
@@ -459,7 +319,7 @@ function DisplayTvContent() {
     })).sort((a, b) => a.stationId - b.stationId);
   }, [plan]);
 
-  const currentStationId = session?.stationId ?? stationGroups[0]?.stationId ?? null;
+  const currentStationId = perpetualState.stationId || session?.stationId || stationGroups[0]?.stationId || null;
   const currentExercises = useMemo(() => {
     if (!currentStationId) return [];
     return (stationGroups.find((g) => g.stationId === currentStationId)?.exercises ?? []) as any[];
@@ -470,237 +330,168 @@ function DisplayTvContent() {
     return currentExercises.map(ex => ex.name).join(" + ");
   }, [currentExercises]);
 
-  const currentMedia = resolveExerciseMedia(currentExercises[0], { library: exerciseLibrary });
-  // Always use global timer if it has valid data, otherwise fall back to session timer
-  const hasValidGlobalTimer = globalTimer.timeLeft >= 0 && globalTimer.targetEndTime !== null;
-  const currentPhase: SessionPhase = hasValidGlobalTimer ? globalTimer.phase : (session?.phase ?? "prep");
-  const remainingTime = hasValidGlobalTimer ? globalTimer.timeLeft : (session?.remaining ?? setup?.workTime ?? 0);
-  const currentRound = session?.round ?? 1;
-  const totalRounds = setup?.rounds ?? 1;
+  const currentPhase: SessionPhase = perpetualState.phase;
+  const remainingTime = perpetualState.timeLeft;
+  const currentRound = perpetualState.round;
+  const totalRounds = perpetualState.totalRounds;
 
-  const setSummary = `SET ${globalTimer.setNumber} OF 4`;
-  const timingFormat = `45s Work / 45s Rest`;
+  // SVG Ring Calculations
+  const radius = 220;
+  const stroke = 12;
+  const normalizedRadius = radius - stroke * 2;
+  const circumference = normalizedRadius * 2 * Math.PI;
+  const maxTime = currentPhase === 'work' ? perpetualState.workTime : perpetualState.restTime;
+  const strokeDashoffset = circumference - (remainingTime / maxTime) * circumference;
 
-  const phaseColor = PHASE_COLOR[currentPhase];
+  const activeStation = stationGroups.find(s => s.stationId === currentStationId);
 
   return (
-    <main
-      className={`${orbitron.variable} ${orbitron.className} relative flex min-h-screen w-screen items-center justify-center bg-black text-white`}
-    >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#202020,transparent_55%)]" />
-
-      {!showDebug && (
-        <button
-          className="absolute top-6 left-6 z-50 bg-black text-white border-2 border-white/20 rounded-full shadow-lg px-3 py-2 text-xs"
-          style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center" }}
-          onClick={() => setShowDebug(true)}
-        >
-          🐞
-        </button>
-      )}
-
-      {/* Fullscreen Toggle Button (Bottom Right) */}
+    <div className="w-screen h-screen font-sans flex flex-col justify-between py-6 px-12 overflow-hidden bg-studio-cream select-none relative">
+      <FontStyles />
+      
+      {/* Fullscreen Toggle Button */}
       <div className="fixed bottom-6 right-6 z-50">
-        <button
-          onClick={toggleFullscreen}
-          className="w-12 h-12 rounded-full flex items-center justify-center bg-black/50 text-white border border-white/20 hover:bg-white/10 transition-all backdrop-blur-md"
-          title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-        >
-          {isFullscreen ? (
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
-          ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-          )}
+        <button onClick={toggleFullscreen} className="w-10 h-10 rounded-full flex items-center justify-center bg-black/10 text-[#8A5F20] border border-[#AA7D39]/20 hover:bg-black/20 transition-all backdrop-blur-md">
+          {isFullscreen ? <span className="text-lg font-black">⤓</span> : <span className="text-lg font-black">⤢</span>}
         </button>
       </div>
 
-      {showDebug && (
-        <div className="absolute top-6 left-6 z-50 bg-black text-white border-2 border-blue-400 rounded-lg shadow-lg p-4 text-xs max-w-xs space-y-2">
-          <div className="flex w-full justify-between items-center">
-            <strong>Debug Panel</strong>
-            <button
-              className="ml-2 px-2 py-1 bg-blue-900 text-white rounded-full border border-blue-400 text-xs"
-              onClick={() => setShowDebug(false)}
-            >
-              ✕
-            </button>
+      {/* TOP HEADER SECTION */}
+      <div className="w-full flex justify-between items-start z-10">
+        <AvrlLogo />
+        
+        {/* Class Details - Moved to top right for a cleaner center */}
+        <div className="flex flex-col items-end pt-8">
+          <p className="text-[#8A5F20] text-[10px] font-bold tracking-[0.3em] uppercase mb-1">
+            Circuit Format
+          </p>
+          <h2 className="text-[#2D2D2D] font-serif text-3xl tracking-wider mb-2">
+            {plan?.name || "Melt & Tone"}
+          </h2>
+          <div className="flex items-center space-x-3 text-[#6B6B6B] text-[11px] font-semibold tracking-[0.2em] uppercase bg-white/50 px-5 py-2 rounded-full border border-[#EBE6DC]">
+            <span>{perpetualState.workTime}s Work</span>
+            <span className="w-1 h-1 rounded-full bg-[#C69C50]"></span>
+            <span>{perpetualState.restTime}s Rest</span>
+            <span className="w-1 h-1 rounded-full bg-[#C69C50]"></span>
+            <span>RND {currentRound}/{totalRounds}</span>
           </div>
-          <div>Last Updated: {lastUpdated ?? "Never"}</div>
-          <div>Error: {error ?? "None"}</div>
-          <div>Phase: {currentPhase}</div>
-          <div>Remaining: {remainingTime}s</div>
-          <div>Round: {currentRound}</div>
-          <div className="border-t border-white/20 pt-2 mt-2">
-            <div className="font-bold mb-1">Global Timer:</div>
-            <div>isActive: {globalTimer.isActive.toString()}</div>
-            <div>timeLeft: {globalTimer.timeLeft}</div>
-            <div>phase: {globalTimer.phase}</div>
-            <div>targetEndTime: {globalTimer.targetEndTime ? globalTimer.targetEndTime.toISOString() : 'null'}</div>
-            <div>hasValidGlobalTimer: {hasValidGlobalTimer.toString()}</div>
+        </div>
+      </div>
+
+      {/* CENTER HERO SECTION (The Biocircuit Focus) */}
+      <div className="flex-1 flex flex-col items-center justify-center relative -mt-6">
+        
+        {/* Active Station Name (Hero Text) */}
+        <div className="flex flex-col items-center mb-10 z-20">
+          <p className="text-[#8A5F20] text-[12px] font-bold tracking-[0.4em] uppercase mb-2">
+            Currently Active
+          </p>
+          <h2 className={`text-5xl lg:text-6xl font-serif tracking-wide text-center transition-opacity duration-500 ${currentPhase === 'work' ? 'text-[#2D2D2D]' : 'text-[#8A5F20]'}`}>
+            {currentPhase === 'work' ? exerciseLabel : 'Rotate to Next Station'}
+          </h2>
+        </div>
+
+        {/* Massive Sweeping Timer Ring */}
+        <div className="relative flex items-center justify-center">
+          {/* Background Track Ring */}
+          <svg height={radius * 2} width={radius * 2} className="absolute transform -rotate-90 drop-shadow-sm">
+            <circle
+              stroke="#EBE6DC"
+              fill="transparent"
+              strokeWidth={stroke}
+              r={normalizedRadius}
+              cx={radius}
+              cy={radius}
+            />
+            {/* Animated Progress Ring */}
+            <circle
+              className="progress-ring-circle"
+              stroke={currentPhase === 'work' ? "url(#goldGradient)" : "#2D2D2D"}
+              fill="transparent"
+              strokeWidth={stroke}
+              strokeLinecap="round"
+              strokeDasharray={circumference + ' ' + circumference}
+              style={{ strokeDashoffset }}
+              r={normalizedRadius}
+              cx={radius}
+              cy={radius}
+            />
+          </svg>
+
+          {/* Inner Content */}
+          <div className="flex flex-col items-center justify-center w-[350px] h-[350px] bg-white rounded-full shadow-[inset_0_4px_30px_rgba(0,0,0,0.03),0_10px_40px_rgba(170,125,57,0.05)] border border-[#F8F6F0]">
+            <p className={`text-[12px] font-bold tracking-[0.4em] uppercase mb-4 transition-colors duration-500 ${currentPhase === 'work' ? 'text-[#C69C50]' : 'text-[#2D2D2D]'}`}>
+              {currentPhase === 'work' ? 'Active Work' : 'Recovery'}
+            </p>
+            
+            <div className={`flex items-start time-active-pulse ${currentPhase === 'work' ? 'text-gold-foil' : 'text-[#2D2D2D]'}`}>
+              <span className="font-serif text-[9rem] leading-[0.8] font-light tabular-nums tracking-tighter drop-shadow-sm">
+                {remainingTime}
+              </span>
+            </div>
+            
+            <p className="font-sans text-[#8A5F20] text-[14px] tracking-[0.3em] uppercase mt-6 opacity-80">
+              Seconds
+            </p>
           </div>
+        </div>
+      </div>
+
+      {/* BOTTOM TIMELINE (The Track) */}
+      <div className="w-full h-[200px] bg-white rounded-[2.5rem] border border-[#E8D3A2]/40 shadow-[0_10px_40px_rgba(0,0,0,0.02)] flex flex-col justify-center px-12 relative z-10 mb-4">
+        
+        {/* The Track Line */}
+        <div className="absolute top-[45%] left-16 right-16 h-[2px] bg-[#EBE6DC] z-0"></div>
+        {/* Active Track Highlight (draws a gold line up to the current station) */}
+        <div 
+          className="absolute top-[45%] left-16 h-[2px] bg-gradient-to-r from-[#AA7D39] to-[#E8D3A2] z-0 transition-all duration-1000 ease-in-out"
+          style={{ width: `calc(${(((currentStationId || 1) - 1) / (stationGroups.length - 1 || 1)) * 100}% - 4rem)` }}
+        ></div>
+
+        <div className="flex justify-between items-start w-full relative z-10">
+          {stationGroups.map((group) => {
+            const isActive = group.stationId === currentStationId;
+            const isPast = currentStationId ? group.stationId < currentStationId : false;
+            const exerciseLabel = group.exercises.map(ex => ex.name).join(" + ");
+            const exerciseCategory = group.exercises[0]?.category || "BODYWEIGHT";
+            
+            return (
+              <div key={group.stationId} className="flex flex-col items-center w-32">
+                
+                {/* Station Node/Circle */}
+                <div className={`w-14 h-14 rounded-full flex items-center justify-center text-xl font-serif transition-all duration-700
+                  ${isActive 
+                    ? "bg-white border-[3px] border-[#C69C50] text-[#C69C50] font-bold timeline-active-node" 
+                    : isPast
+                      ? "bg-[#F8F6F0] border-2 border-[#C69C50] text-[#C69C50] opacity-60"
+                      : "bg-white border-2 border-[#EBE6DC] text-[#A0A0A0]"
+                  }
+                `}>
+                  {group.stationId}
+                </div>
+
+                {/* Station Info */}
+                <div className={`mt-6 text-center transition-all duration-700 ${isActive ? 'transform -translate-y-1' : ''}`}>
+                  <p className={`text-[9px] font-bold tracking-[0.2em] uppercase mb-1.5 ${isActive ? 'text-[#8A5F20]' : 'text-[#A0A0A0]'}`}>
+                    {exerciseCategory}
+                  </p>
+                  <p className={`font-serif text-[15px] leading-tight ${isActive ? 'text-[#2D2D2D] font-semibold' : 'text-[#8B8B8B]'}`}>
+                    {exerciseLabel}
+                  </p>
+                </div>
+
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {error && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-2xl bg-red-900/90 backdrop-blur-md border border-red-500/50 text-xs uppercase tracking-widest text-white shadow-2xl">
+          {error}
         </div>
       )}
-
-      {/* Main Content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 py-10 lg:px-12 lg:py-12 flex flex-col gap-12">
-
-        {/* Header Section */}
-        <header className="flex flex-col items-center gap-3 text-center mb-4">
-          <h1 className="text-5xl font-extrabold uppercase md:text-7xl tracking-[0.2em] text-[#F1EDE5]">
-            AVRL
-          </h1>
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs uppercase tracking-[0.4em] text-white font-bold">
-            <span className="opacity-80">{timingFormat}</span>
-            <span className="opacity-40">•</span>
-            <span className="opacity-80">{setSummary}</span>
-            <span className="opacity-40">•</span>
-            <span className="opacity-80">Round {currentRound} of {totalRounds}</span>
-          </div>
-        </header>
-
-        {/* Status Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div
-            className="flex flex-col items-center gap-4 rounded-[24px] border-2 px-6 py-8 text-center"
-            style={{
-              borderColor: phaseColor,
-              backgroundColor: hexToRgba(phaseColor, 0.12),
-              boxShadow: `0 0 55px ${hexToRgba(phaseColor, 0.25)}`,
-            }}
-          >
-            <p className="text-xs uppercase tracking-[0.45em]" style={{ color: phaseColor }}>
-              Current Phase
-            </p>
-            <p
-              className="text-3xl font-black uppercase"
-              style={{ color: phaseColor, textShadow: `0 0 25px ${hexToRgba(phaseColor, 0.35)}` }}
-            >
-              {PHASE_LABEL[currentPhase]} {currentPhase !== 'change' && currentPhase !== 'complete' && currentPhase !== 'prep' ? `(${globalTimer.setNumber}/4)` : ''}
-            </p>
-          </div>
-
-          <div
-            className="flex flex-col items-center gap-4 rounded-[24px] border-2 px-6 py-8 text-center"
-            style={{
-              borderColor: secondaryBrand,
-              backgroundColor: hexToRgba(secondaryBrand, 0.12),
-              boxShadow: `0 0 55px ${hexToRgba(secondaryBrand, 0.25)}`,
-            }}
-          >
-            <p className="text-xs uppercase tracking-[0.45em]" style={{ color: secondaryBrand }}>
-              Time Remaining
-            </p>
-            <p
-              className="text-4xl font-black"
-              style={{ color: primaryBrand, textShadow: `0 0 25px ${hexToRgba(primaryBrand, 0.35)}` }}
-            >
-              {remainingTime}s
-            </p>
-          </div>
-
-          <div
-            className="flex flex-col items-center gap-4 rounded-[24px] border-2 px-6 py-8 text-center"
-            style={{
-              borderColor: secondaryBrand,
-              backgroundColor: hexToRgba(secondaryBrand, 0.12),
-              boxShadow: `0 0 55px ${hexToRgba(secondaryBrand, 0.25)}`,
-            }}
-          >
-            <p className="text-xs uppercase tracking-[0.45em]" style={{ color: secondaryBrand }}>
-              Active Station
-            </p>
-            <p
-              className="text-3xl font-black italic uppercase leading-none"
-              style={{ color: primaryBrand, textShadow: `0 0 25px ${hexToRgba(primaryBrand, 0.35)}` }}
-            >
-              {currentStationId ? `Station ${currentStationId}` : "TBD"}
-            </p>
-            {studioMode === 'studio-b' && (
-              <p className="text-xs font-bold text-white/70 uppercase tracking-widest mt-1">
-                {exerciseLabel}
-              </p>
-            )}
-          </div>
-        </div>
-
-        {/* Station Lineup Section */}
-        <div
-          className="rounded-[24px] border border-white/10 bg-black/60 px-8 py-10 shadow-[0_0_45px_rgba(0,0,0,0.4)] backdrop-blur-md"
-        >
-          <div className="flex items-center justify-between mb-8">
-            <h2
-              className="text-2xl font-bold uppercase tracking-[0.2em] text-[#F1EDE5]"
-            >
-              STATION LINEUP
-            </h2>
-            <div
-              className="text-sm uppercase tracking-[0.15em] font-bold text-white/70"
-            >
-              {stationGroups.length} STATIONS ON DECK
-            </div>
-          </div>
-
-          {/* Stations Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {stationGroups.length > 0 ? (
-              stationGroups.map((group) => (
-                <div
-                  key={group.stationId}
-                  className={`rounded-[20px] border-2 p-6 transition-all duration-300 hover:scale-105 ${group.stationId === currentStationId
-                      ? "bg-white/10 border-[#F1EDE5] shadow-[0_0_35px_rgba(241,237,229,0.3)]"
-                      : "bg-black/60 border-white/20 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
-                    }`}
-                >
-                  <div className="text-center">
-                    <div
-                      className={`text-xl font-black mb-2 uppercase tracking-wider ${group.stationId === currentStationId
-                          ? "text-[#F1EDE5]"
-                          : "text-white/60"
-                        }`}
-                    >
-                      STATION {group.stationId}
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      {group.exercises.map((ex, i) => (
-                        <div
-                          key={i}
-                          className={`text-xs font-bold uppercase tracking-wide truncate ${group.stationId === currentStationId
-                              ? "text-white"
-                              : "text-white/40"
-                            }`}
-                        >
-                          {studioMode === 'studio-b' ? `${i + 1}. ` : ""}{ex.name}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div
-                className="col-span-full text-center p-12 border-2 rounded-[20px] border-brand-accent/40 bg-brand-accent/10 shadow-[0_0_40px_rgba(255,209,0,0.1)]"
-              >
-                <p className="text-xl font-bold text-brand-accent">No stations assigned yet</p>
-                <p className="text-sm mt-2 text-brand-accent/70">Use the builder to assign exercises to stations.</p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {error && (
-          <div
-            className="text-sm text-center border-2 rounded-[20px] px-6 py-4"
-            style={{
-              borderColor: "#FF4D4D",
-              backgroundColor: hexToRgba("#FF4D4D", 0.1),
-              color: "#FF4D4D",
-              boxShadow: '0 0 30px rgba(255, 77, 77, 0.15)'
-            }}
-          >
-            {error}
-          </div>
-        )}
-      </div>
-    </main>
+    </div>
   );
 }
+

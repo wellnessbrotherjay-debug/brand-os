@@ -12,6 +12,7 @@ const nextConfig = {
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || "",
     NEXT_PUBLIC_FACEBOOK_APP_ID: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID || ""
   },
+  transpilePackages: ['@cloudflare/stream-react'],
   images: {
     remotePatterns: [
       {

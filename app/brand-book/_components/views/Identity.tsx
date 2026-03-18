@@ -401,9 +401,9 @@ export const Identity: React.FC = () => {
     return (
         <div className="p-8 max-w-6xl mx-auto pb-40">
             <div className="flex items-center gap-6 mb-10 pb-8 border-b border-black/5">
-                {identity.logo_primary_url && (
-                    <img src={identity.logo_primary_url} alt="Brand Logo" className="h-20 w-auto max-w-[150px] object-contain" />
-                )}
+                {identity.logo_primary_url || "/logos/global-avrl-logo.png" ? (
+                    <img src={identity.logo_primary_url || "/logos/global-avrl-logo.png"} alt="Brand Logo" className="h-20 w-auto max-w-[150px] object-contain" />
+                ) : null}
                 <div>
                     <h1 className="text-4xl font-bold font-serif-brand">Identity Hub</h1>
                     <p className="opacity-60 text-lg">Definitive Brand Guidelines for {activeBrand.name}.</p>
