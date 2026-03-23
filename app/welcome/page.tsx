@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { useBranding } from "@/lib/hooks/useBranding";
 import { ensureGuestSession } from "@/lib/utils/guestSession";
@@ -330,7 +331,7 @@ export default function WelcomePage() {
       {brand.videoUrl ? (
         <video className="absolute inset-0 h-full w-full object-cover opacity-40" src={brand.videoUrl} autoPlay loop muted playsInline />
       ) : (
-        <img src={brand.backgroundUrl} alt="Hotel background" className="absolute inset-0 h-full w-full object-cover" />
+        <Image src={brand.backgroundUrl} alt="Hotel background" fill sizes="100vw" className="object-cover" unoptimized />
       )}
       <div
         className="absolute inset-0 bg-gradient-to-br from-black/85 via-black/65 to-black/35"
@@ -367,10 +368,13 @@ export default function WelcomePage() {
         <section className="mt-14 flex flex-col gap-10 lg:flex-row lg:items-center">
           <div className="flex items-center gap-8">
             <div className="h-28 w-28 rounded-full border border-white/20 bg-white/5 p-4 shadow-[0_25px_60px_rgba(0,0,0,0.45)] backdrop-blur">
-              <img
+              <Image
                 src={brand.logoUrl}
                 alt={`${brand.name} logo`}
+                width={112}
+                height={112}
                 className="h-full w-full object-contain"
+                unoptimized
                 onError={(event) => {
                   (event.target as HTMLImageElement).style.display = "none";
                 }}

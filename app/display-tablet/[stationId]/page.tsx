@@ -97,6 +97,15 @@ function TabletStationContent() {
   const [showDebug, setShowDebug] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastSynced, setLastSynced] = useState<string | null>(null);
+  const [localTime, setLocalTime] = useState("");
+
+  useEffect(() => {
+    const updateClock = () =>
+      setLocalTime(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
+    updateClock();
+    const clockInterval = window.setInterval(updateClock, 1000);
+    return () => window.clearInterval(clockInterval);
+  }, []);
   const [videoError, setVideoError] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -475,14 +484,21 @@ function TabletStationContent() {
         </div>
 
         <div className="flex flex-col items-end gap-1">
-          <div className="flex items-center gap-3 bg-white/50 backdrop-blur-md rounded-full px-4 py-2 border border-[#C8A871]/30">
-            <div
-              className="w-3 h-3 rounded-full animate-pulse shadow-[0_0_8px_currentColor]"
-              style={{ backgroundColor: displayPhaseColor === PHASE_COLOR.work ? "#C8A871" : displayPhaseColor, color: displayPhaseColor === PHASE_COLOR.work ? "#C8A871" : displayPhaseColor }}
-            />
-            <span className="text-2xl font-black tabular-nums tracking-tighter text-[#121112]">
-              {displayTime}<span className="text-[10px] ml-0.5 opacity-60 italic">s</span>
-            </span>
+          <div className="flex items-center gap-4">
+            {localTime && (
+              <span className="text-xl font-black tabular-nums tracking-widest text-[#121112] opacity-60">
+                {localTime}
+              </span>
+            )}
+            <div className="flex items-center gap-3 bg-white/50 backdrop-blur-md rounded-full px-4 py-2 border border-[#C8A871]/30">
+              <div
+                className="w-3 h-3 rounded-full animate-pulse shadow-[0_0_8px_currentColor]"
+                style={{ backgroundColor: displayPhaseColor === PHASE_COLOR.work ? "#C8A871" : displayPhaseColor, color: displayPhaseColor === PHASE_COLOR.work ? "#C8A871" : displayPhaseColor }}
+              />
+              <span className="text-2xl font-black tabular-nums tracking-tighter text-[#121112]">
+                {displayTime}<span className="text-[10px] ml-0.5 opacity-60 italic">s</span>
+              </span>
+            </div>
           </div>
           <p className="text-[9px] uppercase tracking-[0.5em] font-black mr-2 text-[#C8A871]">
             {displayPhase === 'change' ? 'STATION CHANGE' : displayPhase} {displayPhase !== 'change' && displayPhase !== 'prep' && displayPhase !== 'complete' ? `(SET ${globalTimer.setNumber}/${setup?.rounds ?? 4})` : ''}

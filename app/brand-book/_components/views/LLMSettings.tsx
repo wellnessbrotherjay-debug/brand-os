@@ -75,7 +75,7 @@ export const LLMSettingsView: React.FC = () => {
                     <BrainCircuit size={32} className="text-blue-600" /> 
                     Brand Brain AI
                 </h1>
-                <p className="opacity-60">Configure the personality and constraints for the AI model generating {activeBrand.name}'s content.</p>
+                <p className="opacity-60">Configure the personality and constraints for the AI model generating {activeBrand.name}&apos;s content.</p>
             </div>
             <button 
                 onClick={handleSave}
@@ -206,7 +206,7 @@ export const LLMSettingsView: React.FC = () => {
                 <div className="bg-gradient-to-b from-blue-50 to-white p-6 rounded-xl border border-blue-100 shadow-sm sticky top-6">
                     <h3 className="font-bold mb-4 flex items-center gap-2 text-blue-900"><Sparkles size={18} /> Test Playground</h3>
                     <p className="text-xs text-blue-800 mb-4 leading-relaxed">
-                        Generate a sample output to verify your tone settings before saving. This simulates a "Social Media Caption" generation.
+                        Generate a sample output to verify your tone settings before saving. This simulates a &quot;Social Media Caption&quot; generation.
                     </p>
                     
                     <button 

@@ -109,7 +109,7 @@ const FontStyles = () => (
 
     /* Smooth sweeping animation for the SVG ring */
     .progress-ring-circle {
-      transition: stroke-dashoffset 1s linear, stroke 1s ease-in-out;
+      transition: stroke-dashoffset 0.1s linear, stroke 0.5s ease-in-out;
     }
 
     /* Soft floating for the active timeline node */
@@ -135,9 +135,11 @@ const FontStyles = () => (
 // Elegant Header Logo
 const AvrlLogo = () => (
   <div className="flex flex-col items-center justify-center relative z-10 pt-4">
-    <img 
-      src="/logos/global-avrl-logo.png" 
-      alt="AVRL Logo" 
+    <Image
+      src="/logos/global-avrl-logo.png"
+      alt="AVRL Logo"
+      width={400}
+      height={200}
       className="h-[200px] w-auto object-contain"
     />
   </div>
@@ -280,7 +282,7 @@ function DisplayTvContent() {
       });
     };
 
-    const interval = setInterval(calculateState, 100);
+    const interval = setInterval(calculateState, 50);
     return () => clearInterval(interval);
   }, [setup, plan]);
 
@@ -379,7 +381,26 @@ function DisplayTvContent() {
       </div>
 
       {/* CENTER HERO SECTION (The Biocircuit Focus) */}
-      <div className="flex-1 flex flex-col items-center justify-center relative -mt-6">
+      <div className="flex-1 flex flex-col items-center justify-center relative -mt-24">
+        
+        {/* Persistent Phase Status - Active Work, Rest, Work always displayed */}
+        <div className="flex gap-16 mb-12 relative z-20">
+          <div className={`flex flex-col items-center transition-all duration-500 ${currentPhase === 'work' ? 'scale-110' : 'opacity-30 grayscale'}`}>
+            <span className={`text-[11px] font-bold tracking-[0.4em] uppercase mb-1 ${currentPhase === 'work' ? 'text-[#8A5F20]' : 'text-[#6B6B6B]'}`}>Active Work</span>
+            <span className="text-[10px] text-[#6B6B6B] tracking-[0.3em] uppercase">{perpetualState.workTime}s</span>
+            <div className={`h-[3px] rounded-full transition-all duration-500 mt-2 ${currentPhase === 'work' ? 'w-16 bg-[#C69C50]' : 'w-0 bg-transparent'}`}></div>
+          </div>
+          <div className={`flex flex-col items-center transition-all duration-500 ${currentPhase === 'rest' ? 'scale-110' : 'opacity-30 grayscale'}`}>
+            <span className={`text-[11px] font-bold tracking-[0.4em] uppercase mb-1 ${currentPhase === 'rest' ? 'text-[#8A5F20]' : 'text-[#6B6B6B]'}`}>Rest</span>
+            <span className="text-[10px] text-[#6B6B6B] tracking-[0.3em] uppercase">{perpetualState.restTime}s</span>
+            <div className={`h-[3px] rounded-full transition-all duration-500 mt-2 ${currentPhase === 'rest' ? 'w-12 bg-[#C69C50]' : 'w-0 bg-transparent'}`}></div>
+          </div>
+          <div className={`flex flex-col items-center transition-all duration-500 opacity-30`}>
+            <span className={`text-[11px] font-bold tracking-[0.4em] uppercase mb-1 text-[#6B6B6B]`}>Work</span>
+            <span className="text-[10px] text-[#6B6B6B] tracking-[0.3em] uppercase">{perpetualState.workTime}s</span>
+            <div className="h-[3px] w-0 bg-transparent rounded-full mt-2"></div>
+          </div>
+        </div>
         
         {/* Active Station Name (Hero Text) */}
         <div className="flex flex-col items-center mb-10 z-20">

@@ -76,30 +76,6 @@ export default function RemotePage({ params }: RemotePageProps) {
     fetchSessionData();
   }, [fetchSessionData]);
 
-  // Setup realtime subscription
-  useEffect(() => {
-    const channel = supabase
-      .channel(`remote:${params.sessionId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'session_events',
-          filter: `session_id=eq.${params.sessionId}`,
-        },
-        (payload) => {
-          const event = payload.new as SessionEvent;
-          handleRealtimeEvent(event);
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [params.sessionId, supabase]);
-
   // Handle realtime events
   const handleRealtimeEvent = useCallback((event: SessionEvent) => {
     switch (event.event) {
@@ -136,6 +112,30 @@ export default function RemotePage({ params }: RemotePageProps) {
         break;
     }
   }, [fetchSessionData]);
+
+  // Setup realtime subscription
+  useEffect(() => {
+    const channel = supabase
+      .channel(`remote:${params.sessionId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'session_events',
+          filter: `session_id=eq.${params.sessionId}`,
+        },
+        (payload) => {
+          const event = payload.new as SessionEvent;
+          handleRealtimeEvent(event);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [params.sessionId, supabase, handleRealtimeEvent]);
 
   // Send event to server
   const sendEvent = useCallback(async (event: string, payload: any = {}) => {

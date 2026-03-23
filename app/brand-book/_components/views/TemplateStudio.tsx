@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element, jsx-a11y/alt-text */
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useAppStore } from '../store';

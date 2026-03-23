@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import Image from "next/image";
 import { createClient } from "@supabase/supabase-js";
 import {
   storage,
@@ -405,10 +406,13 @@ export default function HomePage() {
               </p>
 
               {displayLogo ? (
-                <img
+                <Image
                   src={displayLogo}
                   alt={displayName ?? "Active venue"}
+                  width={120}
+                  height={48}
                   className="mt-4 h-12 w-auto rounded bg-white/10 p-2 object-contain"
+                  unoptimized
                 />
               ) : null}
 

@@ -1,9 +1,14 @@
+export type BodyPart = "upper" | "lower" | "core" | "full_body";
+export type MovementType = "push" | "pull" | "hinge" | "squat" | "carry" | "cardio";
+
 export type ExerciseMedia = {
   name: string;
   equipment: string;
   video: string;
   muscles?: string[];
   cues?: string[];
+  bodyPart?: BodyPart;
+  movementType?: MovementType;
 };
 
 const PUBLIC_VIDEO_BASE = "/videos/public";
@@ -30,6 +35,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "6384f51bc1425d5e98f1862776ffd019",
     muscles: ["biceps", "forearms"],
     cues: ["Keep elbows pinned", "Control the lowering phase"],
+    bodyPart: "upper",
+    movementType: "pull",
   },
   {
     name: "Renegade Row",
@@ -37,6 +44,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "a336b2b1c4814814b94b438fa13e6fbb",
     muscles: ["back", "core", "arms"],
     cues: ["Hold a plank", "Pull elbow to the sky"],
+    bodyPart: "upper",
+    movementType: "pull",
   },
   {
     name: "DB Squat Woodchops",
@@ -44,6 +53,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "91eb219ccc758944dfd59e0c65491a91",
     muscles: ["legs", "core"],
     cues: ["Sit into the squat", "Drive the weight overhead in one motion"],
+    bodyPart: "full_body",
+    movementType: "squat",
   },
   {
     name: "DB Tricep Kickback",
@@ -51,6 +62,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "e944b2545ef05c042fed961f1498a42a",
     muscles: ["triceps"],
     cues: ["Lock the elbow in place", "Squeeze at the top"],
+    bodyPart: "upper",
+    movementType: "push",
   },
 
   // Barbell
@@ -60,6 +73,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "e4a8b6ee6e5635d821907609ffab967e",
     muscles: ["shoulders", "triceps"],
     cues: ["Brace your core", "Press straight overhead"],
+    bodyPart: "upper",
+    movementType: "push",
   },
   {
     name: "Barbell Sit Up",
@@ -67,6 +82,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "4859c67dc4710fb03a1af2edbcb9cc19",
     muscles: ["core", "hip flexors"],
     cues: ["Keep the bar stacked", "Control the descent"],
+    bodyPart: "core",
+    movementType: "carry",
   },
   {
     name: "Barbell Front Squat Back Lunge",
@@ -74,6 +91,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "5cfa6aecc8089781efd94c56d2beb5ab",
     muscles: ["quads", "glutes"],
     cues: ["Elbows high", "Push through the front heel"],
+    bodyPart: "lower",
+    movementType: "squat",
   },
 
   // Bands / bench
@@ -83,6 +102,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "6c4c5fe9804e87cc679b8eab1780e92d",
     muscles: ["chest", "triceps"],
     cues: ["Drive shoulders into the pad", "Press evenly with both hands"],
+    bodyPart: "upper",
+    movementType: "push",
   },
   {
     name: "Band Single Arm Tricep Extension",
@@ -90,6 +111,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "74c586d0d31aa4416513e2754a1974e9",
     muscles: ["triceps"],
     cues: ["Lock elbows", "Squeeze the finish"],
+    bodyPart: "upper",
+    movementType: "push",
   },
   {
     name: "Band Seated Lat Pull Down",
@@ -97,6 +120,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "1fe74d766ddeb0d3ea20567a9cb6774c",
     muscles: ["back", "lats"],
     cues: ["Drive elbows toward ribs", "Keep chest proud"],
+    bodyPart: "upper",
+    movementType: "pull",
   },
   {
     name: "Walking Lunge",
@@ -104,6 +129,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "f4f49cbf22096fe7a337465bee6c0c01",
     muscles: ["glutes", "quads"],
     cues: ["Step long", "Push through the front heel"],
+    bodyPart: "lower",
+    movementType: "squat",
   },
 
   // Bodyweight
@@ -113,6 +140,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "d5c65024d08f9ce3359b56f849568ca4",
     muscles: ["chest", "shoulders", "triceps"],
     cues: ["Maintain a plank line", "Tap softly without rotating"],
+    bodyPart: "upper",
+    movementType: "push",
   },
   {
     name: "Slow Wide Arm Push Up",
@@ -120,6 +149,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "393538925c722b05c985795885f83b1b",
     muscles: ["chest", "shoulders"],
     cues: ["Lower with control", "Keep elbows slightly bent at top"],
+    bodyPart: "upper",
+    movementType: "push",
   },
 
   // TRX
@@ -129,6 +160,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "aa7dfaf3372a957d77648fba6ff62134",
     muscles: ["back", "biceps"],
     cues: ["Squeeze shoulder blades", "Keep body straight"],
+    bodyPart: "upper",
+    movementType: "pull",
   },
   {
     name: "TRX Pike",
@@ -136,6 +169,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "f01b3c34e40bcb2d43593c2444890d2f",
     muscles: ["core", "shoulders"],
     cues: ["Lift hips to the sky", "Keep legs straight"],
+    bodyPart: "core",
+    movementType: "carry",
   },
 
   // BOSU
@@ -145,6 +180,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "359dd10e2c026f1ace1b51e7f78241d3",
     muscles: ["core", "obliques"],
     cues: ["Press the forearm into the BOSU", "Drive hips high"],
+    bodyPart: "core",
+    movementType: "carry",
   },
   {
     name: "BOSU Knee Tuck",
@@ -152,6 +189,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "d29d7ae710d301c53fd73d409bfdcf92",
     muscles: ["core", "hip flexors"],
     cues: ["Keep shoulders stacked above hands", "Pull knees in tight"],
+    bodyPart: "core",
+    movementType: "carry",
   },
   {
     name: "Bosu Russian Twists",
@@ -159,6 +198,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "409b08eb19cfe8f5e14dea393300ea6e",
     muscles: ["core", "obliques"],
     cues: ["Stay tall through the chest", "Rotate from the ribs"],
+    bodyPart: "core",
+    movementType: "carry",
   },
 
   // Box / Plyo
@@ -168,6 +209,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "344daa5da4c57504bda42a7a054ebda2",
     muscles: ["legs", "glutes"],
     cues: ["Plant the full foot", "Drive through the heel"],
+    bodyPart: "lower",
+    movementType: "squat",
   },
   {
     name: "Box Jump Burpee",
@@ -175,6 +218,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "39b64433fd60d29565f1a1a76be0782e",
     muscles: ["total body"],
     cues: ["Land softly on the box", "Keep chest lifted from the burpee"],
+    bodyPart: "full_body",
+    movementType: "cardio",
   },
 
   // Bench variations
@@ -184,6 +229,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "1ddc9bf1c89b660004b7a6253f28bf89",
     muscles: ["chest", "shoulders"],
     cues: ["Lower to the box with control", "Drive through the floor"],
+    bodyPart: "upper",
+    movementType: "push",
   },
   {
     name: "Bench Press Hold",
@@ -191,6 +238,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "b9659815ec7e2634ee92b88f23d54504",
     muscles: ["chest", "triceps"],
     cues: ["Pin shoulder blades down", "Pause with elbows at 90°"],
+    bodyPart: "upper",
+    movementType: "push",
   },
 
   // Cardio placeholders (mapped to SkiErg clips for now)
@@ -200,6 +249,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "8369c9ff648b505228ae987fcdddb730",
     muscles: ["cardio", "full body"],
     cues: ["Stay tall", "Drive elbows back"],
+    bodyPart: "full_body",
+    movementType: "cardio",
   },
   {
     name: "Bike Sprint",
@@ -207,6 +258,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "40d007c2241fcaae14b47a1c6cabd20c",
     muscles: ["cardio", "upper body"],
     cues: ["Push/pull evenly", "Keep cadence high"],
+    bodyPart: "full_body",
+    movementType: "cardio",
   },
   {
     name: "Reverse grip Deadlift into row",
@@ -214,6 +267,8 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
     video: "6586fd790fec609fb2277c33258e3e9b",
     muscles: ["back", "hamstrings", "glutes"],
     cues: ["Keep back flat", "Pull barbell to belly button", "Reverse grip (palms up)"],
+    bodyPart: "full_body",
+    movementType: "hinge",
   },
 ];
 

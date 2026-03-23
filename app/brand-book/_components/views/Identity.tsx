@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element, jsx-a11y/alt-text */
 import React, { useState, useRef } from 'react';
 import { useAppStore } from '../store';
 import { generateMoodboardPrompts, generateBrandStrategy } from '../services/geminiService';

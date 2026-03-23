@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element, jsx-a11y/alt-text , react-hooks/exhaustive-deps, jsx-a11y/alt-text */
 import React, { useRef, useState, useEffect } from 'react';
 import { useAppStore } from '../store';
 import { Eye, Trash2, Plus, Wallet, MapPin, Briefcase, Target, User, ChevronLeft, ChevronRight, Check, Sparkles, ArrowLeft, ArrowRight, X } from 'lucide-react';

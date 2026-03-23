@@ -803,6 +803,13 @@ export default function BuilderPage() {
               >
                 Edit Station Setup
               </Link>
+              <Link
+                href="/program-builder"
+                className="text-sm uppercase tracking-[0.25em] hover:opacity-80 transition-opacity"
+                style={{ color: secondaryBrand }}
+              >
+                10-Day Program →
+              </Link>
             </div>
           </section>
 

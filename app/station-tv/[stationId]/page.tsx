@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
 import { createClient } from "@supabase/supabase-js";
 import { Orbitron } from "next/font/google";
 import {
@@ -81,6 +82,15 @@ export default function StationTvDisplayPage() {
   const [error, setError] = useState<string | null>(null);
   const [lastSynced, setLastSynced] = useState<string | null>(null);
   const [showDebug, setShowDebug] = useState(false);
+  const [localTime, setLocalTime] = useState("");
+
+  useEffect(() => {
+    const updateClock = () =>
+      setLocalTime(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
+    updateClock();
+    const clockInterval = window.setInterval(updateClock, 1000);
+    return () => window.clearInterval(clockInterval);
+  }, []);
   const { activeVenue } = useVenueContext();
   const { library: exerciseLibrary } = useExerciseMediaLibrary();
 
@@ -324,39 +334,57 @@ export default function StationTvDisplayPage() {
       )}
 
       <div className="relative z-10 flex min-h-screen flex-col p-6 lg:p-10">
-        <header className="flex flex-col items-center justify-center text-center uppercase tracking-[0.12em]">
-          <div className="mb-3 flex items-center gap-4 text-[clamp(14px,1.2vw,20px)] text-[#68dfff]">
-            {setup?.logo ? (
-              <img
-                src={setup.logo}
-                alt={facilityName}
-                className="h-12 w-auto"
-                style={{ filter: "drop-shadow(0 0 18px rgba(0,175,255,0.25))" }}
-              />
-            ) : (
-              <span className="text-sm font-semibold tracking-[0.3em]" style={{ color: hexToRgba("#68dfff", 0.85) }}>
-                RF
-              </span>
-            )}
-            <span className="text-[clamp(18px,1.6vw,28px)] font-bold">{facilityName.toUpperCase()}</span>
+        <header className="flex items-start justify-between text-center uppercase tracking-[0.12em]">
+          <div className="flex flex-col items-center flex-1">
+            <div className="mb-3 flex items-center gap-4 text-[clamp(14px,1.2vw,20px)] text-[#68dfff]">
+              {setup?.logo ? (
+                <Image
+                  src={setup.logo}
+                  alt={facilityName}
+                  width={120}
+                  height={48}
+                  className="h-12 w-auto"
+                  style={{ filter: "drop-shadow(0 0 18px rgba(0,175,255,0.25))" }}
+                  unoptimized
+                />
+              ) : (
+                <span className="text-sm font-semibold tracking-[0.3em]" style={{ color: hexToRgba("#68dfff", 0.85) }}>
+                  RF
+                </span>
+              )}
+              <span className="text-[clamp(18px,1.6vw,28px)] font-bold">{facilityName.toUpperCase()}</span>
+            </div>
+            <div
+              className="text-[clamp(26px,3.2vw,60px)] font-black"
+              style={{
+                color: primaryBrand,
+                textShadow: `0 0 24px ${hexToRgba(primaryBrand, 0.25)}`,
+              }}
+            >
+              {stationLabel.toUpperCase()}
+            </div>
+            <div
+              className="mt-3 text-[clamp(12px,1.1vw,16px)] tracking-[0.4em]"
+              style={{ color: hexToRgba(accentBrand, 0.7) }}
+            >
+              {setup
+                ? `${setup.workTime}s WORK · ${setup.restTime}s REST · ROUND ${currentRound}/${totalRounds}`
+                : "CONFIGURE WORKOUT"}
+            </div>
           </div>
-          <div
-            className="text-[clamp(26px,3.2vw,60px)] font-black"
-            style={{
-              color: primaryBrand,
-              textShadow: `0 0 24px ${hexToRgba(primaryBrand, 0.25)}`,
-            }}
-          >
-            {stationLabel.toUpperCase()}
-          </div>
-          <div
-            className="mt-3 text-[clamp(12px,1.1vw,16px)] tracking-[0.4em]"
-            style={{ color: hexToRgba(accentBrand, 0.7) }}
-          >
-            {setup
-              ? `${setup.workTime}s WORK · ${setup.restTime}s REST · ROUND ${currentRound}/${totalRounds}`
-              : "CONFIGURE WORKOUT"}
-          </div>
+
+          {/* Live Clock */}
+          {localTime && (
+            <div
+              className="font-[var(--font-orbitron)] text-[clamp(22px,2.2vw,40px)] font-bold tracking-[0.12em] tabular-nums shrink-0"
+              style={{
+                color: hexToRgba(primaryBrand, 0.9),
+                textShadow: `0 0 20px ${hexToRgba(primaryBrand, 0.35)}`,
+              }}
+            >
+              {localTime}
+            </div>
+          )}
         </header>
 
         <div className="mt-10 grid flex-1 gap-8 lg:grid-cols-[2fr,1fr]">

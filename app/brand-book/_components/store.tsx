@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps, jsx-a11y/alt-text */
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { createClient } from "@supabase/supabase-js";

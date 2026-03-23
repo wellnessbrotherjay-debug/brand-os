@@ -52,7 +52,7 @@ export default function WorkoutSessionPage({ params }: { params: { id: string } 
             }
         };
         init();
-    }, [params.id]);
+    }, [params.id, router]);
 
     const handleLogChange = (exerciseId: string, setNum: number, field: 'weight' | 'reps', value: string) => {
         const key = `${exerciseId}_${setNum}`;

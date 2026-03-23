@@ -67,7 +67,7 @@ export default function HRMResultsPage() {
             <div className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center text-white p-6 text-center">
                 <AlertCircle className="w-12 h-12 text-red-500 mb-4" />
                 <h2 className="text-xl font-bold mb-2">No Data Found</h2>
-                <p className="text-gray-400 mb-6">We couldn't retrieve the results for this workout.</p>
+                <p className="text-gray-400 mb-6">We couldn&apos;t retrieve the results for this workout.</p>
                 <Link href="/glvt/home" className="px-6 py-3 bg-white text-black rounded font-bold uppercase text-xs tracking-widest">
                     Return Home
                 </Link>
@@ -141,10 +141,14 @@ export default function HRMResultsPage() {
                     <div className="mb-8">
                         <h2 className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-4">Performance Graph</h2>
                         <div className="bg-[#111] border border-white/10 rounded-lg p-2 overflow-hidden">
-                            <img
+                            <Image
                                 src={data.graphUrl}
                                 alt="Heart Rate Graph"
+                                width={0}
+                                height={0}
+                                sizes="100vw"
                                 className="w-full h-auto rounded"
+                                unoptimized
                             />
                         </div>
                     </div>

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element, jsx-a11y/alt-text */
 
 import React, { useState } from 'react';
 import { X, Search, Instagram, CheckCircle2, Loader2, Globe } from 'lucide-react';

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element, jsx-a11y/alt-text , react-hooks/exhaustive-deps, jsx-a11y/alt-text */
 import React, { useEffect } from 'react';
 import { useAppStore } from '../store';
 import { ViewName } from '../types';

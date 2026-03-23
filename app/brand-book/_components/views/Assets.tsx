@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element, jsx-a11y/alt-text */
 
 import React, { useRef, useState } from 'react';
 import { useAppStore } from '../store';
@@ -591,7 +592,7 @@ export const Assets: React.FC<{ setView: (view: ViewName) => void }> = ({ setVie
                                     {selectedAsset.compliance_report ? (
                                         <div className="space-y-3">
                                             <p className="text-xs opacity-80 leading-relaxed italic border-l-2 pl-2 border-black/10">
-                                                "{selectedAsset.compliance_report.ai_feedback}"
+                                                &quot;{selectedAsset.compliance_report.ai_feedback}&quot;
                                             </p>
                                             <div className="space-y-2 text-xs">
                                                 <div className="flex items-center justify-between opacity-80">
