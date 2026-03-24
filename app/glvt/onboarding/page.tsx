@@ -196,7 +196,7 @@ export default function OnboardingPage() {
                         <div className="bg-[#1a1a1a] p-6 rounded-lg border border-white/10 h-72 overflow-y-auto text-xs text-gray-400 leading-relaxed custom-scrollbar">
                             <h4 className="text-[#C8A871] font-bold mb-4 uppercase tracking-widest">Waiver & Release</h4>
                             <p className="mb-4">
-                                I hereby acknowledge that I have voluntarily chosen to participate in the physical exercise program provided by GLVT / AVLR.
+                                I hereby acknowledge that I have voluntarily chosen to participate in the physical exercise program provided by GLVT / Social Viewer.
                             </p>
                             <p className="mb-4">
                                 <strong>1. RISK WARNING:</strong> I understand that physical exercise involves inherent risks, including but not limited to, muscle strains, heart attacks, and other serious injuries or death. I assume all such risks.

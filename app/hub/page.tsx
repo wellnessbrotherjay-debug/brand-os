@@ -25,7 +25,7 @@ export default function SolutionsHubPage() {
                             Solutions Architecture
                         </h1>
                         <p className="text-xl text-gray-400 max-w-2xl">
-                            Central access hub for AVLR & GLVT Fitness ecosystems.
+                            Central access hub for Social Viewer & GLVT Fitness ecosystems.
                             Manage deployment, access front-end experiences, and configure backend services.
                         </p>
                     </div>

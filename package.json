@@ -1,7 +1,7 @@
 {
-  "name": "avlr-gym-interface",
+  "name": "social-viewer",
   "version": "1.0.0",
-  "description": "AVLR Gym Interface",
+  "description": "Social Viewer",
   "main": "index.js",
   "directories": {
     "lib": "lib"

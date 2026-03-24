@@ -57,6 +57,9 @@ const PhonePreview = ({
     const { activeBrandId } = useAppStore();
     const [currentSlide, setCurrentSlide] = useState(0); // For post carousel
 
+    // Provide default value for viewMode if undefined
+    const currentViewMode = viewMode || 'profile';
+
     // Live Instagram Data State
     const [liveProfile, setLiveProfile] = useState<any>(null);
     const [liveMedia, setLiveMedia] = useState<any[]>([]);
@@ -137,6 +140,17 @@ const PhonePreview = ({
         highlights: identity.instagram_highlights,
         website: liveProfile?.website || identity.instagram_website
     };
+    
+    // Debug logging to see what data we have
+    console.log('PhonePreview Debug:', {
+        platform,
+        identityFeed: identity.instagram_feed,
+        identityHighlights: identity.instagram_highlights,
+        dataFeed: data.feed,
+        dataHighlights: data.highlights,
+        hasIdentity: !!identity,
+        hasBrand: !!brand
+    });
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0] && onUpdate && uploadTarget) {
@@ -264,7 +278,7 @@ const PhonePreview = ({
 
     switch (platform) {
         case 'Instagram':
-            if (viewMode === 'post' && postData) {
+            if (currentViewMode === 'post' && postData) {
                 const images = postData.media_urls?.length ? postData.media_urls : (postData.url ? [postData.url] : []);
 
                 return (
@@ -495,7 +509,7 @@ const PhonePreview = ({
                                 {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((index) => {
                                     const feedItem = data.feed?.[index];
                                     const moodboardItem = identity.brand_book_config?.moodboard_images?.[index];
-                                    const displayUrl = overrideData ? `https://source.unsplash.com/random/400x400?sig=${index}` : (feedItem?.url || moodboardItem);
+                                    const displayUrl = overrideData ? `https://source.unsplash.com/random/400x400?sig=${index}` : (feedItem?.url || feedItem?.image || moodboardItem);
 
                                     return (
                                         <div

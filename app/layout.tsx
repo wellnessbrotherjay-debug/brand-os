@@ -7,8 +7,8 @@ import PwaUpdater from "@/components/PwaUpdater";
 import { BrandProvider } from "@/lib/brand-context";
 
 export const metadata: Metadata = {
-  title: "AVLR",
-  description: "Advanced Virtual Life & Recreation",
+  title: "Social Viewer",
+  description: "Social Viewer Application",
   manifest: "/manifest.webmanifest",
 };
 

@@ -111,41 +111,60 @@ const baseIdentity = {
     instagram_website: 'www.glvt.com',
     logo_primary_url: 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=200',
     instagram_highlights: [
-        {
-            id: 'h1', title: 'Classes', cover_image: 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=200', stories: [
-                { id: 's1', url: 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=400', type: 'image' as const },
-                { id: 's2', url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400', type: 'image' as const }
-            ]
-        },
-        {
-            id: 'h2', title: 'Results', cover_image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=200', stories: [
-                { id: 's3', url: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400', type: 'image' as const }
-            ]
-        },
-        {
-            id: 'h3', title: 'Facility', cover_image: 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=200', stories: [
-                { id: 's4', url: 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=400', type: 'image' as const }
-            ]
-        },
-        {
-            id: 'h4', title: 'Nutrition', cover_image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=200', stories: [
-                { id: 's5', url: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400', type: 'image' as const }
-            ]
-        },
+        { id: 'h1', title: 'Classes', cover_image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=150&h=150&fit=crop&crop=face', stories: [] },
+        { id: 'h2', title: 'Nutrition', cover_image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=150&h=150&fit=crop', stories: [] },
+        { id: 'h3', title: 'Wellness', cover_image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=150&h=150&fit=crop', stories: [] },
+        { id: 'h4', title: 'Community', cover_image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=150&h=150&fit=crop', stories: [] },
     ],
     instagram_feed: [
-        { id: 'p1', url: 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=600', type: 'image' as const, caption: 'Monday motivation 💪', hashtags: ['fitness', 'motivation', 'gym'], likes: 1240, comments: 89 },
-        { id: 'p2', url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600', type: 'image' as const, caption: 'Push your limits 🔥', hashtags: ['workout', 'training', 'strength'], likes: 2100, comments: 145 },
-        { id: 'p3', url: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600', type: 'image' as const, caption: 'Transformation Tuesday', hashtags: ['results', 'transformation', 'beforeafter'], likes: 3450, comments: 234 },
-        { id: 'p4', url: 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=600', type: 'image' as const, caption: 'State of the art equipment', hashtags: ['gym', 'equipment', 'facility'], likes: 890, comments: 45 },
-        { id: 'p5', url: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600', type: 'image' as const, caption: 'Train hard, recover harder 💆‍♂️', hashtags: ['recovery', 'wellness', 'selfcare'], likes: 1567, comments: 78 },
-        { id: 'p6', url: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600', type: 'image' as const, caption: 'Fuel your body right 🥗', hashtags: ['nutrition', 'healthy', 'food'], likes: 1123, comments: 56 },
-        { id: 'p7', url: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&sig=2', type: 'image' as const, caption: 'Weekend warrior energy ⚡', hashtags: ['weekend', 'fitness', 'energy'], likes: 2341, comments: 167 },
-        { id: 'p8', url: 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=600&sig=2', type: 'image' as const, caption: 'Strong body, strong mind', hashtags: ['mindset', 'strength', 'wellness'], likes: 1876, comments: 92 },
-        { id: 'p9', url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&sig=2', type: 'image' as const, caption: 'Your journey starts now 🚀', hashtags: ['journey', 'fitness', 'motivation'], likes: 1456, comments: 103 },
-        { id: 'p10', url: 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=600&sig=2', type: 'carousel' as const, caption: 'Swipe for gym tour 👉', hashtags: ['tour', 'facility', 'gym'], media_urls: ['https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=600&sig=2', 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=600&sig=3', 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&sig=3'], likes: 3210, comments: 198 },
-        { id: 'p11', url: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600&sig=2', type: 'image' as const, caption: 'Recovery is part of the process', hashtags: ['recovery', 'rest', 'wellness'], likes: 987, comments: 34 },
-        { id: 'p12', url: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&sig=2', type: 'image' as const, caption: 'Eat clean, train dirty 😈', hashtags: ['cleaneating', 'nutrition', 'health'], likes: 1654, comments: 87 },
+        {
+            id: 'post1',
+            image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop',
+            caption: 'Morning strength session 💪',
+            likes: 284,
+            comments: 12,
+            timestamp: '2h'
+        },
+        {
+            id: 'post2',
+            image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=400&fit=crop',
+            caption: 'Fuel your body right 🥗',
+            likes: 156,
+            comments: 8,
+            timestamp: '4h'
+        },
+        {
+            id: 'post3',
+            image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=400&fit=crop',
+            caption: 'Mindful movement flows ✨',
+            likes: 203,
+            comments: 15,
+            timestamp: '1d'
+        },
+        {
+            id: 'post4',
+            image: 'https://images.unsplash.com/photo-1506629905607-46e2ffe2a8eb?w=400&h=400&fit=crop',
+            caption: 'Community strength grows here 🏋️‍♀️',
+            likes: 342,
+            comments: 23,
+            timestamp: '2d'
+        },
+        {
+            id: 'post5',
+            image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=400&fit=crop',
+            caption: 'Recovery is part of the journey 🧘‍♀️',
+            likes: 189,
+            comments: 6,
+            timestamp: '3d'
+        },
+        {
+            id: 'post6',
+            image: 'https://images.unsplash.com/photo-1540206276207-3af25c08abc4?w=400&h=400&fit=crop',
+            caption: 'Your potential is limitless 🚀',
+            likes: 267,
+            comments: 18,
+            timestamp: '4d'
+        }
     ],
     instagram_tagged: [],
     social_connections: [
