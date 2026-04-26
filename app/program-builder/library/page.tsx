@@ -44,22 +44,38 @@ export default function BuilderLibraryPage() {
   }, []);
 
   const fetchTemplates = async () => {
-    if (!supabase) {
-      setError("Database connection not configured.");
-      setIsLoading(false);
-      return;
-    }
-
     try {
       setIsLoading(true);
-      const { data, error: fetchError } = await supabase
-        .from("workouts")
-        .select("*")
-        .eq("is_template", true)
-        .order("updated_at", { ascending: false });
+      
+      // Fetch Legacy Templates (direct from DB is fine if RLS is off, but let's be safe)
+      let legacy: any[] = [];
+      if (supabase) {
+        const { data: legacyData } = await supabase
+          .from("workouts")
+          .select("*")
+          .eq("is_template", true);
+        legacy = legacyData || [];
+      }
 
-      if (fetchError) throw fetchError;
-      setTemplates(data || []);
+      // Fetch New Programs from our API (which uses Admin client)
+      const res = await fetch("/api/programs");
+      if (!res.ok) throw new Error("API failed to fetch programs");
+      const programs = await res.json();
+
+      // Map programs to look like templates for the UI
+      const mappedPrograms = (programs || []).map((p: any) => ({
+        ...p,
+        is_program: true,
+        // Use the first day's data for the card preview
+        data: p.program_days?.[0]?.data || { goal: 'Fat Loss', exercises: [] }
+      }));
+
+      // Combine and filter duplicates by name (if any legacy/modern overlap)
+      const combined = [...mappedPrograms, ...legacy].sort((a, b) => 
+        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+      );
+
+      setTemplates(combined);
     } catch (err: any) {
       console.error("Failed to fetch templates:", err);
       setError(err.message || "Failed to load templates.");
@@ -69,10 +85,13 @@ export default function BuilderLibraryPage() {
   };
 
   const handleLoadTemplate = (template: any) => {
-    const plan = template.data as WorkoutPlan;
-    // Save to local storage and redirect to builder
-    storage.savePlan(plan);
-    router.push("/builder");
+    if (template.is_program) {
+      router.push(`/program-builder?programId=${template.id}`);
+    } else {
+      const plan = template.data as WorkoutPlan;
+      storage.savePlan(plan);
+      router.push("/program-builder");
+    }
   };
 
   const handleDeleteTemplate = async (id: string) => {
@@ -133,7 +152,7 @@ export default function BuilderLibraryPage() {
               />
             </div>
             <Link 
-              href="/builder"
+              href="/program-builder"
               className="bg-white text-black px-6 py-3 rounded-xl font-bold uppercase tracking-widest text-xs flex items-center gap-2 hover:bg-sky-400 transition-colors"
             >
               <Plus className="w-4 h-4" /> New Plan
@@ -215,8 +234,12 @@ export default function BuilderLibraryPage() {
                   <button
                     className="w-12 h-12 bg-sky-500 hover:bg-sky-400 rounded-xl flex items-center justify-center text-black transition-all"
                     onClick={() => {
-                        storage.savePlan(tpl.data);
-                        router.push("/builder");
+                        if (tpl.is_program) {
+                          router.push(`/program-builder?programId=${tpl.id}`);
+                        } else {
+                          storage.savePlan(tpl.data);
+                          router.push("/program-builder");
+                        }
                     }}
                   >
                     <Play className="w-4 h-4 fill-current" />

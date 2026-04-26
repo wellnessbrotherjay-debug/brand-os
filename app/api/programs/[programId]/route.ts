@@ -27,14 +27,54 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
   const supabase = createAdminClient();
   const body = await req.json();
 
-  // If patching a specific day
+  // If patching multiple days (batch save)
+  if (body.days && Array.isArray(body.days)) {
+    for (const day of body.days) {
+      const { day_number, workout_name, goal, studio_mode, data, scheduled_date, scheduled_time } = day;
+      const { error } = await supabase
+        .from("program_days")
+        .upsert({ 
+          program_id: programId, 
+          day_number, 
+          workout_name, 
+          goal, 
+          studio_mode, 
+          data, 
+          scheduled_date,
+          scheduled_time
+        }, { onConflict: "program_id,day_number" });
+      
+      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    
+    // Also update program meta if name changed
+    if (body.name) {
+      await supabase.from("programs").update({ name: body.name }).eq("id", programId);
+    }
+    
+    return NextResponse.json({ ok: true });
+  }
+
+  // If patching a single specific day (legacy/incremental)
   if (body.day_number !== undefined) {
-    const { day_number, workout_name, goal, studio_mode, data, scheduled_date } = body;
+    const { 
+      day_number, workout_name, goal, studio_mode, data, scheduled_date, scheduled_time
+    } = body;
+
+    const upsertData: any = {
+      program_id: programId, 
+      day_number, 
+      workout_name, 
+      goal, 
+      studio_mode,
+      data, 
+      scheduled_date,
+      scheduled_time
+    };
+
     const { error } = await supabase
       .from("program_days")
-      .update({ workout_name, goal, studio_mode, data, scheduled_date })
-      .eq("program_id", programId)
-      .eq("day_number", day_number);
+      .upsert(upsertData, { onConflict: "program_id,day_number" });
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ ok: true });

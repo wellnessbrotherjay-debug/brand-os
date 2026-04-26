@@ -19,8 +19,15 @@ CREATE TABLE IF NOT EXISTS public.program_days (
   workout_name  TEXT NOT NULL DEFAULT 'Day Workout',
   goal          TEXT NOT NULL DEFAULT 'Fat Loss',
   studio_mode   TEXT NOT NULL DEFAULT 'studio-a',
+  station_count INTEGER DEFAULT 6,
+  main_work_time INTEGER DEFAULT 45,
+  main_rest_time INTEGER DEFAULT 15,
+  main_rounds    INTEGER DEFAULT 3,
+  warmup_work_time INTEGER DEFAULT 60,
+  warmup_rest_time INTEGER DEFAULT 0,
   data          JSONB NOT NULL DEFAULT '{}', -- Full WorkoutPlan JSON
   scheduled_date DATE,
+  scheduled_time TEXT,
   UNIQUE(program_id, day_number)
 );
 

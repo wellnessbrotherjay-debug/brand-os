@@ -102,7 +102,7 @@ export default function StationTvDisplayPage() {
 
   useEffect(() => {
     if (Number.isNaN(stationId)) {
-      router.replace("/builder");
+      router.replace("/program-builder");
       return;
     }
 

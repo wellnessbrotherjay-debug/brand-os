@@ -66,6 +66,9 @@ export interface WorkoutPlan {
   name?: string;
   goal: "Fat Loss" | "Strength" | "Endurance";
   exercises: StationExercise[];
+  warmup?: StationExercise[];
+  warmupDuration?: number; // Total minutes for warmup (e.g., 6)
+  warmupMoveDuration?: number; // Seconds per move (e.g., 60)
   studioMode?: 'studio-a' | 'studio-b';
   scheduledDate?: string;
   isAiGenerated?: boolean;

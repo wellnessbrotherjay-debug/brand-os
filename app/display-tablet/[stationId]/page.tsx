@@ -7,16 +7,9 @@ import {
   storage,
   STORAGE_KEYS,
   type SessionPhase,
-  type SessionState,
   type WorkoutPlan,
   type WorkoutSetup,
 } from "@/lib/workout-engine/storage";
-import {
-  FALLBACK_EXERCISE_VIDEO,
-} from "@/lib/workout-engine/media";
-import { useVenueContext } from "@/lib/venue-context";
-import { resolveBrandColors } from "@/lib/workout-engine/brand-colors";
-import { useExerciseMediaLibrary } from "@/lib/workout-engine/library-hooks";
 import CloudflarePlayer from "@/components/CloudflarePlayer";
 import { supabase as supabaseClient } from "@/lib/supabaseClient";
 
@@ -35,18 +28,6 @@ const PHASE_COLOR: Record<SessionPhase, string> = {
   change: "#C8A871", // Gold
   complete: "#C8A871", // Gold
 };
-
-const FALLBACK_VIDEO = FALLBACK_EXERCISE_VIDEO;
-
-function hexToRgba(hex: string, alpha: number) {
-  const sanitized = hex.replace("#", "");
-  if (sanitized.length !== 6) return `rgba(255,255,255,${alpha})`;
-  const numeric = parseInt(sanitized, 16);
-  const r = (numeric >> 16) & 255;
-  const g = (numeric >> 8) & 255;
-  const b = numeric & 255;
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
 
 export default function TabletStationPage() {
   return (
@@ -72,7 +53,6 @@ function TabletStationContent() {
 
   const [setup, setSetup] = useState<WorkoutSetup | null>(null);
   const [plan, setPlan] = useState<WorkoutPlan | null>(null);
-  const [session, setSession] = useState<SessionState | null>(null);
   const [timeLeft, setTimeLeft] = useState(0);
   const [currentPhase, setCurrentPhase] = useState<SessionPhase>("prep");
   const [globalTimer, setGlobalTimer] = useState({
@@ -86,14 +66,6 @@ function TabletStationContent() {
     activeStationId: 1,
   });
 
-  const { activeVenue } = useVenueContext();
-  const { library: exerciseLibrary } = useExerciseMediaLibrary();
-
-  const brandColors = useMemo(() => {
-    return resolveBrandColors({ activeVenue, setup });
-  }, [activeVenue, setup]);
-
-  const { primary: primaryBrand, secondary: secondaryBrand } = brandColors;
   const [showDebug, setShowDebug] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastSynced, setLastSynced] = useState<string | null>(null);
@@ -106,7 +78,6 @@ function TabletStationContent() {
     const clockInterval = window.setInterval(updateClock, 1000);
     return () => window.clearInterval(clockInterval);
   }, []);
-  const [videoError, setVideoError] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
@@ -204,7 +175,7 @@ function TabletStationContent() {
 
   useEffect(() => {
     if (Number.isNaN(stationId)) {
-      router.replace("/builder");
+      router.replace("/program-builder");
     }
   }, [router, stationId]);
 
@@ -218,12 +189,6 @@ function TabletStationContent() {
 
     setSetup(nextSetup);
     setPlan(storage.getPlan());
-    const nextSession = storage.getSession();
-    if (nextSession) {
-      setSession(nextSession);
-      setTimeLeft(nextSession.remaining);
-      setCurrentPhase(nextSession.phase);
-    }
   }, [router]);
 
   useEffect(() => {
@@ -232,20 +197,13 @@ function TabletStationContent() {
       setPlan(nextPlan);
       setLastSynced(new Date().toLocaleString());
     };
-    const handleSessionUpdate = (nextSession: SessionState | null) => {
-      setSession(nextSession);
-      setTimeLeft(nextSession?.remaining ?? 0);
-      setCurrentPhase(nextSession?.phase ?? "prep");
-    };
 
     const unsubSetup = storage.subscribe(STORAGE_KEYS.setup, handleSetupUpdate);
     const unsubPlan = storage.subscribe(STORAGE_KEYS.plan, handlePlanUpdate);
-    const unsubSession = storage.subscribe(STORAGE_KEYS.session, handleSessionUpdate);
 
     return () => {
       unsubSetup?.();
       unsubPlan?.();
-      unsubSession?.();
     };
   }, []);
 
@@ -314,12 +272,53 @@ function TabletStationContent() {
     const localInterval = setInterval(() => {
       setGlobalTimer(prev => {
         if (!prev.isActive || !prev.targetEndTime) return prev;
+
         const now = Date.now();
-        const diff = prev.targetEndTime.getTime() - now;
+        const targetEndTimeMs = prev.targetEndTime instanceof Date ? prev.targetEndTime.getTime() : Number(prev.targetEndTime);
+        const diff = targetEndTimeMs - now;
         let calculatedTimeLeft = Math.max(0, Math.ceil(diff / 1000));
-        
+
         setTimeLeft(calculatedTimeLeft);
         setCurrentPhase(prev.phase);
+
+        // Phase switching logic - when timer reaches 0, switch to next phase
+        if (calculatedTimeLeft <= 0 && diff <= 1000) {
+          const nextPhase = prev.phase === 'work' ? 'rest' : 'work';
+          const nextTime = nextPhase === 'work' ? prev.workTime : prev.restTime;
+          const newTargetEndTime = new Date(now + nextTime * 1000);
+
+          console.log(`🔄 Phase switch: ${prev.phase} -> ${nextPhase}, Time: ${nextTime}s`);
+
+          // Update Supabase with new phase and target time
+          (supabaseClient as any)
+            .from('global_timer')
+            .update({
+              phase: nextPhase,
+              target_end_time: newTargetEndTime.toISOString(),
+              time_left: nextTime,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', 'active')
+            .then(({ error }: any) => {
+              if (error) {
+                console.error('❌ Failed to update phase:', error);
+              } else {
+                console.log(`✅ Phase updated to ${nextPhase}`);
+              }
+            });
+
+          // Update local state immediately for smooth UI
+          setTimeLeft(nextTime);
+          setCurrentPhase(nextPhase);
+
+          return {
+            ...prev,
+            timeLeft: nextTime,
+            phase: nextPhase,
+            targetEndTime: newTargetEndTime,
+          };
+        }
+
         return { ...prev, timeLeft: calculatedTimeLeft };
       });
     }, 200);
@@ -334,52 +333,83 @@ function TabletStationContent() {
     if (!supabaseClient) return;
     let mounted = true;
 
-    const fetchLatestPlan = async () => {
-      if (!supabaseClient) return;
+    // 1. Monitor Schedules Table for Active Programs
+    const studioId = modeOverride || 'studio-a';
+
+    const checkSchedule = async () => {
       try {
         const today = new Date().toISOString().split('T')[0];
+        const now = new Date();
+        const currentTimeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:00`;
+
+        const { data: rawSchedules } = await supabaseClient
+          .from('schedules')
+          .select('*, program:programs(*)')
+          .eq('scheduled_day', today)
+          .eq('studio_id', studioId)
+          .lte('start_time', currentTimeStr);
+
+        const activeSchedules = rawSchedules as any[];
+
+        if (activeSchedules && activeSchedules.length > 0 && mounted) {
+          const latestSelection = activeSchedules.sort((a,b) => b.start_time.localeCompare(a.start_time))[0];
+          
+          let nextPlan: WorkoutPlan | null = null;
+          if (latestSelection.program_id) {
+            const { data: progData } = await (supabaseClient
+              .from('program_days')
+              .select('*')
+              .eq('program_id', latestSelection.program_id)
+              .eq('day_number', 1)
+              .single() as any);
+
+            if (progData?.data) {
+              nextPlan = { ...progData.data, name: latestSelection.workout_name || progData.workout_name } as WorkoutPlan;
+            }
+          } else if (latestSelection.workout_id) {
+            const { data: workoutData } = await (supabaseClient
+              .from('workouts')
+              .select('*')
+              .eq('id', latestSelection.workout_id)
+              .single() as any);
+
+            if (workoutData?.data) {
+              nextPlan = { ...workoutData.data, name: latestSelection.workout_name || workoutData.name } as WorkoutPlan;
+            }
+          }
+
+          if (nextPlan && mounted) {
+            storage.savePlan(nextPlan);
+            setPlan(nextPlan);
+            setLastSynced(`Schedule Sync: ${new Date().toLocaleTimeString()}`);
+            setError(null);
+            return;
+          }
+        }
         
-        // 1. Try today's scheduled workout
-        const { data: scheduledData } = await (supabaseClient
-          .from("workouts") as any)
-          .select("data")
-          .eq("scheduled_date", today)
-          .limit(1)
-          .maybeSingle();
-
-        if (scheduledData?.data && mounted) {
-          storage.savePlan(scheduledData.data);
-          setPlan(scheduledData.data);
-          setLastSynced(`Scheduled: ${today}`);
-          setError(null);
-          return;
-        }
-
-        // 2. Fallback to manually set "active" workout
-        const { data: activeData } = await (supabaseClient
-          .from("workouts") as any)
-          .select("data")
-          .eq("id", "active")
-          .maybeSingle();
-
-        if (activeData?.data && mounted) {
-          storage.savePlan(activeData.data);
-          setPlan(activeData.data);
-          setLastSynced(new Date().toLocaleString());
-          setError(null);
-        }
+        // No active schedule found, preserving local/manual state
+        // TV logic: simply returns to avoid overwriting `storage.getPlan()` with broken legacy fallbacks
       } catch (err) {
-        if (mounted) setError("Unexpected Supabase error. Using local plan.");
+        if (mounted) console.error("Scheduling sync error", err);
       }
     };
 
-    fetchLatestPlan();
+    const scheduleInterval = setInterval(checkSchedule, 30000);
+    checkSchedule();
 
-    const channel = supabaseClient
+    // 2. Realtime Subscriptions
+    const scheduleChannel = supabaseClient
+      .channel('tablet-schedule-sync')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'schedules' }, () => {
+        checkSchedule();
+      })
+      .subscribe();
+
+    const pushChannel = supabaseClient
       .channel("tablet-workouts")
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "workouts" }, (payload) => {
         const nextPlan = payload.new?.data as WorkoutPlan | undefined;
-        if (nextPlan) {
+        if (nextPlan && mounted) {
           storage.savePlan(nextPlan);
           setPlan(nextPlan);
           setLastSynced(new Date().toLocaleString());
@@ -389,9 +419,11 @@ function TabletStationContent() {
 
     return () => {
       mounted = false;
-      if (channel) supabaseClient.removeChannel(channel);
+      clearInterval(scheduleInterval);
+      supabaseClient.removeChannel(scheduleChannel);
+      supabaseClient.removeChannel(pushChannel);
     };
-  }, []);
+  }, [modeOverride]);
 
   const currentExercises = useMemo(() => {
     if (!plan?.exercises?.length) return [];
@@ -401,7 +433,7 @@ function TabletStationContent() {
   }, [plan, stationId]);
 
   const studioMode = modeOverride || plan?.studioMode || setup?.mode || 'studio-a';
-
+  
   const exerciseNames = useMemo(() => {
     if (currentExercises.length === 0) return plan ? `No Exercise Assigned (Station ${stationId})` : "No Plan Loaded";
     return currentExercises.map(ex => ex.name).join(" + ");
@@ -444,12 +476,6 @@ function TabletStationContent() {
             muted={true}
             controls={false}
           />
-          {studioMode === 'studio-b' && (
-            <div className="absolute top-2 left-2 z-10 bg-black/40 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[#C8A871]">Exercise 1</p>
-              <p className="text-xs font-bold text-white truncate max-w-[150px]">{currentExercises[0]?.name}</p>
-            </div>
-          )}
         </div>
         {studioMode === 'studio-b' && (
           <div className="relative w-1/2 h-full">
@@ -461,10 +487,6 @@ function TabletStationContent() {
               muted={true}
               controls={false}
             />
-            <div className="absolute top-2 left-2 z-10 bg-black/40 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[#C8A871]">Exercise 2</p>
-              <p className="text-xs font-bold text-white truncate max-w-[150px]">{currentExercises[1]?.name}</p>
-            </div>
           </div>
         )}
       </div>
@@ -477,11 +499,11 @@ function TabletStationContent() {
           <p className="text-[10px] uppercase tracking-[0.4em] font-bold text-[#121112]">STATION {stationId}</p>
         </div>
 
-        <div className="text-center w-full max-w-xl">
-          <h2 className={`${studioMode === 'studio-b' ? 'text-xl' : 'text-3xl md:text-5xl'} font-black uppercase tracking-tight text-[#121112] leading-none italic`}>
-            {studioMode === 'studio-b' ? 'Studio B Circuit' : exerciseNames}
-          </h2>
-        </div>
+         <div className="text-center w-full max-w-xl">
+           <h2 className={`${studioMode === 'studio-b' ? 'text-xl' : 'text-3xl md:text-5xl'} font-black uppercase tracking-tight text-[#121112] leading-none italic truncate px-4`}>
+             {exerciseNames}
+           </h2>
+         </div>
 
         <div className="flex flex-col items-end gap-1">
           <div className="flex items-center gap-4">
@@ -524,10 +546,6 @@ function TabletStationContent() {
 
       {error && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-2xl bg-red-900/90 backdrop-blur-md border border-red-500/50 text-xs uppercase tracking-widest text-white shadow-2xl">{error}</div>
-      )}
-
-      {videoError && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-2xl bg-orange-900/90 backdrop-blur-md border border-orange-500/50 text-xs uppercase tracking-widest text-white shadow-2xl max-w-md text-center">{videoError}</div>
       )}
 
       {!showDebug && (

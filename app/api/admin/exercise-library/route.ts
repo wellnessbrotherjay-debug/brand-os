@@ -25,3 +25,64 @@ export async function GET() {
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json()
+    const { id, ...data } = body
+    
+    // Lazy import supabase client
+    const { getServerSupabaseClient } = await import("@/lib/supabaseClient")
+    const client = getServerSupabaseClient()
+
+    if (id) {
+      // Update
+      const { data: updated, error } = await client
+        .from("exercise_library")
+        .update(data as any)
+        .eq("id", id)
+        .select()
+        .single()
+      
+      if (error) throw error
+      return NextResponse.json(updated)
+    } else {
+      // Create
+      const { data: created, error } = await client
+        .from("exercise_library")
+        .insert(data as any)
+        .select()
+        .single()
+      
+      if (error) throw error
+      return NextResponse.json(created)
+    }
+  } catch (error) {
+    console.error("Error saving exercise:", error)
+    const message = error instanceof Error ? error.message : "Internal Server Error"
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get("id")
+    if (!id) return NextResponse.json({ error: "No ID provided" }, { status: 400 })
+
+    const { getServerSupabaseClient } = await import("@/lib/supabaseClient")
+    const client = getServerSupabaseClient()
+
+    const { error } = await client
+      .from("exercise_library")
+      .delete()
+      .eq("id", id)
+
+    if (error) throw error
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("Error deleting exercise:", error)
+    const message = error instanceof Error ? error.message : "Internal Server Error"
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
+}

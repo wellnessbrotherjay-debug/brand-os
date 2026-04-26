@@ -37,7 +37,7 @@ export default function WorkoutPreviewPage() {
             No workout found. Head back to the builder to generate a new one.
           </p>
           <Link
-            href="/builder"
+            href="/program-builder"
             className="rounded-md bg-[#00BFFF] px-4 py-2 text-sm font-semibold text-neutral-950 transition hover:bg-[#0095d8]"
           >
             Back to Builder

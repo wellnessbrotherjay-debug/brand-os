@@ -13,6 +13,12 @@ export const systemFeatures: SystemFeature[] = [
     studios: ["studio-a", "studio-b"],
   },
   {
+    title: "Warm Up Display",
+    description: "Daily routine loops for the warmup station",
+    href: "/display-warmup",
+    studios: ["studio-a", "studio-b"],
+  },
+  {
     title: "Gym HRM Wall",
     description: "Real-time heart rate monitoring for the floor",
     href: "/hrm-tv",
@@ -43,14 +49,19 @@ export const systemFeatures: SystemFeature[] = [
     studios: ["studio-a"],
   },
   {
-    title: "Workout Builder",
-    description: "Create and assign exercises to stations",
-    href: "/builder",
+    title: "Program Builder",
+    description: "Plan 10-day schedules and daily warmups",
+    href: "/program-builder",
   },
   {
     title: "Venue Manager",
     description: "Add venues, logos, and brand colors",
     href: "/venues",
+  },
+  {
+    title: "Movement Library",
+    description: "Manage exercises, videos, and categorization",
+    href: "/exercise-library",
   },
   {
     title: "HRM Management",
@@ -61,12 +72,13 @@ export const systemFeatures: SystemFeature[] = [
   {
     title: "Workout Library",
     description: "Manage and load saved workout templates",
-    href: "/builder/library",
+    href: "/program-builder/library",
   },
   {
     title: "Schedule Manager",
-    description: "View and manage scheduled studio sessions",
-    href: "/builder/schedule",
+    description: "Plan and view studio class schedules",
+    href: "/program-builder/schedule",
+    studios: ["studio-a", "studio-b"],
   },
   {
     title: "Setup Console",

@@ -15,6 +15,7 @@ const BUTTONS = [
   { label: "Facilities", href: "/facilities", icon: "🏛️", blurb: "Spa, pool, thermal suite" },
   { label: "Room Workouts", href: "/room-workout/builder", icon: "🛌", blurb: "Curate routines for guests" },
   { label: "Workouts", href: "/workouts", icon: "💪", blurb: "Stations, timers, playlists" },
+  { label: "Movement Library", href: "/exercise-library", icon: "🧘", blurb: "Manage movements and videos" },
   { label: "Menu", href: "/menu", icon: "🍽️", blurb: "Fuel, macros, chef picks" },
 ];
 
@@ -72,12 +73,12 @@ export default function HotelHomePage() {
 
       <div className="mx-auto grid w-full max-w-5xl gap-6 md:grid-cols-3">
         {BUTTONS.map((button) => (
-          <motion.button
+          <motion.div
             key={button.href}
             onClick={() => handleNavigate(button.href)}
             whileHover={{ scale: 1.02, boxShadow: "0 30px 90px rgba(0,0,0,0.45)" }}
             whileTap={{ scale: 0.97 }}
-            className="rounded-[30px] border border-white/10 bg-gradient-to-br from-black/45 via-slate-900/55 to-black/35 p-6 text-left shadow-[0_18px_65px_rgba(0,0,0,0.38)] backdrop-blur"
+            className="rounded-[30px] border border-white/10 bg-gradient-to-br from-black/45 via-slate-900/55 to-black/35 p-6 text-left shadow-[0_18px_65px_rgba(0,0,0,0.38)] backdrop-blur cursor-pointer"
             style={{
               backgroundImage: `linear-gradient(135deg, ${brand.primary}22, ${brand.secondary}11)`,
             }}
@@ -85,7 +86,7 @@ export default function HotelHomePage() {
             <div className="text-5xl">{button.icon}</div>
             <div className="mt-6 text-2xl font-semibold tracking-tight">{button.label}</div>
             <p className="mt-2 text-sm text-zinc-300">{button.blurb}</p>
-          </motion.button>
+          </motion.div>
         ))}
       </div>
     </BrandScreen>

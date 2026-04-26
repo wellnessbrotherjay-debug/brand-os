@@ -54,7 +54,7 @@ export default function TvPreviewPage() {
         <div className="flex flex-col items-center gap-4 rounded-xl border border-neutral-800 bg-neutral-900/60 p-8 text-center">
           <p className="text-neutral-300">Nothing to preview.</p>
           <Link
-            href="/builder"
+            href="/program-builder"
             className="rounded-md bg-[#F4D03F] px-4 py-2 text-sm font-semibold text-neutral-950 transition hover:bg-[#d4b538]"
           >
             Back to Builder

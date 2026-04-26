@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { Orbitron } from "next/font/google";
 import Image from "next/image";
@@ -95,11 +95,12 @@ const FontStyles = () => (
 
     /* Enhanced Luxury Metallic Gold Foil Effect */
     .text-gold-foil {
-      background: linear-gradient(135deg, #AA7D39 0%, #E8D3A2 30%, #C69C50 50%, #E8D3A2 70%, #8A5F20 100%);
+      background-image: linear-gradient(135deg, #AA7D39 0%, #E8D3A2 30%, #C69C50 50%, #E8D3A2 70%, #8A5F20 100%);
       background-size: 200% auto;
-      color: transparent;
       -webkit-background-clip: text;
       background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
       animation: foilShine 6s linear infinite;
     }
 
@@ -167,6 +168,7 @@ function DisplayTvContent() {
     totalRounds: 1,
     totalStations: 6
   });
+  const [audioStatus, setAudioStatus] = useState<'blocked' | 'muted' | 'ready'>('blocked');
 
   const { activeVenue } = useVenueContext();
 
@@ -186,18 +188,89 @@ function DisplayTvContent() {
     }
   };
 
+  const audioContextRef = useRef<AudioContext | null>(null);
+
+  const getAudioContext = useCallback(() => {
+    if (typeof window === 'undefined') return null;
+    if (!audioContextRef.current) {
+      const Ctx = window.AudioContext || (window as any).webkitAudioContext;
+      if (Ctx) audioContextRef.current = new Ctx();
+    }
+    return audioContextRef.current;
+  }, []);
+
+  const playBeep = useCallback((freq = 440, type: OscillatorType = 'sine', duration = 0.3, vol = 0.1) => {
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      
+      // Resume if suspended (browser policy)
+      if (ctx.state === 'suspended') ctx.resume();
+
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      gain.gain.setValueAtTime(vol, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + duration);
+    } catch (e) {
+      console.error("Beep Error:", e);
+    }
+  }, [getAudioContext]);
+
+  const preloadedAudioRef = useRef<Record<string, HTMLAudioElement>>({});
+  
+  const playSpeech = useCallback(async (phrase: string) => {
+     try {
+       // Also resume AudioContext for Speech if needed (though HTMLAudio handles it slightly differently)
+       const ctx = getAudioContext();
+       if (ctx && ctx.state === 'suspended') ctx.resume();
+
+       let audio = preloadedAudioRef.current[phrase];
+       if (!audio) {
+         audio = new window.Audio(`/api/speech?text=${encodeURIComponent(phrase)}`);
+         preloadedAudioRef.current[phrase] = audio;
+       }
+       audio.currentTime = 0;
+       await audio.play();
+     } catch(e) {
+       // Fallback to Native Speech Synthesis
+       if (window.speechSynthesis) {
+         window.speechSynthesis.cancel(); // Clear queue
+         const u = new SpeechSynthesisUtterance(phrase);
+         u.rate = 1.1;
+         window.speechSynthesis.speak(u);
+       }
+     }
+  }, [getAudioContext]);
+
   useEffect(() => {
     const handleFullscreenChange = () => {
       const doc = document as any;
       setIsFullscreen(!!(doc.fullscreenElement || doc.webkitFullscreenElement));
     };
+    
+    // Auto-resume check
+    const checkAudio = () => {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      if (ctx.state === 'running') setAudioStatus('ready');
+      else setAudioStatus('blocked');
+    };
+    const interval = setInterval(checkAudio, 1000);
+
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
     return () => {
+      clearInterval(interval);
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
       document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
     };
-  }, []);
+  }, [getAudioContext]);
 
   useEffect(() => {
     const nextSetup = storage.getSetup();
@@ -209,34 +282,230 @@ function DisplayTvContent() {
     setSetup(nextSetup);
     setPlan(storage.getPlan());
     setSession(storage.getSession());
-  }, [router]);
 
-  useEffect(() => {
-    const handleSetupUpdate = (next: WorkoutSetup | null) => setSetup(next);
-    const handlePlanUpdate = (next: WorkoutPlan | null) => {
-      setPlan(next);
+    // 1. Sync from Supabase for direct UI pushes (Legacy/Manual)
+    const pushChannel = supabaseClient
+      .channel('tv-workout-sync')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'workouts' }, payload => {
+        const nextPlan = payload.new?.data as WorkoutPlan;
+        if (nextPlan) {
+          setPlan(nextPlan);
+          storage.savePlan(nextPlan);
+        }
+      })
+      .subscribe();
+
+    // 2. Schedule Monitor: Check for calendar-based sessions for this studio
+    const studioId = searchParams?.get('studio') || 'studio-a';
+    
+    const checkSchedule = async () => {
+      const today = new Date().toISOString().split('T')[0];
+      const now = new Date();
+      const currentTimeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:00`;
+
+      // Fetch active schedules for this studio today
+      const { data: activeSchedules } = await supabaseClient
+        .from('schedules')
+        .select('*, program:programs(*)')
+        .eq('scheduled_day', today)
+        .eq('studio_id', studioId)
+        .lte('start_time', currentTimeStr);
+
+      if (activeSchedules && activeSchedules.length > 0) {
+        // Find the most recent one
+        const latest = activeSchedules.sort((a,b) => b.start_time.localeCompare(a.start_time))[0];
+        
+        // Convert start_time to full Date to check duration
+        const [sh, sm] = latest.start_time.split(':');
+        const startTime = new Date(now);
+        startTime.setHours(parseInt(sh), parseInt(sm), 0);
+        
+        const durationMs = (latest.duration_mins || 60) * 60 * 1000;
+        const endTime = new Date(startTime.getTime() + durationMs);
+
+        if (now >= startTime && now < endTime) {
+          // If we have a program assigned, fetch its detailed day data
+          if (latest.program_id) {
+            const { data: progData } = await supabaseClient
+              .from('program_days')
+              .select('*')
+              .eq('program_id', latest.program_id)
+              .eq('day_number', 1) // Just take day 1 for now or based on some logic
+              .single();
+
+            if (progData?.data) {
+                const nextPlan = {
+                  ...progData.data,
+                  name: latest.workout_name || progData.workout_name
+                } as WorkoutPlan;
+                
+                // Only update if it's different to avoid re-renders
+                if (plan?.name !== nextPlan.name) {
+                  setPlan(nextPlan);
+                  storage.savePlan(nextPlan);
+                }
+            }
+          }
+        }
+      }
     };
-    const handleSessionUpdate = (next: SessionState | null) => setSession(next);
 
-    const unsubSetup = storage.subscribe(STORAGE_KEYS.setup, handleSetupUpdate);
-    const unsubPlan = storage.subscribe(STORAGE_KEYS.plan, handlePlanUpdate);
-    const unsubSession = storage.subscribe(STORAGE_KEYS.session, handleSessionUpdate);
+    const scheduleInterval = setInterval(checkSchedule, 30000); // Check every 30s
+    checkSchedule(); // Immediate check
+
+    // Subscribe to schedule changes to trigger immediate update
+    const scheduleChannel = supabaseClient
+      .channel('tv-schedule-sync')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'schedules' }, () => {
+        checkSchedule();
+      })
+      .subscribe();
 
     return () => {
-      unsubSetup?.();
-      unsubPlan?.();
-      unsubSession?.();
+      supabaseClient.removeChannel(pushChannel);
+      supabaseClient.removeChannel(scheduleChannel);
+      clearInterval(scheduleInterval);
     };
-  }, []);
+  }, [router, searchParams, plan?.name]);
 
-  // Perpetual State Calculation Logic
+  const [activeSchedule, setActiveSchedule] = useState<any | null>(null);
+
+  useEffect(() => {
+    const nextSetup = storage.getSetup();
+    if (!nextSetup) {
+      setError("Setup missing.");
+      router.replace("/setup");
+      return;
+    }
+    setSetup(nextSetup);
+    setPlan(storage.getPlan());
+    setSession(storage.getSession());
+
+    // 1. Sync from Supabase for direct UI pushes (Legacy/Manual)
+    const pushChannel = supabaseClient
+      .channel('tv-workout-sync')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'workouts' }, payload => {
+        const nextPlan = payload.new?.data as WorkoutPlan;
+        if (nextPlan) {
+          setPlan(nextPlan);
+          storage.savePlan(nextPlan);
+        }
+      })
+      .subscribe();
+
+    // 2. Schedule Monitor: Check for calendar-based sessions for this studio
+    const studioId = searchParams?.get('studio') || 'studio-a';
+    
+    const checkSchedule = async () => {
+      const today = new Date().toISOString().split('T')[0];
+      const now = new Date();
+      const currentTimeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:00`;
+
+      // Fetch active schedules for this studio today
+      const { data: rawSchedules } = await supabaseClient
+        .from('schedules')
+        .select('*, program:programs(*)')
+        .eq('scheduled_day', today)
+        .eq('studio_id', studioId)
+        .lte('start_time', currentTimeStr);
+
+      const activeSchedules = rawSchedules as any[];
+
+      if (activeSchedules && activeSchedules.length > 0) {
+        // Find the most recent one
+        const latestSelection = activeSchedules.sort((a: any, b: any) => b.start_time.localeCompare(a.start_time))[0];
+        
+        // Convert start_time to full Date to check duration
+        const [sh, sm] = latestSelection.start_time.split(':');
+        const startTime = new Date(now);
+        startTime.setHours(parseInt(sh), parseInt(sm), 0);
+        
+        const durationMs = (latestSelection.duration_mins || 60) * 60 * 1000;
+        const endTime = new Date(startTime.getTime() + durationMs);
+
+        if (now >= startTime && now < endTime) {
+          // Found an active schedule!
+          setActiveSchedule(latestSelection);
+          
+          let nextPlan: WorkoutPlan | null = null;
+
+          if (latestSelection.program_id) {
+            const { data: progData } = await (supabaseClient
+              .from('program_days')
+              .select('*')
+              .eq('program_id', latestSelection.program_id)
+              .eq('day_number', 1) 
+              .single() as any);
+
+            if (progData?.data) {
+                nextPlan = {
+                  ...progData.data,
+                  name: latestSelection.workout_name || progData.workout_name
+                } as WorkoutPlan;
+            }
+          } else if (latestSelection.workout_id) {
+            // Fetch from legacy workouts
+            const { data: workoutData } = await (supabaseClient
+              .from('workouts')
+              .select('*')
+              .eq('id', latestSelection.workout_id)
+              .single() as any);
+
+            if (workoutData?.data) {
+                nextPlan = {
+                  ...workoutData.data,
+                  name: latestSelection.workout_name || workoutData.name
+                } as WorkoutPlan;
+            }
+          }
+
+          if (nextPlan && plan?.name !== nextPlan.name) {
+             setPlan(nextPlan);
+             storage.savePlan(nextPlan);
+          }
+        } else {
+          setActiveSchedule(null);
+        }
+      } else {
+        setActiveSchedule(null);
+      }
+    };
+
+    const scheduleInterval = setInterval(checkSchedule, 30000); 
+    checkSchedule(); 
+
+    const scheduleChannel = supabaseClient
+      .channel('tv-schedule-sync')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'schedules' }, () => {
+        checkSchedule();
+      })
+      .subscribe();
+
+    return () => {
+      supabaseClient.removeChannel(pushChannel);
+      supabaseClient.removeChannel(scheduleChannel);
+      clearInterval(scheduleInterval);
+    };
+  }, [router, searchParams, plan?.name]);
+
+  // Perpetual State Calculation Logic (Schedule-Aware)
   useEffect(() => {
     const calculateState = () => {
       if (!setup) return;
 
       const now = new Date();
-      // Total seconds since start of today
-      const totalSecondsToday = (now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds() + (now.getMilliseconds() / 1000);
+      let totalSecondsElapsed = 0;
+
+      if (activeSchedule) {
+        // Calculate elapsed time since class start
+        const [sh, sm] = activeSchedule.start_time.split(':');
+        const startTime = new Date(now);
+        startTime.setHours(parseInt(sh), parseInt(sm), 0);
+        totalSecondsElapsed = (now.getTime() - startTime.getTime()) / 1000;
+      } else {
+        // Fallback to 24/7 repeating circuit
+        totalSecondsElapsed = (now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds() + (now.getMilliseconds() / 1000);
+      }
       
       const workTime = setup.workTime || 45;
       const restTime = setup.restTime || 15;
@@ -246,19 +515,14 @@ function DisplayTvContent() {
       const stationDuration = (workTime + restTime) * roundsPerStation;
       const totalCircuitDuration = stationDuration * stationCount;
 
-      // Current position within the 24/7 repeating circuit
-      const currentCircuitTime = totalSecondsToday % totalCircuitDuration;
-
-      // Determine current station
+      const currentCircuitTime = totalSecondsElapsed % totalCircuitDuration;
       const currentStationIndex = Math.floor(currentCircuitTime / stationDuration);
       const timeInStation = currentCircuitTime % stationDuration;
 
-      // Determine current round within station
       const roundDuration = workTime + restTime;
       const currentRound = Math.floor(timeInStation / roundDuration) + 1;
       const timeInRound = timeInStation % roundDuration;
 
-      // Determine phase (work vs rest)
       let phase: SessionPhase = 'work';
       let timeLeft = 0;
 
@@ -284,7 +548,7 @@ function DisplayTvContent() {
 
     const interval = setInterval(calculateState, 50);
     return () => clearInterval(interval);
-  }, [setup, plan]);
+  }, [setup, plan, activeSchedule]);
 
   useEffect(() => {
     if (!supabaseClient) return;
@@ -347,8 +611,53 @@ function DisplayTvContent() {
 
   const activeStation = stationGroups.find(s => s.stationId === currentStationId);
 
+  // Audio Driver Trigger
+  const previousTimeRef = useRef<number | null>(null);
+  const previousPhaseRef = useRef<SessionPhase | null>(null);
+
+  useEffect(() => {
+    // Phase Change Announcement
+    if (currentPhase !== previousPhaseRef.current) {
+      const oldPhase = previousPhaseRef.current;
+      previousPhaseRef.current = currentPhase;
+      
+      // Only announce transitions (not initial load)
+      if (oldPhase !== null) {
+        if (currentPhase === 'work') {
+          playBeep(880, 'square', 0.5, 0.15);
+          playSpeech("Work");
+        } else if (currentPhase === 'rest') {
+          playBeep(330, 'square', 0.5, 0.1);
+          playSpeech("Rest");
+        }
+      }
+    }
+
+    // Countdown Logic (3, 2, 1)
+    if (remainingTime !== previousTimeRef.current) {
+      previousTimeRef.current = remainingTime;
+      
+      if (remainingTime === 3) {
+        playBeep(440, 'sine', 0.2, 0.1);
+      } else if (remainingTime === 2) {
+        playBeep(440, 'sine', 0.2, 0.1);
+      } else if (remainingTime === 1) {
+        playBeep(880, 'sine', 0.3, 0.15); // Higher pitch for final second
+      }
+    }
+  }, [currentPhase, remainingTime, playBeep, playSpeech]);
+
   return (
-    <div className="w-screen h-screen font-sans flex flex-col justify-between py-6 px-12 overflow-hidden bg-studio-cream select-none relative">
+    <div 
+      className="w-screen h-screen font-sans flex flex-col justify-between py-6 px-12 overflow-hidden bg-studio-cream select-none relative"
+      onClick={() => {
+        const ctx = getAudioContext();
+        if (ctx && ctx.state === 'suspended') {
+          ctx.resume();
+          playBeep(440, 'sine', 0.1, 0.05); // Quick feedback chirp
+        }
+      }}
+    >
       <FontStyles />
       
       {/* Fullscreen Toggle Button */}
@@ -360,7 +669,26 @@ function DisplayTvContent() {
 
       {/* TOP HEADER SECTION */}
       <div className="w-full flex justify-between items-start z-10">
-        <AvrlLogo />
+        <div className="flex flex-col gap-4">
+          <AvrlLogo />
+          
+          {/* Audio Unlock Hint */}
+          <div 
+            onClick={async () => {
+              const ctx = getAudioContext();
+              if (ctx) await ctx.resume();
+              playBeep(880, 'sine', 0.1, 0.05);
+              playSpeech("Audio Ready");
+              setAudioStatus('ready');
+            }}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all cursor-pointer ${audioStatus === 'ready' ? 'bg-green-50 border-green-200 opacity-50' : 'bg-red-50 border-red-200 animate-pulse'}`}
+          >
+            <span className="text-xs">{audioStatus === 'ready' ? '🔊' : '🔇'}</span>
+            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#8A5F20]">
+              {audioStatus === 'ready' ? 'Audio Live' : 'Tap to Enable Audio'}
+            </span>
+          </div>
+        </div>
         
         {/* Class Details - Moved to top right for a cleaner center */}
         <div className="flex flex-col items-end pt-8">
@@ -381,41 +709,25 @@ function DisplayTvContent() {
       </div>
 
       {/* CENTER HERO SECTION (The Biocircuit Focus) */}
-      <div className="flex-1 flex flex-col items-center justify-center relative -mt-24">
+      <div className="flex-1 flex flex-col items-center justify-center relative">
         
-        {/* Persistent Phase Status - Active Work, Rest, Work always displayed */}
-        <div className="flex gap-16 mb-12 relative z-20">
-          <div className={`flex flex-col items-center transition-all duration-500 ${currentPhase === 'work' ? 'scale-110' : 'opacity-30 grayscale'}`}>
-            <span className={`text-[11px] font-bold tracking-[0.4em] uppercase mb-1 ${currentPhase === 'work' ? 'text-[#8A5F20]' : 'text-[#6B6B6B]'}`}>Active Work</span>
-            <span className="text-[10px] text-[#6B6B6B] tracking-[0.3em] uppercase">{perpetualState.workTime}s</span>
-            <div className={`h-[3px] rounded-full transition-all duration-500 mt-2 ${currentPhase === 'work' ? 'w-16 bg-[#C69C50]' : 'w-0 bg-transparent'}`}></div>
-          </div>
-          <div className={`flex flex-col items-center transition-all duration-500 ${currentPhase === 'rest' ? 'scale-110' : 'opacity-30 grayscale'}`}>
-            <span className={`text-[11px] font-bold tracking-[0.4em] uppercase mb-1 ${currentPhase === 'rest' ? 'text-[#8A5F20]' : 'text-[#6B6B6B]'}`}>Rest</span>
-            <span className="text-[10px] text-[#6B6B6B] tracking-[0.3em] uppercase">{perpetualState.restTime}s</span>
-            <div className={`h-[3px] rounded-full transition-all duration-500 mt-2 ${currentPhase === 'rest' ? 'w-12 bg-[#C69C50]' : 'w-0 bg-transparent'}`}></div>
-          </div>
-          <div className={`flex flex-col items-center transition-all duration-500 opacity-30`}>
-            <span className={`text-[11px] font-bold tracking-[0.4em] uppercase mb-1 text-[#6B6B6B]`}>Work</span>
-            <span className="text-[10px] text-[#6B6B6B] tracking-[0.3em] uppercase">{perpetualState.workTime}s</span>
-            <div className="h-[3px] w-0 bg-transparent rounded-full mt-2"></div>
-          </div>
-        </div>
+
         
-        {/* Active Station Name (Hero Text) */}
-        <div className="flex flex-col items-center mb-10 z-20">
-          <p className="text-[#8A5F20] text-[12px] font-bold tracking-[0.4em] uppercase mb-2">
-            Currently Active
-          </p>
-          <h2 className={`text-5xl lg:text-6xl font-serif tracking-wide text-center transition-opacity duration-500 ${currentPhase === 'work' ? 'text-[#2D2D2D]' : 'text-[#8A5F20]'}`}>
-            {currentPhase === 'work' ? exerciseLabel : 'Rotate to Next Station'}
-          </h2>
-        </div>
+
 
         {/* Massive Sweeping Timer Ring */}
         <div className="relative flex items-center justify-center">
           {/* Background Track Ring */}
           <svg height={radius * 2} width={radius * 2} className="absolute transform -rotate-90 drop-shadow-sm">
+            <defs>
+              <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#AA7D39" />
+                <stop offset="30%" stopColor="#E8D3A2" />
+                <stop offset="50%" stopColor="#C69C50" />
+                <stop offset="70%" stopColor="#E8D3A2" />
+                <stop offset="100%" stopColor="#8A5F20" />
+              </linearGradient>
+            </defs>
             <circle
               stroke="#EBE6DC"
               fill="transparent"
@@ -445,8 +757,8 @@ function DisplayTvContent() {
               {currentPhase === 'work' ? 'Active Work' : 'Recovery'}
             </p>
             
-            <div className={`flex items-start time-active-pulse ${currentPhase === 'work' ? 'text-gold-foil' : 'text-[#2D2D2D]'}`}>
-              <span className="font-serif text-[9rem] leading-[0.8] font-light tabular-nums tracking-tighter drop-shadow-sm">
+            <div className="flex items-start time-active-pulse">
+              <span className={`font-serif text-[9rem] leading-[0.8] font-light tabular-nums tracking-tighter drop-shadow-sm ${currentPhase === 'work' ? 'text-gold-foil' : 'text-[#2D2D2D]'}`}>
                 {remainingTime}
               </span>
             </div>

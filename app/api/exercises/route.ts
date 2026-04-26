@@ -64,16 +64,20 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // Filter client-side to only Cloudflare Stream IDs (32-char hex or cloudflarestream.com URL)
-  // unless ?all=true is set
-  const exercises = showAll
-    ? (data ?? [])
-    : (data ?? []).filter((ex) => {
-        if (!ex.demo_url) return false;
-        const isStreamId = ex.demo_url.length === 32 && !ex.demo_url.includes("/");
-        const isStreamUrl = ex.demo_url.includes("cloudflarestream.com");
-        return isStreamId || isStreamUrl;
-      });
+  // Filter client-side to only meaningful video sources
+  // (32-char hex, Cloudflare URLs, or valid local paths)
+  const filtered = (data ?? []).filter((ex) => {
+    if (!ex.demo_url) return false;
+    const url = ex.demo_url.trim();
+    if (url === "" || url.toLowerCase() === "todo") return false;
 
-  return NextResponse.json(exercises);
+    // Is it a Cloudflare Stream ID (32 chars hex)?
+    const isId = /^[a-f0-9]{32}$/i.test(url);
+    // Is it a local path or a remote URL?
+    const isPath = url.startsWith("/") || url.startsWith("http");
+    
+    return isId || isPath;
+  });
+
+  return NextResponse.json(filtered);
 }

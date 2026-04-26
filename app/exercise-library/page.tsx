@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Plus, Edit2, Trash2, Video, Search, Package, Maximize2, Weight, PlayCircle, X } from "lucide-react"
 import MainLayout from "@/components/MainLayout"
 import { NexusCard } from "@/components/ui/NexusCard"
@@ -36,7 +36,7 @@ const CATEGORIES = ["Bodyweight", "Dumbbell", "Barbell", "Bands", "Plate", "Kett
 const MUSCLES = ["Biceps", "Triceps", "Shoulders", "Back", "Chest", "Quads", "Hamstrings", "Glutes", "Legs", "Core", "Full Body"]
 const EQUIP_CATS = ["Strength", "Cardio", "Functional", "Recovery", "Studio A", "Studio B", "Other"]
 
-export default function UnifiedLibraryPage() {
+export default function FullyStandaloneLibraryPage() {
   // Movement State
   const [rows, setRows] = useState<ExerciseRecord[]>([])
   const [loading, setLoading] = useState(true)
@@ -51,9 +51,60 @@ export default function UnifiedLibraryPage() {
   const [editingAsset, setEditingAsset] = useState<EquipmentRecord | null>(null)
   const [isAssetOpen, setIsAssetOpen] = useState(false)
 
+  // Dynamic Equipment Options for the Movement Dialog
+  const DYNAMIC_CATEGORIES = useMemo(() => {
+    const list = assets.map(a => a.equipment_name)
+    // Merge with defaults and remove duplicates
+    const defaults = ["Bodyweight", "Dumbbell", "Barbell", "Bands", "Plate", "TRX", "BOSU"]
+    return Array.from(new Set([...defaults, ...list])).sort()
+  }, [assets])
+
   // Preview State
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
+  
+  // Upload State
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isUploading, setIsUploading] = useState(false)
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setIsUploading(true)
+    try {
+      // 1. Get Direct Upload URL
+      const res = await fetch("/api/admin/cloudflare/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filename: file.name }),
+      })
+      
+      const { uploadUrl, uid, error } = await res.json()
+      if (error) throw new Error(error)
+
+      // 2. Upload to Cloudflare
+      const formData = new FormData()
+      formData.append("file", file)
+      
+      const uploadRes = await fetch(uploadUrl, {
+        method: "POST",
+        body: formData,
+      })
+
+      if (!uploadRes.ok) throw new Error("Cloudflare upload failed")
+
+      // 3. Update State
+      setEditingExercise(prev => prev ? { ...prev, video_url: uid } : null)
+      alert("Successfully uploaded to Studio Cloud! The ID has been linked.")
+    } catch (err: any) {
+      console.error(err)
+      alert(err.message || "Upload failed. Check Cloudflare credentials.")
+    } finally {
+      setIsUploading(false)
+      if (fileInputRef.current) fileInputRef.current.value = ""
+    }
+  }
 
   const fetchData = useCallback(async () => {
     setLoading(true)
@@ -176,7 +227,7 @@ export default function UnifiedLibraryPage() {
                       <Label>Equipment</Label>
                       <Select value={editingExercise?.required_equipment || "Bodyweight"} onValueChange={v => setEditingExercise(p => ({ ...p!, required_equipment: v }))}>
                         <SelectTrigger className="bg-black/30 border-white/10"><SelectValue /></SelectTrigger>
-                        <SelectContent className="bg-neutral-800 text-white">{CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+                        <SelectContent className="bg-neutral-800 text-white">{DYNAMIC_CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
                       </Select>
                     </div>
                     <div className="grid gap-2">
@@ -188,8 +239,31 @@ export default function UnifiedLibraryPage() {
                     </div>
                   </div>
                   <div className="grid gap-2">
-                    <Label>Video ID</Label>
-                    <Input value={editingExercise?.video_url || ""} onChange={e => setEditingExercise(p => ({ ...p!, video_url: e.target.value }))} className="bg-black/30 border-white/10" placeholder="Cloudflare ID" />
+                    <Label>Video Asset</Label>
+                    <div className="flex gap-2">
+                      <Input 
+                        value={editingExercise?.video_url || ""} 
+                        onChange={e => setEditingExercise(p => ({ ...p!, video_url: e.target.value }))} 
+                        className="bg-black/30 border-white/10 flex-1" 
+                        placeholder="Cloudflare ID" 
+                      />
+                      <input 
+                        type="file" 
+                        ref={fileInputRef} 
+                        onChange={handleFileUpload} 
+                        accept="video/*" 
+                        className="hidden" 
+                      />
+                      <NexusButton 
+                        type="button" 
+                        variant="ghost" 
+                        className="border border-white/10 bg-white/5 whitespace-nowrap"
+                        disabled={isUploading}
+                        onClick={() => fileInputRef.current?.click()}
+                      >
+                        {isUploading ? "Uploading..." : "Record / Upload"}
+                      </NexusButton>
+                    </div>
                   </div>
                   <div className="flex justify-end gap-3 pt-4">
                     <NexusButton variant="ghost" type="button" onClick={() => setIsExerciseOpen(false)}>Cancel</NexusButton>

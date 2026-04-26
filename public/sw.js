@@ -7,7 +7,7 @@ const MEDIA_CACHE = `hotel-fit-media-${CACHE_VERSION}`;
 const OFFLINE_URL = "/offline";
 const CORE_ROUTES = [
   "/",
-  "/builder",
+  "/program-builder",
   "/display-tv",
   "/display-timer",
   "/hrm-tv",

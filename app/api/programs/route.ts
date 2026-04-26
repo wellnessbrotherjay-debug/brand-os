@@ -30,14 +30,24 @@ export async function POST(req: NextRequest) {
 
   if (progErr) return NextResponse.json({ error: progErr.message }, { status: 500 });
 
-  // Create 10 empty day slots
-  const days = Array.from({ length: 10 }, (_, i) => ({
+  // Create empty day slots
+  const dayCount = body.dayCount || 10;
+  const days = Array.from({ length: dayCount }, (_, i) => ({
     program_id: program.id,
     day_number: i + 1,
     workout_name: `Day ${i + 1}`,
     goal: "Fat Loss",
     studio_mode: "studio-a",
-    data: { exercises: [], goal: "Fat Loss", studioMode: "studio-a" },
+    data: { 
+      exercises: [], 
+      warmup: [], 
+      warmupDuration: 6,
+      warmupRounds: 1,
+      warmupWorkTime: 60,
+      warmupRestTime: 0,
+      goal: "Fat Loss", 
+      studioMode: "studio-a" 
+    },
   }));
 
   const { error: daysErr } = await supabase.from("program_days").insert(days);

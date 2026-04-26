@@ -312,7 +312,7 @@ export default function SetupPage() {
 
     storage.saveSetup(payload);
     storage.clearSession();
-    router.push("/builder");
+    router.push("/program-builder");
   };
 
   const themeLabel = (value: string) =>

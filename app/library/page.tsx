@@ -40,7 +40,9 @@ export default function LibraryPage() {
 
     const getVideoStatus = (url?: string) => {
         if (!url) return { label: 'Missing', color: 'text-red-400', bg: 'bg-red-500/10', border: 'border-red-500/20' };
-        if (url.includes('cloudflarestream.com') || (url.length === 32 && !url.includes('/'))) {
+        // Accept any likely cloudflare stream ID (32 chars) or full URL
+        const isCloudReady = url.length >= 32 || url.includes('cloudflare');
+        if (isCloudReady) {
             return { label: 'Cloud', color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' };
         }
         if (url.startsWith('/')) {

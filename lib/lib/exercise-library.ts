@@ -32,7 +32,7 @@ export const DEFAULT_EXERCISE_MEDIA: ExerciseMedia[] = [
   {
     name: "Alt Hammer Curls",
     equipment: "dumbbells",
-    video: "6384f51bc1425d5e98f1862776ffd019",
+    video: "7143a05b5c4c6aa727695a9646e9a8ca", // Speed alt curls (fallback)
     muscles: ["biceps", "forearms"],
     cues: ["Keep elbows pinned", "Control the lowering phase"],
     bodyPart: "upper",

@@ -16,6 +16,7 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'home', label: 'Admin Home', href: '/home', group: 'Admin', icon: '⌂' },
   { key: 'branding', label: 'Branding', href: '/admin/brand', group: 'Branding', icon: '🎨' },
   { key: 'gym-setup', label: 'Gym / Studio Setup', href: '/admin/workouts', group: 'Gym / Studio', icon: '💪' },
+  { key: 'exercise-library', label: 'Movement Library', href: '/admin/exercise-library', group: 'Gym / Studio', icon: '🧘' },
   { key: 'retreats', label: 'Retreat Services & Add-ons', href: '/services', group: 'Retreats', icon: '🌴' },
 ];
 
@@ -26,7 +27,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const activeKey = useMemo(() => {
     return (
       NAV_ITEMS.find((item) => pathname?.startsWith(item.href))?.key ??
-      NAV_ITEMS.find((item) => item.href === '/admin/brand')?.key ??
       ''
     );
   }, [pathname]);
