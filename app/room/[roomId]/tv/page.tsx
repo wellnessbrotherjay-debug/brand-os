@@ -1,13 +1,5 @@
-import { getWelcomeContext } from "./context";
-import { LiveWelcome } from "./LiveWelcome";
+import BeautifulWelcome from "./BeautifulWelcome";
 
-type PageProps = {
-  params: { roomId: string };
-};
-
-export const dynamic = "force-dynamic";
-
-export default async function RoomWelcomePage({ params }: PageProps) {
-  const context = await getWelcomeContext(params.roomId);
-  return <LiveWelcome initialContext={context} roomId={params.roomId} />;
+export default function RoomWelcomePage() {
+  return <BeautifulWelcome />;
 }
