@@ -1,5 +1,5 @@
-import { getWelcomeContext } from "./context";
-import { LiveWelcome } from "./LiveWelcome";
+import { getWelcomeContext } from "../context";
+import { LiveWelcome } from "../LiveWelcome";
 
 export default async function RoomTvDashboard({ params }: { params: { roomId: string } }) {
   const context = await getWelcomeContext(params.roomId);
