@@ -371,6 +371,22 @@ export default function HomePage() {
         )}
 
         <NexusCard className="p-8">
+          {/* Room TV System Card */}
+          <div className="mb-10">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-6 rounded-2xl border border-cyan-400/30 bg-gradient-to-br from-cyan-900/30 to-black/60 shadow-lg">
+              <div>
+                <div className="text-xs uppercase tracking-[0.4em] text-cyan-300 mb-2">Room TV System</div>
+                <h2 className="text-2xl font-bold text-white mb-1">Hotel Room TV Display</h2>
+                <p className="text-sm text-slate-300 mb-2">Full hotel dashboard for in-room TVs: workouts, services, menu, concierge, and smart TV integrations.</p>
+                <NexusButton asChild size="md" variant="primary">
+                  <a href="/room/101/tv">Launch Room TV →</a>
+                </NexusButton>
+              </div>
+              <div className="flex items-center justify-center">
+                <img src="/logos/global-avrl-logo.png" alt="Room TV" className="h-20 w-auto rounded-xl bg-white/10 p-2 object-contain" />
+              </div>
+            </div>
+          </div>
           <div className="grid gap-8 md:grid-cols-2">
             <div className="space-y-4">
               <p className="text-xs uppercase tracking-[0.4em] text-emerald-300">Mobile Command</p>
