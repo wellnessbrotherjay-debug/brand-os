@@ -196,7 +196,7 @@ export default function ProgramBuilderPage() {
       setProgramName(days[0].workoutName);
       setIsNameDirty(false); // keep it synced
     }
-  }, [days, isNameDirty]);
+  }, [days, isNameDirty, days.length, initNewProgram]);
 
   useEffect(() => {
     if (days.length === 0) initNewProgram(10);
@@ -914,7 +914,7 @@ export default function ProgramBuilderPage() {
                     {previewExercise.cues && (
                       <div className="bg-white/5 rounded-xl p-4 border border-white/5">
                         <span className="text-[8px] font-black uppercase tracking-widest opacity-40 block mb-2">Performance Cues</span>
-                        <p className="text-xs opacity-70 leading-relaxed italic">"{previewExercise.cues}"</p>
+                        <p className="text-xs opacity-70 leading-relaxed italic">&quot;{previewExercise.cues}&quot;</p>
                       </div>
                     )}
                     <button onClick={() => addExerciseToStation(previewExercise as any, pickerStation, pickerPart)} 
