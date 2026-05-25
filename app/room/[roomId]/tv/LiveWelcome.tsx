@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { launchNetflix, launchYouTube, callConcierge } from "./api";
 import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { supabase } from "@/lib/supabase";
@@ -113,25 +114,37 @@ export function LiveWelcome({ initialContext, roomId }: LiveWelcomeProps) {
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
-                  {actions.map((action) => (
-                    <Link
-                      key={action.title}
-                      href={action.href}
-                      className={`group rounded-2xl border border-white/10 bg-gradient-to-br ${action.accent} p-5 transition hover:border-white/40`}
-                    >
-                      <p className="text-xs uppercase tracking-[0.3em] text-white/80">
-                        {action.pill}
-                      </p>
-                      <h3 className="mt-2 text-2xl font-semibold text-white">
-                        {action.title}
-                      </h3>
-                      <p className="text-sm text-white/80">{action.description}</p>
-                      <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-white">
-                        {action.cta}
-                        <span aria-hidden>↗</span>
-                      </span>
-                    </Link>
-                  ))}
+                  {actions.map((action) =>
+                    action.onClick ? (
+                      <button
+                        key={action.title}
+                        onClick={action.onClick}
+                        className={`group w-full text-left rounded-2xl border border-white/10 bg-gradient-to-br ${action.accent} p-5 transition hover:border-white/40`}
+                      >
+                        <p className="text-xs uppercase tracking-[0.3em] text-white/80">{action.pill}</p>
+                        <h3 className="mt-2 text-2xl font-semibold text-white">{action.title}</h3>
+                        <p className="text-sm text-white/80">{action.description}</p>
+                        <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-white">
+                          {action.cta}
+                          <span aria-hidden>↗</span>
+                        </span>
+                      </button>
+                    ) : (
+                      <Link
+                        key={action.title}
+                        href={action.href}
+                        className={`group rounded-2xl border border-white/10 bg-gradient-to-br ${action.accent} p-5 transition hover:border-white/40`}
+                      >
+                        <p className="text-xs uppercase tracking-[0.3em] text-white/80">{action.pill}</p>
+                        <h3 className="mt-2 text-2xl font-semibold text-white">{action.title}</h3>
+                        <p className="text-sm text-white/80">{action.description}</p>
+                        <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-white">
+                          {action.cta}
+                          <span aria-hidden>↗</span>
+                        </span>
+                      </Link>
+                    )
+                  )}
                 </div>
               </div>
             </div>
@@ -277,6 +290,7 @@ function getPrimaryActions(roomId: string) {
       cta: "Launch player",
       pill: "Movement",
       accent: "from-cyan-500/60 to-sky-500/40",
+      onClick: undefined,
     },
     {
       title: "Order Dining",
@@ -285,6 +299,7 @@ function getPrimaryActions(roomId: string) {
       cta: "Browse menu",
       pill: "Dining",
       accent: "from-amber-500/50 to-rose-500/50",
+      onClick: undefined,
     },
     {
       title: "Hotel Events",
@@ -293,6 +308,7 @@ function getPrimaryActions(roomId: string) {
       cta: "View calendar",
       pill: "Social",
       accent: "from-violet-500/50 to-indigo-500/50",
+      onClick: undefined,
     },
     {
       title: "Facilities & Spa",
@@ -301,6 +317,34 @@ function getPrimaryActions(roomId: string) {
       cta: "See options",
       pill: "Wellness",
       accent: "from-emerald-500/50 to-teal-500/40",
+      onClick: undefined,
+    },
+    {
+      title: "Watch Netflix",
+      description: "Stream Netflix on your room TV",
+      href: "#",
+      cta: "Launch Netflix",
+      pill: "Entertainment",
+      accent: "from-red-500/60 to-pink-500/40",
+      onClick: () => launchNetflix(roomId),
+    },
+    {
+      title: "Watch YouTube",
+      description: "Open YouTube for music, workouts, or shows",
+      href: "#",
+      cta: "Launch YouTube",
+      pill: "Entertainment",
+      accent: "from-yellow-400/60 to-red-400/40",
+      onClick: () => launchYouTube(roomId),
+    },
+    {
+      title: "Call Concierge",
+      description: "Request assistance or special services",
+      href: "#",
+      cta: "Call now",
+      pill: "Concierge",
+      accent: "from-emerald-400/60 to-cyan-400/40",
+      onClick: () => callConcierge(roomId),
     },
   ];
 }
