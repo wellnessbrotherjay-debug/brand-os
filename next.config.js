@@ -1,10 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    turbopack: {
-      root: __dirname,
-    },
-  },
+  // turbopack config removed (unsupported in this Next.js version)
   typescript: {
     ignoreBuildErrors: true,
   },
