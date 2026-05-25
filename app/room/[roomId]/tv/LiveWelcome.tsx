@@ -65,6 +65,11 @@ export function LiveWelcome({ initialContext, roomId }: LiveWelcomeProps) {
       <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-slate-950/70 to-black" />
 
       <div className="relative z-10 flex h-screen flex-col gap-6 px-10 py-8">
+        <div className="mb-2">
+          <Link href="/" className="inline-flex items-center gap-2 text-slate-300 hover:text-white transition font-semibold text-sm">
+            <span aria-hidden="true">←</span> Back to Dashboard
+          </Link>
+        </div>
         <header className="space-y-3">
           <div className="flex items-center justify-between">
             <p className="text-xs uppercase tracking-[0.5em] text-slate-300/80">
